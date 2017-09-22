@@ -2,8 +2,8 @@
 
 from config import config
 
-from storage.azurestoragewrapper import StorageContext
-db = StorageContext(**config)
+from storage.azurestoragewrapper import StorageTableContext
+db = StorageTableContext(**config)
 
 
 

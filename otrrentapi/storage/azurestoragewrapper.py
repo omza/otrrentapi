@@ -28,7 +28,7 @@ class StorageTableContext():
         """ service init """
         self._models = []
         if self._storage_key != '' and self._storage_name != '':
-            self._tableservice = TableService(self.storage_name, self.storage_key)
+            self._tableservice = TableService(self._storage_name, self._storage_key)
         else:
             self._tableservice = TableService
         pass
@@ -53,13 +53,8 @@ class StorageTableContext():
                 self._models.append(modelname)
         pass
 
-
-
-
-
-
     def table_isempty(self, tablename, PartitionKey='', RowKey = '') -> bool:
-        if (tablename in self.tables) and (not self.tableservice is None):
+        if  (not self.tableservice is None):
 
             filter = "PartitionKey eq '{}'".format(PartitionKey) if PartitionKey != '' else ''
             if filter == '':
@@ -67,7 +62,7 @@ class StorageTableContext():
             else:
                 filter = filter + ("and RowKey eq '{}'".format(RowKey) if RowKey != '' else '')
             try:
-                entities = list(self.tableservice.query_entities(tablename, filter = filter, select='PartitionKey', num_results=1))
+                entities = list(self._tableservice.query_entities(tablename, filter = filter, select='PartitionKey', num_results=1))
                 if len(entities) == 1: 
                     return False
                 else:

@@ -17,11 +17,11 @@ from storage.azurestoragewrapper import StorageTableModel
 from storage.tablemodels import Torrent, Recording
 from storage import db
 
-db.create_table(Torrent._tablename)
-db.create_table(Recording._tablename)
+db.register_model(Torrent)
+db.register_model(Recording)
 
 """ init api Namespace """
-api = Namespace('tops', description='top recordings including torrentinformation from otr')
+api = Namespace('tasks', description='endpoints to initiate ftp push')
 
 
 

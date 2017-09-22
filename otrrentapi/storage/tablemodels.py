@@ -4,7 +4,7 @@ import datetime
 from azure.common import AzureException 
 from azure.storage.table import Entity, TableService, EntityProperty, EdmType
 
-from storage.azurestoragewrapper import StorageTableModel, StorageContext, StorageTableCollection
+from storage.azurestoragewrapper import StorageTableModel, StorageTableCollection
 from helpers.helper import safe_cast
 
 """ configure logging """
