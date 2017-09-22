@@ -42,7 +42,7 @@ app.register_blueprint(otrrentapi)
 # --------------------------------------------------------
 if app.debug:
     for key, value in app.config.items():
-        if key.find('OTRRENTSERVER') >= 0:
+        if key.find('APPLICATION') >= 0:
             log.debug('{} = {!s}'.format(key, value))
 
 

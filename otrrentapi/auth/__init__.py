@@ -1,14 +1,10 @@
 from flask import g, abort
 from flask_httpauth import HTTPBasicAuth
 
+from config import config, log
 
+""" HTTP Authentification  """
 
-# Logger
-import logging
-log = logging.getLogger('diboardapi.' + __name__)
-
-# HTTP Authentification
-# --------------------------------------------------------------
 authorizations = {
     'basicauth': {
         'type': 'basic',
@@ -27,9 +23,17 @@ def auth_error():
     return
 
 @basicauth.verify_password
-def verify_password(username, password):
+def verify_password(client_id, password):
 
-    """ verify by clientid """
-    g.user = 'client-ID'
-    return True
+    client = next((client for client in config['APPLICATION_CLIENTS'] if client['ID'] == client_id), False)
+
+    if client:
+        """ verify by clientid """
+        g.clientrole = client['ROLE']
+        log.debug('client identified with role {}'.format(g.clientrole))
+        return True
+    else:
+        return False
+
+
 

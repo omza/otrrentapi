@@ -80,20 +80,20 @@ recording_detail = api.model('top recording public detail',{
 @api.route('/')
 class TopList(Resource):
 
-    # swagger responses   
+    """ swagger responses """   
     _responses = {}
     _responses['get'] = {200: ('Success', recording),
-                  #401: 'Missing Authentification or wrong credentials',
+                  401: 'Missing Authentification or wrong credentials',
                   403: 'Insufficient rights or Bad request',
                   404: 'No recordings found'
                   }
 
-    # list/filter boards (public)
-    @api.doc(description='request Bulletin Boards by filter (id, address)', responses=_responses['get'])
+    """ list/filter boards (public) """
+    @api.doc(description='request a list of top recordings with active torrents', security='basicauth', responses=_responses['get'])
     @api.param(name = 'Id', description = 'filter for a single recording with unique board id', type = int)
     @api.param(name = 'Genre', description = 'filter by Genre', type = str)
-    @api.param(name = 'Channel', description = 'filter by city name', type = str)
-    #@api.param(name = 'Start', description = 'filter by street', type = datetime.date)
+    @api.param(name = 'Channel', description = 'filter by channel name', type = str)
+    @auth.basicauth.login_required
     @api.marshal_list_with(recording)
     def get(self):
 
@@ -135,8 +135,9 @@ class TopInstance(Resource):
                   }
     
     """ retrieve toprecording """
-    @api.doc(description='show all top recording details to owner and administrator', responses=_responses['get'])  #security='basicauth',
+    @api.doc(description='show all top recording details to owner and administrator', security='basicauth', responses=_responses['get'])
     @api.marshal_with(recording_detail)
+    @auth.basicauth.login_required
     def get(self, id):
         """ request top recording detail data """
 

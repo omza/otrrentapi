@@ -5,7 +5,7 @@ from sys import stderr, stdout, stdin
 import logging
 import logging.handlers
 
-from config.helper import safe_cast
+from helpers.helper import safe_cast
 
 """ Main configuration """
 config = {}
