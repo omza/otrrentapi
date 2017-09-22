@@ -26,4 +26,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Start & Stop
 # -----------------------------------------------------------
 STOPSIGNAL SIGTERM
-ENTRYPOINT ["python3", "runetl.py"] gunicorn --config ./deploy/gunicorn.conf.py diboards:app
+ENTRYPOINT ["gunicorn", "--config", "./config/gunicorn.conf.py", "otrrentapi:app"] 
