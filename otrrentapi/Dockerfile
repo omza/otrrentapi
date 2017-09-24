@@ -21,7 +21,16 @@ VOLUME /usr/src/api/config/secrets/
 # Install requirements
 # ----------------------------------------------------------
 COPY requirements.txt /usr/src/api/
-RUN pip install --no-cache-dir -r requirements.txt
+
+# Build essentials
+# ---------------------------------------------------------
+RUN apk update && \
+    apk upgrade && \
+    apk add -u build-base openssl-dev libffi-dev && \
+    pip install --no-cache-dir -r requirements.txt && \
+	apk del -u build-base openssl-dev libffi-dev && \
+	rm -rf /var/cache/apk/*
+
 
 # Start & Stop
 # -----------------------------------------------------------

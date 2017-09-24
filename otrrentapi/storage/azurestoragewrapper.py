@@ -1,12 +1,14 @@
+""" imports & globals """
 from azure.common import AzureMissingResourceHttpError, AzureException
 from azure.storage.table import TableService, Entity
 from azure.storage.queue import QueueService
 from helpers.helper import safe_cast
 
 import datetime
+
 """ configure logging """
 from config import log
-log.name = '{}.{}'.format(log.name,__name__)
+
 
 class StorageTableContext():
     """Initializes the repository with the specified settings dict.
@@ -16,7 +18,7 @@ class StorageTableContext():
     """
     
     _models = []
-    _tableservice = TableService
+    _tableservice = None
     _storage_key = ''
     _storage_name = ''
 
@@ -29,12 +31,11 @@ class StorageTableContext():
         self._models = []
         if self._storage_key != '' and self._storage_name != '':
             self._tableservice = TableService(self._storage_name, self._storage_key)
-        else:
-            self._tableservice = TableService
+
         pass
      
-    def __create_table__(self, tablename) -> bool:
-        if (not self.tableservice is None):
+    def __createtable__(self, tablename) -> bool:
+        if (not self._tableservice is None):
             try:
                 self._tableservice.create_table(tablename)
                 return True
@@ -49,7 +50,7 @@ class StorageTableContext():
         if isinstance(storagemodel, StorageTableModel):
             modelname = storagemodel.__class__.__name__
             if (not modelname in self._models):
-                self.__create_table__(storagemodel._tablename)
+                self.__createtable__(storagemodel._tablename)
                 self._models.append(modelname)
         pass
 
@@ -76,194 +77,80 @@ class StorageTableContext():
             return True
         pass
 
-
-    pass
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-class StorageTableModel(object):
-    _tablename = ''
-    _dateformat = ''
-    _datetimeformat = ''
-
-    def __init__(self, tableservice:TableService, **kwargs):                  
-        """ constructor """
-        
-        self._tableservice = tableservice
-        self._existsinstorage = None
-        self._tablename = self.__class__._tablename
-        self._dateformat = self.__class__._dateformat
-        self._datetimeformat = self.__class__._datetimeformat
-
-                
-        """ parse **kwargs into instance var """
-        self._PartitionKey = kwargs.get('PartitionKey', '')
-        self._RowKey = kwargs.get('RowKey', '')
-
-        for key, default in vars(self.__class__).items():
-            if not key.startswith('_') and key != '':
-                if key in kwargs:
-                   
-                    value = kwargs.get(key)
-                    to_type = type(default)
-                
-                    if to_type is StorageTableCollection:
-                        setattr(self, key, value)
-
-                    elif to_type is datetime.datetime:
-                        setattr(self, key, safe_cast(value, to_type, default, self._datetimeformat))
-
-                    elif to_type is datetime.date:
-                        setattr(self, key, safe_cast(value, to_type, default, self._dateformat))
-
-                    else:
-                        setattr(self, key, safe_cast(value, to_type, default))
-                
+    def exists(self, storagemodel) -> bool:
+        exists = False
+        if isinstance(storagemodel, StorageTableModel):
+            modelname = storagemodel.__class__.__name__
+            if (modelname in self._models):
+                if storagemodel._exists is None:
+                    try:
+                        entity = self._tableservice.get_entity(storagemodel._tablename, storagemodel.PartitionKey, storagemodel.RowKey)
+                        storagemodel._exists = True
+                        exists = True
+            
+                    except AzureMissingResourceHttpError:
+                        storagemodel._exists = False
                 else:
-                    setattr(self, key, default)
+                    exists = storagemodel._exists
+            else:
+                log.debug('please register model {} first'.format(modelname))
+                        
+        return exists       
 
-        """ set primary keys from data"""
-        if self._PartitionKey == '':
-            self.__setPartitionKey__()
+    def get(self, storagemodel) -> StorageTableModel:
+        """ load entity data from storage to vars in self """
 
-        if self._RowKey == '':
-            self.__setRowKey__()
+        if isinstance(storagemodel, StorageTableModel):
+            modelname = storagemodel.__class__.__name__
+            if (modelname in self._models):
 
-        """ init Storage Table Collections in Instance """
-        self.__setcollections__()
-        pass
-           
-    def __setPartitionKey__(self):
-        """ parse storage primaries from instance attribute 
-            overwrite if inherit this class
-        """
-        pass
-
-    def __setRowKey__(self):
-        """ parse storage primaries from instance attribute 
-            overwrite if inherit this class
-        """
-        pass
-
-    def __setcollections__(self):
-        """ initialize StorageTable collections  
-            overwrite if inherit this class
-        """
-        pass
-
-    def __image__(self, entity=False) -> dict:        
-        """ parse self into entity """
+                try:
+                    entity = self._tableservice.get_entity(storagemodel._tablename, storagemodel.PartitionKey, storagemodel.RowKey)
+                    storagemodel._exists = True
         
-        image = {}
-        if entity:
-            image['PartitionKey'] = self._PartitionKey
-            image['RowKey'] = self._RowKey
-
-        for key, value in vars(self).items():
-            if not key.startswith('_') and key != '':
-                default = getattr(self.__class__, key, None)
-                istype = type(default)
-                if not default is None:
-                    if entity:
-                        if (value != default) and (istype not in [list, dict, StorageTableCollection]):
-                            image[key] = value                   
-                    
-                    elif istype == StorageTableCollection:
-                        image[key] = getattr(self, key).dictionary()
-
-                    else:
-                        image[key] = value                    
-        
-        return image
-            
-    def dictionary(self) -> dict:
-        """ representation as dictionary """
-        return self.__image__()
-
-    def exists(self) -> bool:
-        
-        if isinstance(self._existsinstorage, bool):
-            return self._existsinstorage
-        
-        else:
-            try:
-                entity = self._tableservice.get_entity(self._tablename,self._PartitionKey, self._RowKey)
-                self._existsinstorage = True
-                return self._existsinstorage
-            
-            except AzureMissingResourceHttpError:
-                self._existsinstorage = False
-                return self._existsinstorage
-
-    def load(self):
-        """ load entity data from storage and merge vars in self """
-        try:
-            entity = self._tableservice.get_entity(self._tablename, self._PartitionKey, self._RowKey)
-            self._existsinstorage = True
-        
-            """ sync with entity values """
-            for key, default in vars(self.__class__).items():
-                if not key.startswith('_') and key != '':
-                    if isinstance(default, StorageTableCollection):
-                        collection = getattr(self, key)
-                        collection.setfilter()
-                        collection.load()
-                    else:
-                        value = getattr(entity, key, None)
-                        if not value is None:
-                            oldvalue = getattr(self, key, default)
-                            if oldvalue == default:
-                                setattr(self, key, value)
+                    """ sync with entity values """
+                    for key, default in vars(storagemodel).items():
+                        if not key.startswith('_') and key not in ['','PartitionKey','RowKey']:
+                            value = getattr(entity, key, None)
+                            if not value is None:
+                                setattr(storagemodel, key, value)
              
-        except AzureMissingResourceHttpError as e:
-            log.debug('can not get table entity:  Table {}, PartitionKey {}, RowKey {} because {!s}'.format(self._tablename, self._PartitionKey, self._RowKey, e))
-            self._existsinstorage = False
+                except AzureMissingResourceHttpError as e:
+                    log.debug('can not get table entity:  Table {}, PartitionKey {}, RowKey {} because {!s}'.format(self._tablename, self._PartitionKey, self._RowKey, e))
+                    storagemodel._exists = False
 
-    def save(self, syncwithstorage=True):
-        """ insert or merge self into storage """
+            else:
+                log.debug('please register model {} first'.format(modelname))
 
-        if syncwithstorage:
-            """ try to merge entry """
-            try:            
-                self._tableservice.insert_or_merge_entity(self._tablename, self.__image__(entity=True))
-                
-                """ sync self """
-                self.load()
-
-            except AzureMissingResourceHttpError as e:
-                log.error('can not insert or merge table entity:  Table {}, PartitionKey {}, RowKey {} because {!s}'.format(self._tablename, self._PartitionKey, self._RowKey, e))
+            return storagemodel
 
         else:
-            """ try to replace entry """
-            try:            
-                self._tableservice.insert_or_replace_entity(self._tablename, self.__image__(entity=True))
-                self._existsinstorage = True
+            return None
 
-            except AzureMissingResourceHttpError as e:
-                log.debug('can not insert or replace table entity:  Table {}, PartitionKey {}, RowKey {} because {!s}'.format(self._tablename, self._PartitionKey, self._RowKey, e))
+    def insert(self, storagemodel) -> StorageTableModel:
+        """ insert model into storage """
+        try:            
+            self._tableservice.insert_or_replace_entity(storagemodel._tablename, storagemodel.dict())
+            storagemodel._exists = True
 
+        except AzureMissingResourceHttpError as e:
+            log.debug('can not insert or replace table entity:  Table {}, PartitionKey {}, RowKey {} because {!s}'.format(storagemodel._tablename, storagemodel.PartitionKey, storagemodel.RowKey, e))
+
+        return storagemodel
+
+    def merge(self, storagemodel) -> StorageTableModel:
+        """ try to merge entry """
+        try:            
+            self._tableservice.insert_or_merge_entity(self._tablename, storagemodel.dict())
+                
+            """ sync storagemodel """
+            storagemodel = self.get(storagemodel)
+
+        except AzureMissingResourceHttpError as e:
+            log.error('can not insert or merge table entity:  Table {}, PartitionKey {}, RowKey {} because {!s}'.format(storagemodel._tablename, storagemodel.PartitionKey, storagemodel.RowKey, e))
+
+        return storagemodel
+    
     def delete(self):
         """ delete existing Entity """
         try:
@@ -323,24 +210,23 @@ class StorageTableModel(object):
 
         return new
 
-    pass
-
-
-class StorageTableEntity(object):
+class StorageTableModel(object):
     _tablename = ''
     _dateformat = ''
     _datetimeformat = ''
+    _exists = None
 
     def __init__(self, **kwargs):                  
         """ constructor """
+        
         self._tablename = self.__class__._tablename
         self._dateformat = self.__class__._dateformat
         self._datetimeformat = self.__class__._datetimeformat
-
-                
+        self._exists = None
+               
         """ parse **kwargs into instance var """
-        self._PartitionKey = kwargs.get('PartitionKey', '')
-        self._RowKey = kwargs.get('RowKey', '')
+        self.PartitionKey = kwargs.get('PartitionKey', '')
+        self.RowKey = kwargs.get('RowKey', '')
 
         for key, default in vars(self.__class__).items():
             if not key.startswith('_') and key != '':
@@ -370,11 +256,7 @@ class StorageTableEntity(object):
 
         if self._RowKey == '':
             self.__setRowKey__()
-
-        """ init Storage Table Collections in Instance """
-        self.__setcollections__()
-        pass
-           
+         
     def __setPartitionKey__(self):
         """ parse storage primaries from instance attribute 
             overwrite if inherit this class
@@ -387,52 +269,46 @@ class StorageTableEntity(object):
         """
         pass
 
-    def __setcollections__(self):
-        """ initialize StorageTable collections  
-            overwrite if inherit this class
-        """
-        pass
+    def dict(self) -> dict:        
+        """ parse self into dictionary """
+     
+        image = {}
 
-    pass
+        for key, value in vars(self).items():
+            if not key.startswith('_') and key !='':                  
+                    
+                if isinstance(value, StorageTableCollection):
+                    image[key] = getattr(self, key).list()
 
+                else:
+                    image[key] = value                    
+        
+        return image
 
 class StorageTableCollection():
     _tablename = ''
-    _tableservice = None
-    _entities = None
-    _count = None
+    _filter = ''
+    _entities = []
+    _count = -1
 
-    def __init__(self, tableservice:TableService, tablename, filter='*'):
+    def __init__(self, tablename='', filter='*'):
         """ constructor """
 
         """ query configuration """
-        self._tableservice = tableservice
-        self._tablename = tablename
-        self._entities = None
-        self._count = None
-        self._filter = filter
+        self._tablename = tablename if tablename != '' else self.__class__._tablename
+        self._filter = filter        
+        self._entities = []
+        self._count = -1
         pass
 
-    def load(self):
-        if not self._tableservice is None:
-            log.debug('query table {} filter by {}'.format(self._tablename, self._filter))
-            self._entities = self._tableservice.query_entities(self._tablename, self._filter)
-            self._count = len(list(self._entities))
             
     def list(self) -> list:
-        if self._entities is None:
-            self.load()
         return list(self._entities)
 
     def count(self) -> int:
-        if self._count is None:
-            self.load()
         return self._count
 
     def find(self, key, value):
-        pass
-
-    def delete(self):
         pass
 
     pass
