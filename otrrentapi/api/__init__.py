@@ -6,7 +6,7 @@ from flask import Blueprint, json
 from flask_restplus import Api
 
 from api.recording import api as recording_ns
-from api.task import api as task_ns
+from api.push import api as push_ns
 from api.dev import api as dev_ns
 
 from auth import authorizations
@@ -34,7 +34,7 @@ api = Api(otrrentapi,
 """ Initialize flask-restplus api ----------------------------------------------
 """
 api.add_namespace(recording_ns)
-api.add_namespace(task_ns)
+api.add_namespace(push_ns)
 api.add_namespace(dev_ns)
 
 """ global error handling ------------------------------------------------------

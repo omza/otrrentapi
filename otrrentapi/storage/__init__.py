@@ -2,8 +2,9 @@
 
 from config import config
 
-from storage.azurestoragewrapper import StorageTableContext
+from storage.azurestoragewrapper import StorageTableContext, StorageQueueContext
 db = StorageTableContext(**config)
+queue = StorageQueueContext(**config)
 
 
 

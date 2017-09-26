@@ -9,7 +9,6 @@ from helpers.helper import safe_cast
 
 """ configure logging """
 from config import log
-log.name = '{}.{}'.format(log.name,__name__)
 
 class Torrent(StorageTableModel):
     _tablename = 'torrents'
@@ -25,11 +24,11 @@ class Torrent(StorageTableModel):
     loaded = 0
 
     def __setPartitionKey__(self):
-        self._PartitionKey = self.Id
+        self.PartitionKey = self.Id
         return super().__setPartitionKey__()
 
     def __setRowKey__(self):
-        self._RowKey = self.Resolution
+        self.RowKey = self.Resolution
         return super().__setRowKey__()
 
 class Recording(StorageTableModel):
@@ -57,17 +56,19 @@ class Recording(StorageTableModel):
     programlink = ''
     rating = ''
     previewimagelink = ''
-    _Torrents = []
-    test = EntityProperty(EdmType.STRING,'',True)
+    Torrents = StorageTableCollection(_tablename)
 
-    def loadtorrents(self):
-        """ set filter conditions """
-        filter = "PartitionKey eq '{!s}'".format(self.RowKey)
-        log.debug(filter)
-        self._Torrents = StorageTableCollection(self._tableservice, self._tablename, filter).list()
+    def __setPartitionKey__(self):
+        self.PartitionKey = self.beginn.strftime('%Y_%m_%d')
+        return super().__setPartitionKey__()
 
-        pass
+    def __setRowKey__(self):
+        self.RowKey = str(self.Id)
+        return super().__setRowKey__()
 
+    def __setCollections__(self):
+        self.Torrents = StorageTableCollection('torrents', "PartitionKey eq '{}'".format(self.RowKey))
+        return super().__setCollections__()
 
 class Genre(StorageTableModel):   
     _tablename = 'genres'                       

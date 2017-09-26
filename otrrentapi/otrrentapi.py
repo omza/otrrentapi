@@ -21,21 +21,12 @@ app = Flask(__name__)
 """    
 
 # Load the default configuration
-from config import config
+from config import config, log
 app.config.update(config)
 
-
-"""
-    Logging Configuraion
-    ---------------------------------------------------------------------------------
-    formatter
-"""
-from config import log
-
-
-# register blueprints api and manage
-# --------------------------------------------------------
+""" register blueprints api and manage --------------------------------------------------------  """
 app.register_blueprint(otrrentapi)
+
 
 
 # log App configuration/setting  if in debug mode

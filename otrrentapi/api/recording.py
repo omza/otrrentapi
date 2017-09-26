@@ -13,12 +13,12 @@ log.name = log.name +'.'+__name__
 """ import & Init storage """
 #from azure.storage.table import TableService, Entity
 
-from storage.azurestoragewrapper import StorageTableModel
+from storage.azurestoragewrapper import StorageTableModel, StorageTableCollection
 from storage.tablemodels import Torrent, Recording
 from storage import db
 
-db.register_model(Torrent)
-db.register_model(Recording)
+db.register_model(Torrent())
+db.register_model(Recording())
 
 """ init api Namespace """
 api = Namespace('tops', description='top recordings including torrentinformation from otr')
@@ -68,7 +68,7 @@ recording_detail = api.model('top recording public detail',{
     'Genre': fields.String(attribute='genre', readOnly=True, description='Board description'),
     'Rating': fields.String(attribute='rating', readOnly=True, description='Board description'),
     'PreviewImage': fields.String(attribute='previewimagelink', readOnly=True, description='Board description'),
-    'Torrents': fields.Nested(attribute='_Torrents',model=torrent, readOnly=True, as_list=True)})
+    'Torrents': fields.Nested(model=torrent, readOnly=True, as_list=True)})
 
 
 """ Endpoints
@@ -90,35 +90,32 @@ class TopList(Resource):
 
     """ list/filter boards (public) """
     @api.doc(description='request a list of top recordings with active torrents', security='basicauth', responses=_responses['get'])
-    @api.param(name = 'Id', description = 'filter for a single recording with unique board id', type = int)
     @api.param(name = 'Genre', description = 'filter by Genre', type = str)
     @api.param(name = 'Channel', description = 'filter by channel name', type = str)
     @auth.basicauth.login_required
     @api.marshal_list_with(recording)
     def get(self):
-
-        """ list boards with filters """
-        # concat filters
-        recordfilter = ''
-        for key, value in request.args.items():            
-            try:
-                if key == 'id':
-                    recordfilter = recordfilter + 'board.' + key + ' == ' + str(value) + ' AND '
-                else:
-                    recordfilter = recordfilter + 'board.' + key + ' == \'' + str(value) + '\' AND '
-            
-            except:
-                api.abort(403, __class__._responses['get'][403])
-        recordfilter = recordfilter[:-5]       
-        
-        log.info('retrieve record list with filters {!s}'.format(recordfilter)) 
+        """ list top recordings  with filters """   
 
         """ retrieve Boards with filters """
-        toplist = list(db.tableservice.query_entities('recordings', "PartitionKey eq 'top'"))
-        if len(toplist) == 0:
+        toplist = StorageTableCollection('recordings', "PartitionKey eq 'top'")
+        toplist = db.query(toplist)
+        toplist.sort(key = lambda item: item.beginn)
+
+        """ apply filters """
+        for key, value in request.args.items():
+            if key == 'Genre':
+                toplist.filter('genre', value)
+            elif key == 'Channel':
+                toplist.filter('sender', value)
+            else:
+                api.abort(403, __class__._responses['get'][403])
+        
+        """ abort if no toplist filtered """
+        if toplist == 0:
             api.abort(404, __class__._responses['get'][404])
 
-        # return httpstatus, object
+        """ return list, httpstatus """
         return toplist, 200  
 
 
@@ -145,13 +142,13 @@ class TopInstance(Resource):
         log.info('select all details for recording: {!s}'.format(id))
 
         """ retrieve board """
-        recording = Recording(db.tableservice, PartitionKey = 'top', RowKey = str(id))
-        
-        if not recording.exists():
+        recording = db.get(Recording(PartitionKey = 'top', RowKey = str(id)))
+
+        if not db.exists(recording):
             api.abort(404, __class__._responses['get'][404])
 
-        recording.loadtorrents()
-
+        recording.Torrents = db.query(recording.Torrents)
+        
         """ return recording """
         return recording, 200
 
