@@ -465,54 +465,118 @@ class StorageQueueContext():
     def put(self, storagemodel:object) -> StorageQueueModel:
         """ insert queue message into storage """
 
+        modelname = storagemodel.__class__.__name__
         if isinstance(storagemodel, StorageQueueModel):
-            modelname = storagemodel.__class__.__name__
             if (modelname in self._models):
+                """ peek first message in queue """
                 try:
                     message = self._service.put_message(storagemodel._queuename, storagemodel.getmessage())
                     storagemodel.mergemessage(message)
 
                 except AzureException as e:
-                    log.debug('can not save queue message:  queue {} with message {} because {!s}'.format(storagemodel._queuename, storagemodel.content, e))
-
+                    log.debug('can not save queue message:  queue {} with message {} because {!s}'.format(storagemodel._queuename, storagemodel.content, e))                    
             else:
                 log.debug('please register model {} first'.format(modelname))
+        else:
+            log.debug('model {} is not a Queue Model'.format(modelname))
 
         return storagemodel
-        pass
 
-    def peek(self, storagemodel, id='') -> StorageQueueModel:
-        """ lookup the next message in queue or search all messages by id """
+
+    def peek(self, storagemodel) -> StorageQueueModel:
+        """ lookup the next message in queue """
+
+        modelname = storagemodel.__class__.__name__
         if isinstance(storagemodel, StorageQueueModel):
-            modelname = storagemodel.__class__.__name__
             if (modelname in self._models):
-                if id =='':
-                    """ peek first message in queue """
+                """ peek first message in queue """
+                try:
+                    storagemodel = None
+                    messages = self._service.peek_messages(storagemodel._queuename, num_messages=1)
+                    for message in messages:
+                        storagemodel.mergemessage(message)
+
+                except AzureException as e:
+                    log.debug('can not peek queue message:  queue {} with message {} because {!s}'.format(storagemodel._queuename, storagemodel.content, e))                     
+            else:
+                log.debug('please register model {} first'.format(modelname))
+        else:
+            log.debug('model {} is not a Queue Model'.format(modelname))
+
+        return storagemodel
+
+    def get(self, storagemodel, hide = 0) -> StorageQueueModel:
+        """ lookup the next message in queue """
+        modelname = storagemodel.__class__.__name__
+        if isinstance(storagemodel, StorageQueueModel):
+            if (modelname in self._models):
+                """ get first message in queue """
+                try:
+                    if hide > 0:
+                        messages = self._service.get_messages(storagemodel._queuename, num_messages=1, visibility_timeout = hide)
+                    else:
+                        messages = self._service.get_messages(storagemodel._queuename, num_messages=1)
+                    
+                    """ parse retrieved message """
+                    for message in messages:
+                        storagemodel.mergemessage(message)
+
+                    """ no message retrieved ?"""
+                    if storagemodel.id is None:
+                        storagemodel = None
+
+                except AzureException as e:
+                    log.debug('can not get queue message:  queue {} with message {} because {!s}'.format(storagemodel._queuename, storagemodel.content, e))                     
+            else:
+                log.debug('please register model {} first'.format(modelname))
+        else:
+            log.debug('model {} is not a Queue Model'.format(modelname))
+
+        return storagemodel
+
+    def update(self, storagemodel, hide = 0) -> StorageQueueModel:
+        """ update the message in queue """
+        modelname = storagemodel.__class__.__name__
+        if isinstance(storagemodel, StorageQueueModel):
+            if (modelname in self._models):
+                """ check if message in queue """
+                if (storagemodel.id != '') and (storagemodel.pop_receipt != '') and (not storagemodel.id is None) and (not storagemodel.pop_receipt is None):
                     try:
-                        messages = self._service.peek_messages(storagemodel._queuename)
-                        if len[messages] == 1:
-                            storagemodel.mergemessage(message[0])
-                        else:
-                            log.debug('can not peek queue message: queue {} because its empty'.format(storagemodel._queuename))
-                            storagemodel = None
+                        content = storagemodel.getmessage()
+                        message = self._service.update_message(storagemodel._queuename, storagemodel.id, storagemodel.pop_receipt, visibility_timeout = hide, content=content)
+                        storagemodel.content = content
+                        storagemodel.pop_receipt = message.pop_receipt
 
                     except AzureException as e:
-                        log.debug('can not peek queue message:  queue {} with message {} because {!s}'.format(storagemodel._queuename, storagemodel.content, e))
-                        storagemodel = None
+                        log.debug('can not update queue message:  queue {} with message.id {!s} because {!s}'.format(storagemodel._queuename, storagemodel.id, e))
                 else:
-                    """ try to find message with id """
-                    storagemodel = None
-
+                    log.debug('cant update queuemessage {} due to missing id and pop_receipt'.format(modelname))                
             else:
                 log.debug('please register model {} first'.format(modelname))
+        else:
+            log.debug('model {} is not a Queue Model'.format(modelname))
 
         return storagemodel
 
-    def get(self, visibility = 0, id='') -> StorageQueueModel:
-        pass
+    def delete(self, storagemodel:object) -> bool:
+        """ delete the message in queue """
+        modelname = storagemodel.__class__.__name__
+        deleted = False
+        if isinstance(storagemodel, StorageQueueModel):
+            if (modelname in self._models):
+                """ check if message in queue """
+                if (storagemodel.id != '') and (storagemodel.pop_receipt != '') and (not storagemodel.id is None) and (not storagemodel.pop_receipt is None):
+                    try:
+                        self._service.delete_message(storagemodel._queuename, storagemodel.id, storagemodel.pop_receipt)
+                        deleted = True
 
-    def update(self, storagemodel:object) -> StorageQueueModel:
-        pass
+                    except AzureException as e:
+                        log.debug('can not delete queue message:  queue {} with message.id {!s} because {!s}'.format(storagemodel._queuename, storagemodel.id, e))
+                else:
+                    log.debug('cant update queuemessage {} due to missing id and pop_receipt'.format(modelname))                
+            else:
+                log.debug('please register model {} first'.format(modelname))
+        else:
+            log.debug('model {} is not a Queue Model'.format(modelname))
 
-    def delete(self, storagemodel:object) -> StorageQueueModel:
-        pass
+        return deleted

@@ -2,7 +2,7 @@
 import datetime
 
 from azure.common import AzureException, AzureMissingResourceHttpError 
-from storage.azurestoragewrapper import StorageQueueContext, StorageQueueModel 
+from azurestorage.wrapper import StorageQueueContext, StorageQueueModel 
 from helpers.helper import safe_cast
 
 """ configure logging """
