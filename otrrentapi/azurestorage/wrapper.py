@@ -494,11 +494,14 @@ class StorageQueueContext():
                     storagemodel.mergemessage(message)
 
                 except AzureException as e:
-                    log.debug('can not save queue message:  queue {} with message {} because {!s}'.format(storagemodel._queuename, storagemodel.content, e))                    
+                    log.error('can not save queue message:  queue {} with message {} because {!s}'.format(storagemodel._queuename, storagemodel.content, e))
+                    storagemodel = None
             else:
-                log.debug('please register model {} first'.format(modelname))
+                log.info('please register model {} first'.format(modelname))
+                storagemodel = None
         else:
-            log.debug('model {} is not a Queue Model'.format(modelname))
+            log.info('model {} is not a Queue Model'.format(modelname))
+            storagemodel = None
 
         return storagemodel
 
@@ -521,11 +524,14 @@ class StorageQueueContext():
                         storagemodel = None
 
                 except AzureException as e:
-                    log.debug('can not peek queue message:  queue {} with message {} because {!s}'.format(storagemodel._queuename, storagemodel.content, e))                     
+                    log.error('can not peek queue message:  queue {} with message {} because {!s}'.format(storagemodel._queuename, storagemodel.content, e))
+                    storagemodel = None
             else:
-                log.debug('please register model {} first'.format(modelname))
+                log.info('please register model {} first'.format(modelname))
+                storagemodel = None
         else:
-            log.debug('model {} is not a Queue Model'.format(modelname))
+            log.info('model {} is not a Queue Model'.format(modelname))
+            storagemodel = None
 
         return storagemodel
 
@@ -550,11 +556,14 @@ class StorageQueueContext():
                         storagemodel = None
 
                 except AzureException as e:
-                    log.debug('can not get queue message:  queue {} with message {} because {!s}'.format(storagemodel._queuename, storagemodel.content, e))                     
+                    log.error('can not get queue message:  queue {} with message {} because {!s}'.format(storagemodel._queuename, storagemodel.content, e))
+                    storagemodel = None
             else:
-                log.debug('please register model {} first'.format(modelname))
+                log.info('please register model {} first'.format(modelname))
+                storagemodel = None
         else:
-            log.debug('model {} is not a Queue Model'.format(modelname))
+            log.info('model {} is not a Queue Model'.format(modelname))
+            storagemodel = None
 
         return storagemodel
 
@@ -572,13 +581,17 @@ class StorageQueueContext():
                         storagemodel.pop_receipt = message.pop_receipt
 
                     except AzureException as e:
-                        log.debug('can not update queue message:  queue {} with message.id {!s} because {!s}'.format(storagemodel._queuename, storagemodel.id, e))
+                        log.error('can not update queue message:  queue {} with message.id {!s} because {!s}'.format(storagemodel._queuename, storagemodel.id, e))
+                        storagemodel = None
                 else:
-                    log.debug('cant update queuemessage {} due to missing id and pop_receipt'.format(modelname))                
+                    log.info('cant update queuemessage {} due to missing id and pop_receipt'.format(modelname))
+                    storagemodel = None
             else:
-                log.debug('please register model {} first'.format(modelname))
+                log.info('please register model {} first'.format(modelname))
+                storagemodel = None
         else:
-            log.debug('model {} is not a Queue Model'.format(modelname))
+            log.info('model {} is not a Queue Model'.format(modelname))
+            storagemodel = None
 
         return storagemodel
 
@@ -595,12 +608,12 @@ class StorageQueueContext():
                         deleted = True
 
                     except AzureException as e:
-                        log.debug('can not delete queue message:  queue {} with message.id {!s} because {!s}'.format(storagemodel._queuename, storagemodel.id, e))
+                        log.error('can not delete queue message:  queue {} with message.id {!s} because {!s}'.format(storagemodel._queuename, storagemodel.id, e))
                 else:
-                    log.debug('cant update queuemessage {} due to missing id and pop_receipt'.format(modelname))                
+                    log.info('cant update queuemessage {} due to missing id and pop_receipt'.format(modelname))
             else:
-                log.debug('please register model {} first'.format(modelname))
+                log.info('please register model {} first'.format(modelname))
         else:
-            log.debug('model {} is not a Queue Model'.format(modelname))
+            log.info('model {} is not a Queue Model'.format(modelname))
 
         return deleted
