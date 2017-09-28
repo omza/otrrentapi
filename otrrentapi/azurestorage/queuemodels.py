@@ -15,14 +15,37 @@ from config import log
 class PushMessage(StorageQueueModel):
     _queuename = 'push'
 
-    source = ''
+    epgid = 0
+    resolution = ''
+    sourcefile = ''
+    sourcelink = ''
+
     protocol = 'ftp'
     server = ''
     port = 22
     user = ''
     password = ''
     destpath = '/'
-    status = 'new'
 
 
+class DownloadMessage(StorageQueueModel):
+    _queuename = 'download'
+
+    epgid = 0
+    resolution = ''
+    sourcefile = ''
+    sourcelink = ''
+    
+    otrkeyfile = ''
+
+
+class DecodeMessage(StorageQueueModel):
+    _queuename = 'decode'
+
+    otrkeyfile = ''
+    videofile = ''
+    otruser = ''
+    otrpassword = ''
+    usecutlist = True
+    usesubfolder = False
 

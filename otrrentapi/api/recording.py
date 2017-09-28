@@ -11,11 +11,9 @@ from config import config, log
 log.name = log.name +'.'+__name__
 
 """ import & Init storage """
-#from azure.storage.table import TableService, Entity
-
-from storage.azurestoragewrapper import StorageTableModel, StorageTableCollection
-from storage.tablemodels import Torrent, Recording
-from storage import db
+from azurestorage.wrapper import StorageTableModel, StorageTableCollection
+from azurestorage.tablemodels import Torrent, Recording
+from azurestorage import db
 
 db.register_model(Torrent())
 db.register_model(Recording())

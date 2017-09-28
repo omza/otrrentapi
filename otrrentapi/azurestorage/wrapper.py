@@ -4,12 +4,18 @@ from azure.storage.table import TableService, Entity
 from azure.storage.queue import QueueService, QueueMessage
 from helpers.helper import safe_cast
 
+
 import datetime
 from ast import literal_eval
 
 """ configure logging """
 from config import log
 
+""" encryption """
+from azurestorage.encryption import (
+    KeyWrapper,
+    KeyResolver    
+    )
 
 """ model base classes """
 class StorageTableModel(object):
@@ -123,7 +129,6 @@ class StorageTableCollection(list):
 
 class StorageQueueModel(QueueMessage):
     _queuename = ''
-    _metadata = {}
     _dateformat = ''
     _datetimeformat = ''
     
@@ -138,7 +143,6 @@ class StorageQueueModel(QueueMessage):
         for key, default in vars(self.__class__).items():
             if not key.startswith('_') and key != '':
                 if (not key in vars(QueueMessage).items()):
-                    self._metadata[key] = default
                     if key in kwargs:                   
                         value = kwargs.get(key)
                         to_type = type(default)              
@@ -177,7 +181,6 @@ class StorageQueueModel(QueueMessage):
             except:
                 log.exception('cant parse message {} into attributes.'.format(message.content))
         pass
-
 
 
 """ wrapper classes """
@@ -439,6 +442,23 @@ class StorageQueueContext():
 
         """ registered models """
         self._models = []
+
+        """ encrypt queue service """
+        if kwargs.get('AZURE_REQUIRE_ENCRYPTION', False):
+
+            # Create the KEK used for encryption.
+            # KeyWrapper is the provided sample implementation, but the user may use their own object as long as it implements the interface above.
+            kek = KeyWrapper(kwargs.get('AZURE_KEY_IDENTIFIER', 'otrrentapi'), kwargs.get('SECRET_KEY', 'super-duper-secret')) # Key identifier
+
+            # Create the key resolver used for decryption.
+            # KeyResolver is the provided sample implementation, but the user may use whatever implementation they choose so long as the function set on the service object behaves appropriately.
+            key_resolver = KeyResolver()
+            key_resolver.put_key(kek)
+
+            # Set the require Encryption, KEK and key resolver on the service object.
+            self._service.require_encryption = True
+            self._service.key_encryption_key = kek
+            self._service.key_resolver_funcion = key_resolver.resolve_key
         pass
      
     def __create__(self, queue) -> bool:
@@ -482,8 +502,7 @@ class StorageQueueContext():
 
         return storagemodel
 
-
-    def peek(self, storagemodel) -> StorageQueueModel:
+    def peek(self, storagemodel:object) -> StorageQueueModel:
         """ lookup the next message in queue """
 
         modelname = storagemodel.__class__.__name__
@@ -491,10 +510,15 @@ class StorageQueueContext():
             if (modelname in self._models):
                 """ peek first message in queue """
                 try:
-                    storagemodel = None
                     messages = self._service.peek_messages(storagemodel._queuename, num_messages=1)
+
+                    """ parse retrieved message """
                     for message in messages:
                         storagemodel.mergemessage(message)
+
+                    """ no message retrieved ?"""
+                    if storagemodel.id is None:
+                        storagemodel = None
 
                 except AzureException as e:
                     log.debug('can not peek queue message:  queue {} with message {} because {!s}'.format(storagemodel._queuename, storagemodel.content, e))                     
@@ -505,7 +529,7 @@ class StorageQueueContext():
 
         return storagemodel
 
-    def get(self, storagemodel, hide = 0) -> StorageQueueModel:
+    def get(self, storagemodel:object, hide = 0) -> StorageQueueModel:
         """ lookup the next message in queue """
         modelname = storagemodel.__class__.__name__
         if isinstance(storagemodel, StorageQueueModel):
@@ -534,7 +558,7 @@ class StorageQueueContext():
 
         return storagemodel
 
-    def update(self, storagemodel, hide = 0) -> StorageQueueModel:
+    def update(self, storagemodel:object, hide = 0) -> StorageQueueModel:
         """ update the message in queue """
         modelname = storagemodel.__class__.__name__
         if isinstance(storagemodel, StorageQueueModel):

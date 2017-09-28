@@ -5,4 +5,7 @@ SECRET_KEY = 'This-is-the-supa-dupa-secret-key'
 AZURE_STORAGE_NAME = 'supersecret'
 AZURE_STORAGE_KEY = 'MoreSuperdupaSecret'
 
-
+#otrrent client-ids
+APPLICATION_CLIENTS = [
+    {'ID':'3trdPartyBasic', 'ROLE':'BASIC'},
+    {'ID':'3trdPartyPro', 'ROLE':'PRO'}]

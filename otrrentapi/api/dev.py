@@ -3,7 +3,7 @@ from flask_restplus import Namespace, Resource
 # Logger
 from config import log
 
-api = Namespace('dev', description='attrentapi for developers')
+api = Namespace('dev', description='ottrent api endpoints for developers')
 
 @api. route('/postman')
 @api.response(404, 'Could not transmit postman collection')

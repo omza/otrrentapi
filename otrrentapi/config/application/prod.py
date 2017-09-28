@@ -18,4 +18,8 @@ APPLICATION_LOGLEVEL_FILE = 20 # debug
 APPLICATION_LOG_LEVEL = 20 # Debug
 APPLICATION_MAINLOGGER = 'otrrentapi'
 
+# azure storage settings
+AZURE_REQUIRE_ENCRYPTION = True
+AZURE_KEY_IDENTIFIER = 'otrrentapi'
+
 
