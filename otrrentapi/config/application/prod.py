@@ -1,6 +1,6 @@
 # Flask settings
 SERVER_NAME = None
-DEBUG = True  # Do not use debug mode in production
+DEBUG = False  # Do not use debug mode in production
 PORT = None
 HOST = None
 

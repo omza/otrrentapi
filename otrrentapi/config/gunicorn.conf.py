@@ -18,7 +18,7 @@
 #       range.
 #
 
-bind = '0.0.0.0:9001'
+bind = 'unix:/tmp/gunicorn.sock'
 backlog = 2048
 
 #

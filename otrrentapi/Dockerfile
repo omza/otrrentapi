@@ -1,9 +1,10 @@
-FROM python:3.6-alpine
+FROM omza/alpine-nginx-py3-supervisor
 MAINTAINER oliver@app-workshop.de
 
 # ARGs & ENVs
 # -------------------------------------------------------
-ENV APPLICATION_ENVIRONMENT Test
+ENV NGINX_CONFIG /usr/src/api/config/nginx.api.conf
+ENV APPLICATION_ENVIRONMENT Production
 
 # dirs & volumes
 # --------------------------------------------------------
@@ -21,18 +22,14 @@ VOLUME /usr/src/api/config/secrets/
 # Install requirements
 # ----------------------------------------------------------
 COPY requirements.txt /usr/src/api/
-
-# Build essentials
-# ---------------------------------------------------------
 RUN apk update && \
     apk upgrade && \
     apk add -u build-base openssl-dev libffi-dev && \
-    pip install --no-cache-dir -r requirements.txt && \
-	apk del -u build-base openssl-dev libffi-dev && \
-	rm -rf /var/cache/apk/*
-
+	pip install --no-cache-dir -r requirements.txt && \
+	apk del build-base
 
 # Start & Stop
 # -----------------------------------------------------------
+EXPOSE 80
 STOPSIGNAL SIGTERM
-ENTRYPOINT ["gunicorn", "--config", "./config/gunicorn.conf.py", "otrrentapi:app"] 
+ENTRYPOINT ["supervisord", "--nodaemon", "--configuration", "/usr/src/api/config/supervisord.conf"]
