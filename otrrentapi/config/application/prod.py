@@ -1,5 +1,5 @@
 # Flask settings
-SERVER_NAME = None
+SERVER_NAME = 'otrrentapi.app-workshop.de'
 DEBUG = False  # Do not use debug mode in production
 PORT = None
 HOST = None
