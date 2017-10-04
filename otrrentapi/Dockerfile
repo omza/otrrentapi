@@ -36,4 +36,4 @@ RUN apk update && \
 EXPOSE 8000
 STOPSIGNAL SIGTERM
 
-ENTRYPOINT ["gunicorn","--bind" ,"0.0.0.0:8000" ,"--config", "python:gunicorn.conf.py", "otrrentapi:app"]
+ENTRYPOINT ["gunicorn", "--config", "./config/gunicorn.conf.py", "otrrentapi:app"]
