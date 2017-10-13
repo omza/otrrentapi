@@ -7,16 +7,15 @@ ENV APPLICATION_ENVIRONMENT Production
 
 # dirs & volumes
 # --------------------------------------------------------
-RUN mkdir -p /usr/src/api \
-	&& mkdir -p /usr/src/api/config/secrets/
+RUN mkdir -p /usr/app/config/secrets/
 
-VOLUME /usr/src/api/
-VOLUME /usr/src/api/config/secrets/
+VOLUME /usr/app/
+VOLUME /usr/app/config/secrets/
 
 # Install docker context
 # ----------------------------------------------------------
-COPY . /usr/src/api
-WORKDIR /usr/src/api
+COPY . /usr/app
+WORKDIR /usr/app
 
 
 # Install requirements
@@ -27,9 +26,3 @@ RUN apk update && \
 	pip install --no-cache-dir gunicorn && \
 	pip install --no-cache-dir -r requirements.txt && \
 	apk del build-base
-
-# Start & Stop
-# -----------------------------------------------------------
-#STOPSIGNAL SIGTERM
-
-#ENTRYPOINT ["gunicorn", "--config", "./config/gunicorn.conf.py", "otrrentapi:app"]
