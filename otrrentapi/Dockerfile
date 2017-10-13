@@ -8,8 +8,7 @@ ENV APPLICATION_ENVIRONMENT Production
 # dirs & volumes
 # --------------------------------------------------------
 RUN mkdir -p /usr/src/api \
-	&& mkdir -p /usr/src/etl/config/secrets/
-
+	&& mkdir -p /usr/src/api/config/secrets/
 
 VOLUME /usr/src/api/
 VOLUME /usr/src/api/config/secrets/
