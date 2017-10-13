@@ -1,4 +1,4 @@
-FROM omza/flask-deploy-stack
+FROM omza/flask-deploy-stack:onbuild
 MAINTAINER oliver@app-workshop.de
 
 # ARGs & ENVs
