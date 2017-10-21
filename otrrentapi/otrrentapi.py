@@ -11,12 +11,12 @@ from api import otrrentapi
 
 import logging
 import logging.handlers
-#from werkzeug.contrib.fixers import ProxyFix
+from werkzeug.contrib.fixers import ProxyFix
 
 
 # Flask app instance
 app = Flask(__name__)
-#app.wsgi_app = ProxyFix(app.wsgi_app)
+app.wsgi_app = ProxyFix(app.wsgi_app)
 
 """
     App Configuration
