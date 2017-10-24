@@ -5,6 +5,7 @@ from flask_restplus import Namespace, Resource, fields
 import os
 from datetime import datetime, timedelta
 import auth
+from helpers.helper import safe_cast
 
 """ configuration """
 from config import config, log
@@ -90,6 +91,9 @@ class TopList(Resource):
     @api.doc(description='request a list of top recordings with active torrents', security='basicauth', responses=_responses['get'])
     @api.param(name = 'Genre', description = 'filter by Genre', type = str)
     @api.param(name = 'Channel', description = 'filter by channel name', type = str)
+    @api.param(name = 'Sort', description = 'sort by a property', type = str)
+    @api.param(name = 'Descending', description = 'sort descending ?', type = bool)
+
     @auth.basicauth.login_required
     @api.marshal_list_with(recording)
     def get(self):
@@ -98,14 +102,25 @@ class TopList(Resource):
         """ retrieve Boards with filters """
         toplist = StorageTableCollection('recordings', "PartitionKey eq 'top'")
         toplist = db.query(toplist)
-        toplist.sort(key = lambda item: item.beginn)
+        toplist.sort(key = lambda item: item.beginn, reverse = True)
 
         """ apply filters """
         for key, value in request.args.items():
             if key == 'Genre':
                 toplist.filter('genre', value)
+
             elif key == 'Channel':
                 toplist.filter('sender', value)
+
+            elif key == 'Sort':
+                reverse = safe_cast(request.args.get('Descending', False),bool)
+                field = recording[value].attribute
+                log.debug('Sort field = {} with reverse {!s}'.format(field, reverse))
+                toplist = sorted(toplist, key=lambda k: k[field], reverse = reverse) 
+
+            elif key == 'Descending':
+                if not request.args.get('Sort', False):
+                    api.abort(403, __class__._responses['get'][403])
             else:
                 api.abort(403, __class__._responses['get'][403])
         

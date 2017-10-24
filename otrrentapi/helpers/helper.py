@@ -1,5 +1,6 @@
 """ helper """
 import datetime
+import ftplib
 
 def safe_cast(val, to_type, default=None, dformat=''):
     try:
@@ -25,3 +26,26 @@ def safe_cast(val, to_type, default=None, dformat=''):
         
     except (ValueError, TypeError):
         return default
+
+
+def test_ftpconnection(server, port, user, password, path):
+    try:
+                
+        """ login to ftp server """
+        ftp = ftplib.FTP()
+
+        ftp.connect(server, port)
+        ftp.login(user=user, passwd=password)
+      
+        """ check fpt_path exist ? """
+        ftp.cwd(path)
+
+        """ logout ftp session """
+        ftp.quit()
+
+        """ return """
+        return True, None
+                
+    except ftplib.all_errors as e:
+        return False, 'Error in ftp login ({!s}:{!s}) = {!s}'.format(server, port, e)
+

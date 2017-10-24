@@ -5,6 +5,7 @@ from flask_restplus import Namespace, Resource, fields
 import os
 from datetime import datetime, timedelta
 import auth
+from helpers.helper import test_ftpconnection
 
 """ configuration """
 from config import config, log
@@ -105,7 +106,7 @@ class Push(Resource):
     _responses['post'] = {200: ('Success', push_detail),
                   400: 'Input payload validation failed',  
                   401: 'Missing Authentification or wrong credentials',
-                  403: 'Insufficient rights or Bad request'
+                  403: 'Insufficient rights or Bad request (e.g. push credentials not valid)'
                   }
 
     """ push torrentfile """
@@ -123,6 +124,14 @@ class Push(Resource):
         for key, value in push.items():
             if key in data:
                 data[value.attribute] = data.pop(key)
+
+        """ further validations:
+            test connection to ftp destination server
+        """
+        validftp, validftpmessage = test_ftpconnection(data['server'], data['port'], data['user'], data['password'], data['destpath'])
+        if not validftp:
+            log.error(validftpmessage)
+            api.abort(403, __class__._responses['post'][403] + ': ' + validftpmessage)
         
         """ init a PushMessage instance and put it into queue """
         message = PushMessage(**data)
@@ -166,6 +175,14 @@ class Decode(Resource):
         """ parse request data and use model attribute info"""
         requestbody = request.json
         log.debug(requestbody)
+
+        """ further validations:
+            test connection to ftp destination server
+        """
+        validftp, validftpmessage = test_ftpconnection(requestbody['Server'], requestbody['Port'], requestbody['User'], requestbody['Password'], requestbody['ServerPath'])
+        if not validftp:
+            log.error(validftpmessage)
+            api.abort(403, __class__._responses['post'][403] + ': ' + validftpmessage)
            
 
         """ create jobchain DownloadMessage -----------------------------------------------------------------"""
