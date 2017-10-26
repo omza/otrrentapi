@@ -173,7 +173,7 @@ class Decode(Resource):
             api.abort(403, __class__._responses['post'][403])
 
         """ parse request data and use model attribute info"""
-        requestbody = request.json
+        request body = request.json
         log.debug(requestbody)
 
         """ further validations:
