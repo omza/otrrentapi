@@ -12,13 +12,13 @@ from config import config, log
 
 """ import & Init storage """
 #from storage.azurestoragewrapper import StorageTableModel
-from azurestorage.queuemodels import PushMessage, DecodeMessage, DownloadMessage
+from azurestorage.queuemodels import PushMessage, DecodeMessage, DownloadMessage, PushVideoMessage
 from azurestorage import queue
 
 queue.register_model(PushMessage())
 queue.register_model(DecodeMessage())
 queue.register_model(DownloadMessage())
-
+queue.register_model(PushVideoMessage())
 
 """ init api Namespace """
 api = Namespace('push', description='endpoints to initiate ftp push')
@@ -44,7 +44,7 @@ source = api.model('top recording source file data',{
 destination = api.model('top recording ftp destination data',{      
     'Protocol': fields.String(attribute='protocol', required=False , description='Determine push protocol ftp or sftp (default ftp)', default='ftp'),
     'Server': fields.String(attribute='server', required=True, description='push destination server'),
-    'Port': fields.Integer(attribute='port', required=False, description='Port on push destination server (default 22)', default=22),
+    'Port': fields.Integer(attribute='port', required=False, description='Port on push destination server (default 22)', default=21),
     'User': fields.String(attribute='user', required=True, description='credentials for push destination server'),
     'Password': fields.String(attribute='password', required=True, description='credentials for push destination server'),
     'ServerPath': fields.String(attribute='destpath', required=False, description='push to path on destination server (default = /)', default='/')
@@ -59,38 +59,30 @@ decoding = api.model('top recording decode video data',{
     'UseSubfolder': fields.Boolean(attribute='usesubfolder',required=False, description='Use auto-cutlist during decoding otrkey file(default False)', default=False)
     })
 
-download_detail = api.model('representation of download torrent job', {})
-download_detail.update(job)
-download_detail.update(source)
-download_detail.update({
-    'OtrkeyFile': fields.String(attribute='otrkeyfile', required=False, description='otrkey file to be decoded', default='')
-    })
-
-decoding_detail = api.model('top recording decode otrkey job data',{})
-decoding_detail.update(job)
-decoding_detail.update(decoding)
-
-push = api.model('top recording push torrent data',{})
-push.update(source)
-push.update(destination)
-
 push_detail = api.model('top recording push torrent data incl. Job',{})
 push_detail.update(job)
 push_detail.update(source)
 push_detail.update(destination)
 
+push = api.model('top recording push torrent data',{})
+push.update(source)
+push.update(destination)
+
+video_detail = api.model('jobchain to download, decode and push a otr recording video file',{})
+video_detail.update(job)
+video_detail.update(source)
+video_detail.update(decoding)
+video_detail.update(destination)
+
 video = api.model('top recording push video job data',{})
 video.update(source)
 tmp = decoding
 tmp.pop('OtrkeyFile')
+tmp.pop('VideoFile')
 video.update(tmp)
 video.update(destination)
 
-video_detail = api.model('jobchain to download, decode and push a otr recording video file',{
-    'download': fields.Nested(download_detail, True),
-    'decode': fields.Nested(decoding_detail, True),
-    'push': fields.Nested(push_detail, True)
-    })
+
 
 """ Endpoints
     / : Toplist
@@ -188,74 +180,22 @@ class Decode(Resource):
         """ create jobchain DownloadMessage -----------------------------------------------------------------"""
         Content = {}
         for key, value in requestbody.items():
-            if key in download_detail.keys():
-                Content[download_detail[key].attribute]=value
+            if key in video.keys():
+                Content[video[key].attribute]=value
 
-        download = DownloadMessage(**Content)
+        message = PushVideoMessage(**Content)
         
         """ update otrkey filename as output """
-        download.otrkeyfile = os.path.splitext(os.path.basename(download.sourcelink))[0]
+        message.otrkeyfile = os.path.splitext(os.path.basename(message.sourcelink))[0]
+        message.videofile = os.path.splitext(os.path.basename(message.otrkeyfile))[0]
         
         """ put download queue message """
-        download = queue.put(download)
-        
-        if not download is None:
-            log.debug('put DownloadMessage.id {!s} for epg {!s} '.format(download.id, download.epgid))
-
-            """ create jobchain DecodeMessage ----------------------------------------------------------------- """
-            Content = {}
-            for key, value in requestbody.items():
-                if key in decoding.keys():
-                    Content[decoding[key].attribute]=value
-
-            decode = DecodeMessage(**Content)
-
-            """ update otrkey and vido filename as output """
-            decode.otrkeyfile = download.otrkeyfile
-            decode.videofile = os.path.splitext(os.path.basename(download.otrkeyfile))[0]
-
-            """ put decode queue message """
-            decode = queue.put(decode)
-
-            if not decode is None:
-                log.debug('put DecodeMessage.id {!s} for video {!s} '.format(decode.id, decode.videofile))
-
-                """ create jobchain  PushMessage ----------------------------------------------------------------- """
-                Content = {}
-                for key, value in requestbody.items():
-                    if key in push.keys():
-                        Content[push[key].attribute]=value
-
-                pushing = PushMessage(**Content)
-                """ update video filename and link as output """
-                pushing.sourcefile = decode.videofile
-                pushing.sourcelink = '(local)'
-
-                """ put decode queue message """                
-                pushing = queue.put(pushing)
-                
-                if not pushing is None:
-                    log.debug('put PushMessage.id {!s} for epg {!s} '.format(pushing.id, pushing.epgid))
-
-                else:
-                    queue.delete(decode)
-                    api.abort(403, __class__._responses['post'][403])
-
-            else:
-                queue.delete(download)
-                api.abort(403, __class__._responses['post'][403])
-
-        else:
+        message = queue.put(message)
+        if message is None:
             api.abort(403, __class__._responses['post'][403])
 
-
         """ prepare return data """
-        decode.otrpassword = '<encrypted>'
-        pushing.password = '<encrypted>'
+        message.otrpassword = '<encrypted>'
+        message.password = '<encrypted>'
 
-        jobchain = {}
-        jobchain['download'] = download
-        jobchain['decode'] = decode
-        jobchain['push'] = pushing
-
-        return jobchain, 200 
+        return message, 200 

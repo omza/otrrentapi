@@ -49,3 +49,25 @@ class DecodeMessage(StorageQueueModel):
     usecutlist = True
     usesubfolder = False
 
+class PushVideoMessage(StorageQueueModel):
+    _queuename = 'video'
+
+    epgid = 0
+    resolution = ''
+    sourcefile = ''
+    sourcelink = ''
+
+    protocol = 'ftp'
+    server = ''
+    port = 21
+    user = ''
+    password = ''
+    destpath = '/'
+
+    otrkeyfile = ''
+    videofile = ''
+    otruser = ''
+    otrpassword = ''
+    usecutlist = True
+    usesubfolder = False
+
