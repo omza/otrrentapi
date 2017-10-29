@@ -12,13 +12,14 @@ from config import config, log
 
 """ import & Init storage """
 #from storage.azurestoragewrapper import StorageTableModel
-from azurestorage.queuemodels import PushMessage, DecodeMessage, DownloadMessage, PushVideoMessage
+from azurestorage.queuemodels import PushMessage, PushVideoMessage
+from azurestorage.tablemodels import History
 from azurestorage import queue
+from azurestorage import db
 
 queue.register_model(PushMessage())
-queue.register_model(DecodeMessage())
-queue.register_model(DownloadMessage())
 queue.register_model(PushVideoMessage())
+db.register_model(History())
 
 """ init api Namespace """
 api = Namespace('push', description='endpoints to initiate ftp push')
@@ -82,6 +83,37 @@ tmp.pop('VideoFile')
 video.update(tmp)
 video.update(destination)
 
+history_detail = api.model('push job status and details',{
+    'Task-Id': fields.String(attribute='RowKey', ReadOnly=True, description='Link or path to torrent or video file to be pushed'),
+    'Created': fields.DateTime(attribute='created', ReadOnly=True, required=False, description='Timestamp job was created'),
+    'Updated': fields.DateTime(attribute='updated', ReadOnly=True, required=False, description='Timestamp of last job update'),
+    'Epg-Id': fields.Integer(attribute='epgid', required=False, description='epg_id to video metadata from otr epg'),
+    'File': fields.String(attribute='sourcefile', required=True, description='torrent or video file to be pushed'),
+    'RemoteAddress': fields.String(attribute='ip', required=False, description='ip address where the job has been initiated from'),
+    'Platform': fields.String(attribute='platform', required=False, description='platform where the job has been initiated from'),
+    'Browser': fields.String(attribute='browser', required=True, description='browser where the job has been initiated from'),
+    'Version': fields.String(attribute='version', required=True, description='browser version where the job has been initiated from'),
+    'Language': fields.String(attribute='language', required=True, description='language setting the job has been initiated with'),
+    'Status': fields.String(attribute='status', required=False, description='current job status')
+    })
+
+
+""" handle history entries """
+def add_history_entry(job, pushrequest:request, message):
+    history = History(PartitionKey = job, RowKey = message.id)
+
+    history.ip = pushrequest.remote_addr
+    history.platform = pushrequest.user_agent.platform
+    history.browser = pushrequest.user_agent.browser
+    history.version = pushrequest.user_agent.version
+    history.language = pushrequest.user_agent.language
+    history.epgid = message.epgid
+    history.sourcefile = message.sourcefile
+    history.status = 'new'
+    history.created = datetime.now()
+    history.updated = history.created
+    db.insert(history)
+    pass
 
 
 """ Endpoints
@@ -91,7 +123,7 @@ video.update(destination)
 """
  
 @api.route('/torrent')
-class Push(Resource):
+class PushTorrent(Resource):
 
     """ swagger responses """   
     _responses = {}
@@ -133,11 +165,46 @@ class Push(Resource):
 
         """ return message """
         message.password = '<encrypted>'
+
+        """ add history entry """
+        add_history_entry('torrent', request, message)
+
         log.debug('mesage input: {!s}, {!s}, {!s}'.format(message.getmessage(), message.id, message.insertion_time))
         return message, 200 
 
+@api.route('/torrent/<id>')
+@api.param('id', 'The unique job identifier')
+class PushTorrentInstance(Resource):
+
+    # swagger responses   
+    _responses = {}
+    _responses['get'] = {200: ('Success', history_detail),
+                  401: 'Missing Authentification or wrong credentials',
+                  403: 'Insufficient rights or Bad request',
+                  404: 'No Job found'
+                  }
+    
+    """ retrieve toprecording """
+    @api.doc(description='show all job details to owner and administrator', security='basicauth', responses=_responses['get'])
+    @api.marshal_with(history_detail)
+    @auth.basicauth.login_required
+    def get(self, id):
+        """ request job detail data """
+
+        """ logging """
+        log.info('select all details for job: {!s}'.format(id))
+
+        """ retrieve board """
+        history = db.get(History(PartitionKey = 'torrent', RowKey = str(id)))
+
+        if not db.exists(history):
+            api.abort(404, __class__._responses['get'][404])
+        
+        """ return recording """
+        return history, 200
+
 @api.route('/video')
-class Decode(Resource):
+class PushVideo(Resource):
 
     """ swagger responses """   
     _responses = {}
@@ -198,4 +265,38 @@ class Decode(Resource):
         message.otrpassword = '<encrypted>'
         message.password = '<encrypted>'
 
+        """ add history entry """
+        add_history_entry('video', request, message)
+
         return message, 200 
+
+@api.route('/video/<id>')
+@api.param('id', 'The unique job identifier')
+class PushTorrentInstance(Resource):
+
+    # swagger responses   
+    _responses = {}
+    _responses['get'] = {200: ('Success', history_detail),
+                  401: 'Missing Authentification or wrong credentials',
+                  403: 'Insufficient rights or Bad request',
+                  404: 'No Job found'
+                  }
+    
+    """ retrieve toprecording """
+    @api.doc(description='show all job details to owner and administrator', security='basicauth', responses=_responses['get'])
+    @api.marshal_with(history_detail)
+    @auth.basicauth.login_required
+    def get(self, id):
+        """ request job detail data """
+
+        """ logging """
+        log.info('select all details for job: {!s}'.format(id))
+
+        """ retrieve board """
+        history = db.get(History(PartitionKey = 'video', RowKey = str(id)))
+
+        if not db.exists(history):
+            api.abort(404, __class__._responses['get'][404])
+        
+        """ return recording """
+        return history, 200

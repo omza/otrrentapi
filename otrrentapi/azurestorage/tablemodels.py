@@ -75,7 +75,6 @@ class Genre(StorageTableModel):
     Genre_Id = 0
     Genre = ''
 
-
 class Genres():
     _tablename = 'genres'
      
@@ -104,3 +103,17 @@ class Genres():
                 return genre['Genre']
                 break
         return 'Sonstiges'
+
+class History(StorageTableModel):
+    _tablename = 'history'
+    _datetimeformat = '%d.%m.%Y %H:%M:%S'    
+    epgid = 0
+    sourcefile = ''
+    ip = ''
+    platform = ''
+    browser = ''
+    version = ''
+    language = ''
+    status = ''
+    created = datetime.datetime.strptime('01.01.1900 00:00:00', _datetimeformat)
+    updated  = datetime.datetime.strptime('01.01.1900 00:00:00', _datetimeformat)    
