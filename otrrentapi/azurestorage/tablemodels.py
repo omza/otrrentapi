@@ -110,6 +110,7 @@ class History(StorageTableModel):
     _tablename = 'history'
     _datetimeformat = '%d.%m.%Y %H:%M:%S'
     
+    taskid = ''
     tasktype = ''
     epgid = 0
     beginn = datetime.datetime.strptime('01.01.1900 00:00:00', _datetimeformat)

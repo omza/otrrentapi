@@ -1,0 +1,49 @@
+﻿{% extends "android/_layout.html" %}
+
+{% block navbar%}
+<div class="navbar">
+    <div class="navbar-inner">
+        <div class="left"><a href="#" class="back link"> <i class="icon icon-back"></i><span>Back</span></a></div>
+        <div class="center sliding">{{ title }}</div>
+        <div class="right">
+            <!-- Right link contains only icon - additional "icon-only" class--><a href="#" class="link icon-only open-panel"> <i class="icon icon-bars"></i></a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block content %}
+
+    <!-- Content Block Listview -->
+    <div class="list-block media-list">
+        <ul>
+
+            {% for item in items %}
+                        
+                <!-- Divider -->
+                {% if loop.changed(item.startdate) %}      
+                    <li class="item-divider">{{ item.createdate }}</li>
+                {% endif %}
+                        
+                <!-- Listitems -->
+                <li class="item-content">
+                    <div class="item-media"><img data-src="{{ item.previewimagelink }}" class="lazy" width="80"></div>
+                    <div class="item-inner">
+                        <div class="item-title-row">
+                            <div class="item-title">{{ item.titel }}</div>
+                            <div class="item-after"><span class="badge">{{ item.resolution }}</span></div>
+                        </div>
+                        
+                        <div class="item-subtitle">{{ item.genre }}</div>
+                        <div class="item-text">{{ item.sender }} {{ item.startdate }} {{ item.starttime }}</div>
+                        <span class="badge">{{ item.tasktype }}</span><span class="badge">{{ item.status }}</span>
+                    </div>
+                </li>
+
+            {% endfor %}
+
+        </ul>
+    </div>
+
+{% endblock %}

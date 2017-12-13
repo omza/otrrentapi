@@ -164,7 +164,8 @@ def details(epgid):
                 message.text = '{!s} wird heruntergeladen, decodiert und danach an Ihren Endpoint gepushed. Die Aufgabe {!s} wurde dazu erfolgreich angelegt'.format(job.sourcefile, job.id)
                 
                 """ add history """
-                AddHistory(g.user, 'video', epgid, 
+                AddHistory(g.user, 
+                           job.id, 'video', epgid, 
                            recording.beginn, recording.sender, recording.titel, recording.genre, recording.previewimagelink, data['Resolution'], 
                            job.sourcefile,
                            request.remote_addr, request.user_agent.platform,
@@ -187,7 +188,8 @@ def details(epgid):
                 message.text = '{!s} wird heruntergelden, decodiert und danach an Ihren Endpoint gepushed. Die Aufgabe {!s} wurde dazu erfolgreich angelegt'.format(job.sourcefile, job.id)
 
                 """ add history """
-                AddHistory(g.user, 'torrent', 
+                AddHistory(g.user, 
+                           job.id, 'torrent', 
                            epgid, 
                            recording.beginn, 
                            recording.sender, 
@@ -288,11 +290,6 @@ def history():
         pathtemplate = session['platform'] + '/' + 'history.html'
         return render_template(pathtemplate, title = 'Verlauf', pagetitle='history', items=historylist)
 
-@otrrentui.route('/about')
-def about():
-    pathtemplate = session['platform'] + '/' + 'about.html'
-    return render_template(pathtemplate, title = 'Über otrrent', pagetitle='index')
-
 
 def PushTorrent(epgid, resolution, sourcefile, sourcelink, user:User):
     """ create a push queue message for torrent push """   
@@ -378,11 +375,12 @@ def PushVideo(epgid, resolution, sourcefile, sourcelink, user:User):
 
     return job, ErrorMessage
 
-def AddHistory(user:User, tasktype, epgid, beginn, sender, titel, genre, previewimagelink, resolution, sourcefile, ip, platform, browser, version, language):
+def AddHistory(user:User, taskid, tasktype, epgid, beginn, sender, titel, genre, previewimagelink, resolution, sourcefile, ip, platform, browser, version, language):
     
     """ handle history entries """
     history = History(PartitionKey = user.RowKey, RowKey = str(epgid))
 
+    history.taskid = taskid
     history.tasktype = tasktype
 
     history.epgid = int(epgid)

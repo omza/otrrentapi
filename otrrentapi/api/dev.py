@@ -71,10 +71,9 @@ class LoginUser(Resource):
                 data[value.attribute] = data.pop(key)
                 log.debug('{!s}: {!s}'.format(value.attribute, data[value.attribute]))
 
-
-            
+      
         """ retrieve user info """
-        loginuser = User(**data)
+        loginuser = db.get(User(**data))
 
         """ user exists ? Create a new and  """
         if not db.exists(loginuser):

@@ -11,9 +11,9 @@ from helpers.helper import test_ftpconnection
 from config import config, log
 
 """ import & Init storage """
-#from storage.azurestoragewrapper import StorageTableModel
+from azurestorage.wrapper import StorageTableCollection
 from azurestorage.queuemodels import PushMessage, PushVideoMessage
-from azurestorage.tablemodels import History
+from azurestorage.tablemodels import History, Recording, User
 from azurestorage import queue
 from azurestorage import db
 
@@ -84,7 +84,8 @@ video.update(tmp)
 video.update(destination)
 
 history_detail = api.model('push job status and details',{
-    'Task-Id': fields.String(attribute='RowKey', ReadOnly=True, description='Link or path to torrent or video file to be pushed'),
+    'Task-Id': fields.String(attribute='taskid', ReadOnly=True, description='Link or path to torrent or video file to be pushed'),
+    'Task-Type': fields.String(attribute='tasktype', ReadOnly=True, description='Link or path to torrent or video file to be pushed'),
     'Created': fields.DateTime(attribute='created', ReadOnly=True, required=False, description='Timestamp job was created'),
     'Updated': fields.DateTime(attribute='updated', ReadOnly=True, required=False, description='Timestamp of last job update'),
     'Epg-Id': fields.Integer(attribute='epgid', required=False, description='epg_id to video metadata from otr epg'),
@@ -148,13 +149,21 @@ class PushTorrent(Resource):
         """ return message """
         message.password = '<encrypted>'
 
-        """ add history entry """
-        add_history_entry('torrent', request, message)
+        """ add history """
+        recording = db.get(Recording(PartitionKey = 'top', RowKey = str(data['epgid'])))
+        AddHistory(g.user, 
+                    message.id, 'torrent', recording.Id, 
+                    recording.beginn, recording.sender, recording.titel, recording.genre, recording.previewimagelink, data['resolution'], 
+                    message.sourcefile,
+                    request.remote_addr, request.user_agent.platform,
+                    request.user_agent.browser,
+                    request.user_agent.version,
+                    request.user_agent.language) 
 
         log.debug('mesage input: {!s}, {!s}, {!s}'.format(message.getmessage(), message.id, message.insertion_time))
         return message, 200 
 
-@api.route('/torrent/<id>')
+@api.route('/torrent/<id>', '/video/<id>')
 @api.param('id', 'The unique job identifier')
 class PushTorrentInstance(Resource):
 
@@ -174,16 +183,27 @@ class PushTorrentInstance(Resource):
         """ request job detail data """
 
         """ logging """
-        log.info('select all details for job: {!s}'.format(id))
+        log.info('select history for job: {!s}'.format(id))
 
-        """ retrieve board """
-        history = db.get(History(PartitionKey = 'torrent', RowKey = str(id)))
+        """ retrieve historylist """
+        historylist = StorageTableCollection('history', "PartitionKey eq '" + g.user.RowKey + "'")
+        historylist = db.query(historylist)
+        log.debug(historylist)
 
-        if not db.exists(history):
+        """ find history item for id """
+        history = None
+        for item in historylist:
+            if item['taskid'] == id:
+                history = item
+                break
+
+        log.debug('found history: {!s}'.format(history))
+        if history is None:
             api.abort(404, __class__._responses['get'][404])
-        
-        """ return recording """
-        return history, 200
+
+        else:
+            """ return recording """
+            return history, 200
 
 @api.route('/video')
 class PushVideo(Resource):
@@ -248,37 +268,42 @@ class PushVideo(Resource):
         message.password = '<encrypted>'
 
         """ add history entry """
-        add_history_entry('video', request, message)
+        recording = db.get(Recording(PartitionKey = 'top', RowKey = str(data['epgid'])))
+        AddHistory(g.user, 
+                    message.id,'torrent', recording.Id, 
+                    recording.beginn, recording.sender, recording.titel, recording.genre, recording.previewimagelink, data['resolution'], 
+                    message.sourcefile,
+                    request.remote_addr, request.user_agent.platform,
+                    request.user_agent.browser,
+                    request.user_agent.version,
+                    request.user_agent.language)  
 
         return message, 200 
 
-@api.route('/video/<id>')
-@api.param('id', 'The unique job identifier')
-class PushTorrentInstance(Resource):
-
-    # swagger responses   
-    _responses = {}
-    _responses['get'] = {200: ('Success', history_detail),
-                  401: 'Missing Authentification or wrong credentials',
-                  403: 'Insufficient rights or Bad request',
-                  404: 'No Job found'
-                  }
+def AddHistory(user:User, taskid, tasktype, epgid, beginn, sender, titel, genre, previewimagelink, resolution, sourcefile, ip, platform, browser, version, language):
     
-    """ retrieve toprecording """
-    @api.doc(description='show all job details to owner and administrator', security='basicauth', responses=_responses['get'])
-    @api.marshal_with(history_detail)
-    @auth.basicauth.login_required
-    def get(self, id):
-        """ request job detail data """
+    """ handle history entries """
+    history = History(PartitionKey = user.RowKey, RowKey = str(epgid))
 
-        """ logging """
-        log.info('select all details for job: {!s}'.format(id))
+    history.taskid = taskid
+    history.tasktype = tasktype
 
-        """ retrieve board """
-        history = db.get(History(PartitionKey = 'video', RowKey = str(id)))
+    history.epgid = int(epgid)
+    history.sourcefile = sourcefile
+    history.beginn = beginn
+    history.sender = sender
+    history.titel = titel
+    history.genre = genre    
+    history.previewimagelink = previewimagelink
+    history.resolution = resolution
 
-        if not db.exists(history):
-            api.abort(404, __class__._responses['get'][404])
-        
-        """ return recording """
-        return history, 200
+    history.ip = ip
+    history.platform = platform
+    history.browser = browser
+    history.version = version
+    history.language = language
+
+    history.status = 'new'
+    history.created = datetime.now()
+    history.updated = history.created
+    db.insert(history)
