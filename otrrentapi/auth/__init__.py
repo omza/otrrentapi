@@ -1,10 +1,20 @@
-from flask import g, abort
+from flask import g, session, abort
 from flask_httpauth import HTTPBasicAuth
+from itsdangerous import (
+    TimedJSONWebSignatureSerializer as Serializer, 
+    BadSignature, 
+    SignatureExpired)
 
+""" import log and config """
 from config import config, log
 
-""" HTTP Authentification  """
+""" import & Init storage """
+from azurestorage.tablemodels import User
+from azurestorage import db
 
+db.register_model(User())
+
+""" HTTP Authentification  """
 authorizations = {
     'basicauth': {
         'type': 'basic',
@@ -13,6 +23,28 @@ authorizations = {
     }
 }
 
+""" handle token """
+def generate_auth_token(user, expiration = 600):
+    s = Serializer(config['SECRET_KEY'], expires_in = expiration)
+    token = s.dumps({'PartitionKey': user.PartitionKey, 'RowKey': user.RowKey })
+    token = token.decode('ascii')
+    return token
+
+def verify_auth_token(token):
+    s = Serializer(config['SECRET_KEY'])
+    try:
+        data = s.loads(token)
+    except SignatureExpired:
+        return None # valid token, but expired
+    except BadSignature:
+        return None # invalid token
+
+    user = db.get(User(PartitionKey=data['PartitionKey'], RowKey= data['RowKey']))
+    
+    if db.exists(user):
+        return user
+    else:
+        return None
 
 basicauth = HTTPBasicAuth()
 
@@ -23,17 +55,30 @@ def auth_error():
     return
 
 @basicauth.verify_password
-def verify_password(client_id, password):
+def verify_password(clientid_or_token, fingerprint):
+    
+    # first try to authenticate by token
+    user = verify_auth_token(clientid_or_token)
+    
+    if not user:     
+        # try to authenticate with username/password
+        user = db.get(User(PartitionKey=clientid_or_token, RowKey= fingerprint))
+        if not db.exists(user):
+            return False
+    
+    """ retrieve user and set global """
+    g.user = user
+    session['authtoken'] = generate_auth_token(user)
 
-    client = next((client for client in config['APPLICATION_CLIENTS'] if client['ID'] == client_id), False)
-
-    if client:
-        """ verify by clientid """
-        g.clientrole = client['ROLE']
-        log.debug('client identified with role {}'.format(g.clientrole))
-        return True
+    """ verify by clientid """
+    if user.ProUser:
+        g.clientrole = 'PRO'
     else:
-        return False
+        g.clientrole = 'BASIC'
+    log.debug('client identified with role {}'.format(g.clientrole))
+
+    return True
+
 
 
 

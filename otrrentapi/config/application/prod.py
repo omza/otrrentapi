@@ -22,4 +22,6 @@ APPLICATION_MAINLOGGER = 'otrrentapi'
 AZURE_REQUIRE_ENCRYPTION = True
 AZURE_KEY_IDENTIFIER = 'otrrentapi'
 
+# Flask-WTF settings
+WTF_CSRF_ENABLED = True
 

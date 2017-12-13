@@ -9,7 +9,6 @@ from helpers.helper import safe_cast
 
 """ configuration """
 from config import config, log
-log.name = log.name +'.'+__name__
 
 """ import & Init storage """
 from azurestorage.wrapper import StorageTableModel, StorageTableCollection

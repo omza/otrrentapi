@@ -98,24 +98,6 @@ history_detail = api.model('push job status and details',{
     })
 
 
-""" handle history entries """
-def add_history_entry(job, pushrequest:request, message):
-    history = History(PartitionKey = job, RowKey = message.id)
-
-    history.ip = pushrequest.remote_addr
-    history.platform = pushrequest.user_agent.platform
-    history.browser = pushrequest.user_agent.browser
-    history.version = pushrequest.user_agent.version
-    history.language = pushrequest.user_agent.language
-    history.epgid = message.epgid
-    history.sourcefile = message.sourcefile
-    history.status = 'new'
-    history.created = datetime.now()
-    history.updated = history.created
-    db.insert(history)
-    pass
-
-
 """ Endpoints
     / : Toplist
     /<id:int> : BoardInstance

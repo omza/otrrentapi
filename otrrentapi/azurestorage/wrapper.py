@@ -23,6 +23,11 @@ class StorageTableModel(object):
     _dateformat = ''
     _datetimeformat = ''
     _exists = None
+    _encryptedproperties = []
+
+    PartitionKey = ''
+    RowKey = ''
+
 
     def __init__(self, **kwargs):                  
         """ constructor """
@@ -67,6 +72,10 @@ class StorageTableModel(object):
 
         """ initialize collectionobjects """
         self.__setCollections__()
+
+        """ define properties to be encrypted """
+        self.__setEncryptedProperties__()
+
         pass
 
          
@@ -87,6 +96,14 @@ class StorageTableModel(object):
             overwrite if inherit this class
         """
         pass
+
+    def __setEncryptedProperties__(self):
+        """ give back a list of property names to be encrypted client side
+            default: all properties are not encrypted
+            overwrite if inherit this class
+        """
+        pass
+
 
     def dict(self) -> dict:        
         """ parse self into dictionary """
@@ -193,6 +210,8 @@ class StorageTableContext():
     """
     
     _models = []
+    _encryptproperties = False
+    _encrypted_properties = []
     _tableservice = None
     _storage_key = ''
     _storage_name = ''
@@ -207,7 +226,27 @@ class StorageTableContext():
         if self._storage_key != '' and self._storage_name != '':
             self._tableservice = TableService(account_name = self._storage_name, account_key = self._storage_key, protocol='https')
 
-     
+        """ encrypt queue service """
+        if kwargs.get('AZURE_REQUIRE_ENCRYPTION', False):
+
+            # Create the KEK used for encryption.
+            # KeyWrapper is the provided sample implementation, but the user may use their own object as long as it implements the interface above.
+            kek = KeyWrapper(kwargs.get('AZURE_KEY_IDENTIFIER', 'otrrentapi'), kwargs.get('SECRET_KEY', 'super-duper-secret')) # Key identifier
+
+            # Create the key resolver used for decryption.
+            # KeyResolver is the provided sample implementation, but the user may use whatever implementation they choose so long as the function set on the service object behaves appropriately.
+            key_resolver = KeyResolver()
+            key_resolver.put_key(kek)
+
+            # Set the require Encryption, KEK and key resolver on the service object.
+            self._encryptproperties = True
+            self._tableservice.key_encryption_key = kek
+            self._tableservice.key_resolver_funcion = key_resolver.resolve_key
+            self._tableservice.encryption_resolver_function = self.__encryptionresolver__
+
+
+        pass
+
     def __createtable__(self, tablename) -> bool:
         if (not self._tableservice is None):
             try:
@@ -220,13 +259,27 @@ class StorageTableContext():
             return True
         pass
 
+    # Define the encryption resolver_function.
+    def __encryptionresolver__(self, pk, rk, property_name):
+        if property_name in self._encrypted_properties:
+            return True
+            log.debug('encrypt field {}'.format(property_name))
+        
+        log.debug('dont encrypt field {}'.format(property_name))
+        return False
+
     def register_model(self, storagemodel:object):
         modelname = storagemodel.__class__.__name__     
         if isinstance(storagemodel, StorageTableModel):
             if (not modelname in self._models):
                 self.__createtable__(storagemodel._tablename)
                 self._models.append(modelname)
-                log.info('model {} registered successfully. Models are {!s}'.format(modelname, self._models))      
+
+                """ set properties to be encrypted client side """
+                if self._encryptproperties:
+                    self._encrypted_properties += storagemodel._encryptedproperties
+
+                log.info('model {} registered successfully. Models are {!s}. Encrypted fields are {!s} '.format(modelname, self._models, self._encrypted_properties))      
         pass
 
     def table_isempty(self, tablename, PartitionKey='', RowKey = '') -> bool:

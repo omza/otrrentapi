@@ -18,7 +18,7 @@ from config import config, log
 """ register flask_restplus api and namespaces as blueprint ------------------
 """
 
-otrrentapi = Blueprint('api', __name__)
+otrrentapi = Blueprint('api', __name__, url_prefix='/api')
 
 api = Api(otrrentapi,
     title='otrrent api',

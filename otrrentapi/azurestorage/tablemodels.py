@@ -8,7 +8,7 @@ from azurestorage.wrapper import StorageTableModel, StorageTableCollection
 from helpers.helper import safe_cast
 
 """ configure logging """
-from config import log
+from config import log, config
 
 class Torrent(StorageTableModel):
     _tablename = 'torrents'
@@ -30,6 +30,7 @@ class Torrent(StorageTableModel):
     def __setRowKey__(self):
         self.RowKey = self.Resolution
         return super().__setRowKey__()
+
 
 class Recording(StorageTableModel):
     _tablename = 'recordings'
@@ -70,6 +71,7 @@ class Recording(StorageTableModel):
         self.Torrents = StorageTableCollection('torrents', "PartitionKey eq '{}'".format(self.RowKey))
         return super().__setCollections__()
 
+
 class Genre(StorageTableModel):   
     _tablename = 'genres'                       
     Genre_Id = 0
@@ -106,8 +108,17 @@ class Genres():
 
 class History(StorageTableModel):
     _tablename = 'history'
-    _datetimeformat = '%d.%m.%Y %H:%M:%S'    
+    _datetimeformat = '%d.%m.%Y %H:%M:%S'
+    
+    tasktype = ''
     epgid = 0
+    beginn = datetime.datetime.strptime('01.01.1900 00:00:00', _datetimeformat)
+    sender = ''
+    titel = ''
+    genre = ''    
+    previewimagelink = ''
+    resolution = ''
+    
     sourcefile = ''
     ip = ''
     platform = ''
@@ -115,5 +126,35 @@ class History(StorageTableModel):
     version = ''
     language = ''
     status = ''
+
     created = datetime.datetime.strptime('01.01.1900 00:00:00', _datetimeformat)
-    updated  = datetime.datetime.strptime('01.01.1900 00:00:00', _datetimeformat)    
+    updated  = datetime.datetime.strptime('01.01.1900 00:00:00', _datetimeformat)
+
+class User(StorageTableModel):
+    _tablename = 'userprofile'
+    _datetimeformat = '%d.%m.%Y %H:%M:%S'
+
+
+    AdsRemoved = False
+    ProUser = False
+    PushVideo = False
+    OtrUser = ''
+    OtrPassword = ''
+    UseCutlist = True
+    UseSubfolder = False
+    Protocol = 'ftp'
+    Server = ''
+    Port = 21
+    FtpUser = ''
+    FtpPassword = ''
+    ServerPath = '/'
+    created = datetime.datetime.strptime('01.01.1900 00:00:00', _datetimeformat)
+    updated = datetime.datetime.strptime('01.01.1900 00:00:00', _datetimeformat)
+
+    def __setEncryptedProperties__(self):
+        self._encryptedproperties = ['OtrUser', 'OtrPassword', 'Server', 'FtpUser', 'FtpPassword']
+        return super().__setEncryptedProperties__()
+    
+    
+    
+

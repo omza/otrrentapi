@@ -2,6 +2,7 @@
 import datetime
 import ftplib
 
+
 def safe_cast(val, to_type, default=None, dformat=''):
     try:
         result = default
@@ -27,7 +28,6 @@ def safe_cast(val, to_type, default=None, dformat=''):
     except (ValueError, TypeError):
         return default
 
-
 def test_ftpconnection(server, port, user, password, path):
     try:
                 
@@ -49,3 +49,18 @@ def test_ftpconnection(server, port, user, password, path):
     except ftplib.all_errors as e:
         return False, 'Error in ftp login ({!s}:{!s}) = {!s}'.format(server, port, e)
 
+class Message():
+
+    def __init__(self, show:bool=False, error:bool=False, header:str = '', text:str = '', code:int = 0):
+        self.show = show
+        self.error = error
+        self.header = header
+        self.text = text
+        self.code = code
+        pass
+
+      
+
+
+
+        

@@ -1,0 +1,120 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    {% block head %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>otrrent</title>
+    <!-- Path to Framework7 Library CSS-->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/framework7.ios.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/framework7.ios.colors.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/framework7-icons.css') }}">
+    <!-- Path to your custom app styles
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/my-app.css') }}">-->
+    {% endblock %}
+</head>
+
+<body>
+    <!-- Status bar overlay for fullscreen mode-->
+    <div class="statusbar-overlay"></div>
+
+    <!-- Panels overlay-->
+    <div class="panel-overlay"></div>
+
+    <!-- Left panel with reveal effect-->
+    <div class="panel panel-left panel-reveal">
+        <div class="list-block">
+            <ul>
+                <li>
+                    <a href="{{ url_for('ui.history') }}" class="item-link item-content close-panel" data-ignore-cache="true">
+                        <div class="item-media"><i class="f7-icons">cloud_download</i></div>
+                        <div class="item-inner item-title">Verlauf</div>
+                    </a>
+                </li>
+                <li class="item-divider"></li>
+                <li>
+                    <a id="settings" href="{{ url_for('ui.settings') }}" class="item-link item-content close-panel" data-ignore-cache="true">
+                        <div class="item-media"><i class="f7-icons">settings</i></div>
+                        <div class="item-inner item-title">Einstellungen</div>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="item-link item-content close-panel">
+                        <div class="item-media"><i class="f7-icons">star</i></div>
+                        <div class="item-inner item-title">Bewertung</div>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('ui.about') }}" class="item-link item-content close-panel">
+                        <div class="item-media"><i class="f7-icons">info</i></div>
+                        <div class="item-inner item-title">Blog</div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Views-->
+    <div class="views">
+
+        <!-- Your main view, should have "view-main" class-->
+        <div class="view view-main">
+
+            {% block navbar %}
+                <!-- Top Navbar-->
+                <div class="navbar">
+                    <div class="navbar-inner">
+
+                        <!-- We have home navbar without left link-->
+                        <div class="center sliding">{{ title }}</div>
+                        <div class="right">
+                            <!-- Right link contains only icon - additional "icon-only" class--><a href="#" class="link icon-only open-panel"> <i class="icon icon-bars"></i></a>
+                        </div>
+                    </div>
+                </div>
+            {% endblock %}
+
+            <!-- Pages, because we need fixed-through navbar and toolbar, it has additional appropriate classes-->
+            <div class="pages navbar-through">
+                <!-- Page, data-page contains page name-->
+                <div data-page="{{ pagetitle }}" class="page">
+
+                    <!-- Search Bar -->
+                    {% block searchbar %}
+                    {% endblock %}
+
+                    <!-- Scrollable page content-->
+                    <div class="page-content pull-to-refresh-content">
+
+                        <!-- Default pull to refresh layer-->
+                        <div class="pull-to-refresh-layer">
+                            <div class="preloader"></div>
+                            <div class="pull-to-refresh-arrow"></div>
+                        </div>
+
+                        {% block content %}
+                        {% endblock %}
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+    <!-- Path to Framework7 Library JS-->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/framework7.min.js') }}"></script>
+
+    <!-- Path to Fingerprint2 Library JS-->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/fingerprint2.min.js') }}"></script>
+
+    <!-- Path to your app js-->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/framework7.myiosapp.js') }}"></script>
+
+
+</body>
+</html>

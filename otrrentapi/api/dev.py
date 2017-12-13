@@ -1,11 +1,18 @@
-from flask_restplus import Namespace, Resource
+from flask_restplus import Namespace, Resource, fields
+from flask import request, g, session, send_from_directory
+
+from auth import generate_auth_token
+from azurestorage import db
+from azurestorage.tablemodels import User
+
+db.register_model(User())
 
 # Logger
-from config import log
+from config import log, config
 
-api = Namespace('dev', description='ottrent api endpoints for developers')
+api = Namespace('user', description='ottrent api endpoints for user authentification and dev subjects')
 
-@api. route('/postman')
+@api.route('/postman')
 @api.response(404, 'Could not transmit postman collection')
 @api.response(200, 'postman collection successfully created.')
 class PostmanCollection(Resource):
@@ -22,5 +29,67 @@ class PostmanCollection(Resource):
         data = diboardsapi.as_postman(urlvars=urlvars, swagger=swagger)
 
         return json.dumps(data), 200
+
+
+""" endpoints for user login """
+
+login = api.model('login with fingerprint and (not required) client',{ 
+    'ClientId': fields.String(attribute='PartitionKey', description='Link or path to torrent or video file to be pushed'),
+    'Fingerprint': fields.String(attribute='RowKey', required=True, description=''),
+    'LoggedIn': fields.Boolean(attribute='loggedin',required=False, description='user identified and logged in', default=False),
+    'SessionTimeout': fields.Integer(attribute='timeout', required=False, description='Session Timeout in seconds (default 22)', default=600),
+    })
+
+
+@api.route('/login')
+class LoginUser(Resource):
+
+    """ swagger responses """   
+    _responses = {}
+    _responses['post'] = {200: ('Success', login),
+                  400: 'Input payload validation failed',  
+                  403: 'Insufficient rights or Bad request (e.g. push credentials not valid)'
+                  }
+
+    """ push torrentfile """
+    @api.doc(description='login and/or create a new otrrent user and set the session cookie', responses=_responses['post'])
+    @api.expect(login)
+    @api.marshal_list_with(login)
+    def post(self):
+        """ parse request data and use model attribute info"""
+        data = request.json
+        log.debug(data)
+        
+        if 'ClientId' in data:
+            if data['ClientId'] == "":
+                data['ClientId'] = config['APPLICATION_CLIENT_ID']
+        else:
+            data['ClientId'] = config['APPLICATION_CLIENT_ID']  
+
+        for key, value in login.items():
+            if key in data:
+                data[value.attribute] = data.pop(key)
+                log.debug('{!s}: {!s}'.format(value.attribute, data[value.attribute]))
+
+
+            
+        """ retrieve user info """
+        loginuser = User(**data)
+
+        """ user exists ? Create a new and  """
+        if not db.exists(loginuser):
+            db.insert(loginuser)
+            
+        """ login user """
+        log.debug(loginuser.dict())
+        g.user = loginuser
+        token = generate_auth_token(loginuser) 
+        session['authtoken'] = token
+
+        """ prepare return dict """
+        data['loggedin']  = True
+        data['timeout'] = 600
+
+        return data, 200 
 
         
