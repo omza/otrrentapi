@@ -378,7 +378,7 @@ def PushVideo(epgid, resolution, sourcefile, sourcelink, user:User):
 def AddHistory(user:User, taskid, tasktype, epgid, beginn, sender, titel, genre, previewimagelink, resolution, sourcefile, ip, platform, browser, version, language):
     
     """ handle history entries """
-    history = History(PartitionKey = user.RowKey, RowKey = str(epgid))
+    history = History(PartitionKey = user.RowKey, RowKey = str(taskid))
 
     history.taskid = taskid
     history.tasktype = tasktype
@@ -404,13 +404,16 @@ def AddHistory(user:User, taskid, tasktype, epgid, beginn, sender, titel, genre,
     db.insert(history)
 
 def ExistsHistory(fingerprint, epgid ) -> bool:
+    
     """ get job history for users fingerprint and epg id """
-    job = db.get(History(PartitionKey = fingerprint, RowKey = str(epgid)))
+    historylist = StorageTableCollection('history', "PartitionKey eq '" + fingerprint + "'")
+    historylist = db.query(toplist)
+    
+    for history in historylist:
+        if history['epgid'] == epgid:
+            if history['status'] != 'deleted':
+                return True
+            else:
+                return False
 
-    if db.exists(job):
-        if job.status != 'deleted':
-            return True
-        else:
-            return False
-    else:
         return False

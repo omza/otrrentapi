@@ -113,7 +113,7 @@ class PushTorrent(Resource):
     _responses['post'] = {200: ('Success', push_detail),
                   400: 'Input payload validation failed',  
                   401: 'Missing Authentification or wrong credentials',
-                  403: 'Insufficient rights or Bad request (e.g. push credentials not valid)'
+                  403: 'Insufficient rights or Bad request (e.g. push credentials not valid or video/torrent already pushed)'
                   }
 
     """ push torrentfile """
@@ -185,20 +185,12 @@ class PushTorrentInstance(Resource):
         """ logging """
         log.info('select history for job: {!s}'.format(id))
 
-        """ retrieve historylist """
-        historylist = StorageTableCollection('history', "PartitionKey eq '" + g.user.RowKey + "'")
-        historylist = db.query(historylist)
-        log.debug(historylist)
 
         """ find history item for id """
-        history = None
-        for item in historylist:
-            if item['taskid'] == id:
-                history = item
-                break
+        history = db.get(History(PartitionKey=g.user.RowKey, RowKey=id))
 
         log.debug('found history: {!s}'.format(history))
-        if history is None:
+        if (history is None) or not db.exists(history):
             api.abort(404, __class__._responses['get'][404])
 
         else:
@@ -283,7 +275,7 @@ class PushVideo(Resource):
 def AddHistory(user:User, taskid, tasktype, epgid, beginn, sender, titel, genre, previewimagelink, resolution, sourcefile, ip, platform, browser, version, language):
     
     """ handle history entries """
-    history = History(PartitionKey = user.RowKey, RowKey = str(epgid))
+    history = History(PartitionKey = user.RowKey, RowKey = str(taskid))
 
     history.taskid = taskid
     history.tasktype = tasktype

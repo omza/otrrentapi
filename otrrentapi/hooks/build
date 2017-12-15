@@ -1,3 +1,3 @@
 #!/bin/bash
 echo "=> Building otrrentapi --build args"
-docker build --build-arg FLASK_DEPLOY_MODULE=otrrentapi --build-arg FLASK_DEPLOY_CALLABLE=app --build-arg FLASK_DEPLOY_PORT=8001 --build-arg FLASK_DEPLOY_DOMAIN=otrrentapi.app-workshop.de --build-arg FLASK_DEPLOY_STATIC=/usr/app/static -t $IMAGE_NAME .
+docker build --build-arg FLASK_DEPLOY_MODULE=otrrentapi --build-arg FLASK_DEPLOY_CALLABLE=app --build-arg FLASK_DEPLOY_PORT=8001 --build-arg FLASK_DEPLOY_DOMAIN=otrrent.app-workshop.de -t $IMAGE_NAME .

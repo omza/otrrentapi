@@ -23,6 +23,5 @@ WORKDIR /usr/app
 RUN apk update && \
     apk upgrade && \
     apk add -u build-base openssl-dev libffi-dev && \
-	pip install --no-cache-dir gunicorn && \
 	pip install --no-cache-dir -r requirements.txt && \
 	apk del build-base
