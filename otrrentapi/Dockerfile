@@ -18,10 +18,12 @@ COPY . /usr/app
 WORKDIR /usr/app
 
 
-# Install requirements
+# Install requirements & static files
 # ----------------------------------------------------------
 RUN apk update && \
     apk upgrade && \
     apk add -u build-base openssl-dev libffi-dev && \
 	pip install --no-cache-dir -r requirements.txt && \
-	apk del build-base
+	apk del build-base && \
+	cp -r /usr/app/static/* /usr/static && \
+	rm -r /usr/app/static
