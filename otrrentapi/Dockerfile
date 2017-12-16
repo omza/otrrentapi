@@ -25,5 +25,5 @@ RUN apk update && \
     apk add -u build-base openssl-dev libffi-dev && \
 	pip install --no-cache-dir -r requirements.txt && \
 	apk del build-base && \
-	cp -r /usr/app/static/* /usr/static && \
-	rm -r /usr/app/static
+	rm /etc/nginx/conf.d/nginx.server.conf && \
+	mv /usr/app/config/nginx.server.conf /etc/nginx/conf.d/nginx.server.conf
