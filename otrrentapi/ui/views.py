@@ -66,9 +66,12 @@ class Settings(FlaskForm):
 def set_platform_session():
     """ retrieve platform parameter and set to session cookie """
     if (not 'platform' in session):
-        platform = request.args.get('platform', default = 'browser', type = str)
-        session['platform'] = platform     
-        log.debug(platform)
+        if config['DEBUG']:
+            session['platform'] = config['APPLICATION_UI_DEFAULT']
+        else:
+            platform = request.user_agent.platform
+            session['platform'] = platform     
+            log.debug(platform)
 
     """ retrieve user from session cookie """
     if ('authtoken' in session):
@@ -407,7 +410,7 @@ def ExistsHistory(fingerprint, epgid ) -> bool:
     
     """ get job history for users fingerprint and epg id """
     historylist = StorageTableCollection('history', "PartitionKey eq '" + fingerprint + "'")
-    historylist = db.query(toplist)
+    historylist = db.query(historylist)
     
     for history in historylist:
         if history['epgid'] == epgid:

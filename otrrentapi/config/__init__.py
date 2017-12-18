@@ -12,6 +12,7 @@ config = {}
 
 """ import configuration depending on environment """
 config['APPLICATION_ENVIRONMENT'] = safe_cast(os.environ.get('APPLICATION_ENVIRONMENT'),str, 'Production')
+config['APPLICATION_UI_DEFAULT'] = safe_cast(os.environ.get('APPLICATION_UI_DEFAULT'),str, 'ios')
 
 if config['APPLICATION_ENVIRONMENT'] == 'Development':
     from config.application import dev as configs

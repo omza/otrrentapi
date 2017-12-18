@@ -4,6 +4,7 @@ MAINTAINER oliver@app-workshop.de
 # ARGs & ENVs
 # -------------------------------------------------------
 ENV APPLICATION_ENVIRONMENT Production
+ENV APPLICATION_UI_DEFAULT ios
 
 # dirs & volumes
 # --------------------------------------------------------
