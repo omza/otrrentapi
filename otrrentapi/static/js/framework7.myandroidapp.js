@@ -100,6 +100,11 @@ var mainView = myApp.addView('.view-main', {
 myApp.onPageInit('details', function (page) {
     // run createContentPage func after link was clicked
 
+    //callback on submit show Indicator 
+    $$('.ajax-submit').on('submit', function (e) {
+        myApp.showIndicator();
+    });
+
     //callback on submit push element to send settings in POST request 
     $$('.ajax-submit').on('submitted', function (e) {
         var xhr = e.detail.xhr; // actual XHR object
@@ -107,7 +112,7 @@ myApp.onPageInit('details', function (page) {
 
         //Load new content as new page
         mainView.router.reloadContent(responsePage);
-
+        myApp.hideIndicator();
     });
 
 });
