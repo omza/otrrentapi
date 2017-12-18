@@ -111,13 +111,26 @@ class StorageTableModel(object):
         image = {}
 
         for key, value in vars(self).items():
-            if not key.startswith('_') and key !='':                  
-                    
-                if isinstance(value, StorageTableCollection):
-                    image[key] = getattr(self, key).list()
-
+            if not key.startswith('_') and key !='':
+                if key in ['PartitionKey', 'RowKey']:
+                    image[key] = str(value)
                 else:
-                    image[key] = value                    
+                    image[key] = value
+        
+        return image
+
+    def entity(self) -> dict:        
+        """ parse self into dictionary """
+     
+        image = {}
+
+        for key, value in vars(self).items():
+            if not key.startswith('_') and key !='':
+                if type(value) in [str, int, bool, datetime.date, datetime.datetime]:
+                    if key in ['PartitionKey', 'RowKey']:
+                        image[key] = str(value)
+                    else:
+                        image[key] = value                   
         
         return image
 
@@ -263,9 +276,9 @@ class StorageTableContext():
     def __encryptionresolver__(self, pk, rk, property_name):
         if property_name in self._encrypted_properties:
             return True
-            log.debug('encrypt field {}'.format(property_name))
+            #log.debug('encrypt field {}'.format(property_name))
         
-        log.debug('dont encrypt field {}'.format(property_name))
+        #log.debug('dont encrypt field {}'.format(property_name))
         return False
 
     def register_model(self, storagemodel:object):
@@ -283,7 +296,7 @@ class StorageTableContext():
         pass
 
     def table_isempty(self, tablename, PartitionKey='', RowKey = '') -> bool:
-        if  (not self.tableservice is None):
+        if  (not self._tableservice is None):
 
             filter = "PartitionKey eq '{}'".format(PartitionKey) if PartitionKey != '' else ''
             if filter == '':
@@ -360,7 +373,7 @@ class StorageTableContext():
             modelname = storagemodel.__class__.__name__
             if (modelname in self._models):
                 try:            
-                    self._tableservice.insert_or_replace_entity(storagemodel._tablename, storagemodel.dict())
+                    self._tableservice.insert_or_replace_entity(storagemodel._tablename, storagemodel.entity())
                     storagemodel._exists = True
 
                 except AzureMissingResourceHttpError as e:
@@ -378,7 +391,7 @@ class StorageTableContext():
             modelname = storagemodel.__class__.__name__
             if (modelname in self._models):
                 try:            
-                    self._tableservice.insert_or_merge_entity(storagemodel._tablename, storagemodel.dict())
+                    self._tableservice.insert_or_merge_entity(storagemodel._tablename, storagemodel.entity())
                     storagemodel._exists = True
 
                 except AzureMissingResourceHttpError as e:

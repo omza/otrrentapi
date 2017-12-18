@@ -229,29 +229,40 @@ def settings():
         form = Settings()
 
         """ init values in get method """
-        if form.validate_on_submit(): 
+        if form.validate_on_submit() or form.is_submitted(): 
 
             """ save form data to userprofile """
-            g.user.PushVideo = form.PushVideo.data
-            g.user.OtrUser = form.OtrUser.data
-            g.user.UseCutlist = form.UseCutlist.data
-            g.user.Protocol = form.Protocol.data
-            g.user.Server = form.Server.data
-            g.user.Port = form.Port.data
-            g.user.FtpUser = form.FtpUser.data
-            g.user.ServerPath = form.ServerPath.data
+            if (g.user.PushVideo != form.PushVideo.data):
+                g.user.PushVideo = form.PushVideo.data
+            
+            if (g.user.OtrUser != form.OtrUser.data):
+                g.user.OtrUser = form.OtrUser.data
+            
+            if (g.user.UseCutlist != form.UseCutlist.data):
+                g.user.UseCutlist = form.UseCutlist.data
+            
+            if (g.user.Protocol != form.Protocol.data):
+                g.user.Protocol = form.Protocol.data
+            
+            if (g.user.Server != form.Server.data):
+                g.user.Server = form.Server.data
+            
+            if (g.user.Port != form.Port.data):
+                g.user.Port = form.Port.data
+            
+            if (g.user.FtpUser != form.FtpUser.data):
+                g.user.FtpUser = form.FtpUser.data
 
-            if (form.OtrPassword.data != ''):
+            if (g.user.ServerPath != form.ServerPath.data):
+                g.user.ServerPath = form.ServerPath.data
+
+            if (form.OtrPassword.data != '') and (g.user.OtrPassword != form.OtrPassword.data):
                 g.user.OtrPassword = form.OtrPassword.data
 
-            if (form.FtpPassword.data != ''):
+            if (form.FtpPassword.data != '') and (g.user.FtpPassword != form.FtpPassword.data):
                 g.user.FtpPassword = form.FtpPassword.data
 
             db.insert(g.user)        
-        
-
-        elif form.is_submitted():
-            pass
 
         else:
             form.PushVideo.data = g.user.PushVideo
@@ -292,7 +303,6 @@ def history():
         """ render platform template """
         pathtemplate = session['platform'] + '/' + 'history.html'
         return render_template(pathtemplate, title = 'Verlauf', pagetitle='history', items=historylist)
-
 
 def PushTorrent(epgid, resolution, sourcefile, sourcelink, user:User):
     """ create a push queue message for torrent push """   
