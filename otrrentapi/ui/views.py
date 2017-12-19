@@ -64,15 +64,6 @@ class Settings(FlaskForm):
 """ set session platform variable """
 @otrrentui.before_request
 def set_platform_session():
-    """ retrieve platform parameter and set to session cookie """
-    if (not 'platform' in session):
-        if config['DEBUG']:
-            session['platform'] = config['APPLICATION_UI_DEFAULT']
-            log.debug('default platform: {!s}'.format(platform))
-        else:
-            platform = request.user_agent.platform
-            session['platform'] = platform     
-            log.debug('request user agent platform: {!s}'.format(platform))
 
     """ retrieve user from session cookie """
     if ('authtoken' in session):
@@ -84,6 +75,19 @@ def set_platform_session():
             g.user = user
     else:
         g.user = None
+
+    """ retrieve platform parameter and set to session cookie """
+    if (not 'platform' in session):
+
+        platform = request.user_agent.platform
+        log.info('request user agent platform: {!s}'.format(platform))
+        
+        if platform in ['android','ios','windows']:
+            session['platform'] = platform 
+        else:
+            session['platform'] = config['APPLICATION_UI_DEFAULT']
+            log.info('default platform: {!s}'.format(session['platform']))
+    
 
 
 """ view to top recordings """        
