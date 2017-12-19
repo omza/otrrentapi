@@ -68,10 +68,11 @@ def set_platform_session():
     if (not 'platform' in session):
         if config['DEBUG']:
             session['platform'] = config['APPLICATION_UI_DEFAULT']
+            log.debug('default platform: {!s}'.format(platform))
         else:
             platform = request.user_agent.platform
             session['platform'] = platform     
-            log.debug(platform)
+            log.debug('request user agent platform: {!s}'.format(platform))
 
     """ retrieve user from session cookie """
     if ('authtoken' in session):
@@ -80,7 +81,6 @@ def set_platform_session():
             session.pop('authtoken')
             g.user = None
         else:
-            log.debug(user)
             g.user = user
     else:
         g.user = None
@@ -280,7 +280,6 @@ def settings():
         pathtemplate = session['platform'] + '/' + 'settings.html'
         return render_template(pathtemplate, title = 'Einstellungen', pagetitle='settings', form=form, User=g.user)
 
-
 @otrrentui.route('/history')
 def history():
     """ retrieve top recordings with filters """
@@ -298,7 +297,8 @@ def history():
             item['startdate'] = item.beginn.strftime('%d.%m.%Y')
             item['starttime'] = item.beginn.strftime('%H:%M')
             item['createdate'] = item.created.strftime('%d.%m.%Y')
-            item['createtime'] = item.created.strftime('%H:%M')
+            item['updatedate'] = item.updated.strftime('%d.%m.%Y %H:%M')
+
 
         """ render platform template """
         pathtemplate = session['platform'] + '/' + 'history.html'

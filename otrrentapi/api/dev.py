@@ -69,7 +69,7 @@ class LoginUser(Resource):
         for key, value in login.items():
             if key in data:
                 data[value.attribute] = data.pop(key)
-                log.debug('{!s}: {!s}'.format(value.attribute, data[value.attribute]))
+                #log.debug('{!s}: {!s}'.format(value.attribute, data[value.attribute]))
 
       
         """ retrieve user info """
@@ -80,7 +80,7 @@ class LoginUser(Resource):
             db.insert(loginuser)
             
         """ login user """
-        log.debug(loginuser.dict())
+        #log.debug(loginuser.dict())
         g.user = loginuser
         token = generate_auth_token(loginuser) 
         session['authtoken'] = token

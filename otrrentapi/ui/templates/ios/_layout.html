@@ -52,17 +52,17 @@
         <div class="view view-main">
 
             {% block navbar %}
-                <!-- Top Navbar-->
-                <div class="navbar">
-                    <div class="navbar-inner">
+            <!-- Top Navbar-->
+            <div class="navbar">
+                <div class="navbar-inner">
 
-                        <!-- We have home navbar without left link-->
-                        <div class="center sliding">{{ title }}</div>
-                        <div class="right">
-                            <!-- Right link contains only icon - additional "icon-only" class--><a href="#" class="link icon-only open-panel"> <i class="icon icon-bars"></i></a>
-                        </div>
+                    <!-- We have home navbar without left link-->
+                    <div class="center sliding">{{ title }}</div>
+                    <div class="right">
+                        <!-- Right link contains only icon - additional "icon-only" class--><a href="#" class="link icon-only open-panel"> <i class="icon icon-bars"></i></a>
                     </div>
                 </div>
+            </div>
             {% endblock %}
 
             <!-- Pages, because we need fixed-through navbar and toolbar, it has additional appropriate classes-->
@@ -75,13 +75,7 @@
                     {% endblock %}
 
                     <!-- Scrollable page content-->
-                    <div class="page-content pull-to-refresh-content">
-
-                        <!-- Default pull to refresh layer-->
-                        <div class="pull-to-refresh-layer">
-                            <div class="preloader"></div>
-                            <div class="pull-to-refresh-arrow"></div>
-                        </div>
+                    <div class="page-content">
 
                         {% block content %}
                         {% endblock %}
@@ -102,6 +96,7 @@
 
     <!-- Path to your app js-->
     <script type="text/javascript" src="{{ url_for('static', filename='js/framework7.myiosapp.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/otrrent.js') }}"></script>
 
 
 </body>
