@@ -1,5 +1,5 @@
 # Flask settings
-SERVER_NAME = 'otrrentapi.app-workshop.de'
+SERVER_NAME = 'otrrent.app-workshop.de'
 DEBUG = False  # Do not use debug mode in production
 PORT = None
 HOST = None
@@ -14,8 +14,8 @@ BUNDLE_ERRORS = True
 # ottrent settings
 APPLICATION_PATH_LOG = '/usr/log/'
 APPLICATION_LOGLEVEL_CONSOLE = 20 # debug 
-APPLICATION_LOGLEVEL_FILE = 20 # debug
-APPLICATION_LOG_LEVEL = 20 # Debug
+APPLICATION_LOGLEVEL_FILE = 10 # debug
+APPLICATION_LOG_LEVEL = 10 # Debug
 APPLICATION_MAINLOGGER = 'otrrentapi'
 
 # azure storage settings
