@@ -1,49 +1,41 @@
-﻿{% extends "ios/_layout.html" %}
+{% extends "ios/_layout.html" %}
 
 {% block searchbar %}
-    <!-- Search Bar -->
-    <form data-search-list=".list-block-search" data-search-in=".item-title" class="searchbar searchbar-init">
-        <div class="searchbar-input">
-            <input type="search" placeholder="Suche"><a href="#" class="searchbar-clear"></a>
-        </div>
-    </form>
+<!-- Search Bar -->
+<form data-search-list=".list-block-search" data-search-in=".item-title" class="searchbar searchbar-init">
+    <div class="searchbar-input">
+        <input type="search" placeholder="Suche"><a href="#" class="searchbar-clear"></a>
+    </div>
+</form>
 {% endblock %}
 
 {% block content %}
+<div class="list-block media-list list-block-search searchbar-found">
+    <ul>
 
-    <!-- This block will be displayed if nothing found -->
-    <div class="content-block searchbar-not-found">
-        <div class="content-block-inner">Nichts gefunden</div>
-    </div>
+        {% for item in items %}
 
-    <!-- Content Block Listview -->
-    <div class="list-block media-list list-block-search searchbar-found">
-        <ul>
+        <!-- Divider -->
+        {% if loop.changed(item.startdate) %}
+        <li class="item-divider">{{ item.startdate }}</li>
+        {% endif %}
 
-            {% for item in items %}
-                        
-                <!-- Divider -->
-                {% if loop.changed(item.startdate) %}      
-                    <li class="item-divider">{{ item.startdate }}</li>
-                {% endif %}
-                        
-                <!-- Listitems -->
-                <li>
-                    <a href="{{ url_for('ui.details', epgid=item.Id) }}" class="item-link item-content">
-                        <div class="item-media"><img data-src="{{ item.previewimagelink }}" class="lazy" width="80"></div>
-                        <div class="item-inner">
-                            <div class="item-title-row">
-                                <div class="item-title">{{ item.titel }}</div>
-                            </div>
-                            <div class="item-subtitle">{{ item.genre }}</div>
-                            <div class="item-text">{{ item.sender }} {{ item.startdate }} {{ item.starttime }}</div>
-                        </div>
-                    </a>
-                </li>
+        <!-- Listitems -->
+        <li>
+            <a href="{{ url_for('ui.details', epgid=item.Id) }}" class="item-link item-content">
+                <div class="item-media"><img data-src="{{ item.previewimagelink }}" class="lazy" width="80"></div>
+                <div class="item-inner">
+                    <div class="item-title-row">
+                        <div class="item-title">{{ item.titel }}</div>
+                    </div>
+                    <div class="item-subtitle">{{ item.genre }}</div>
+                    <div class="item-text">{{ item.sender }} {{ item.startdate }} {{ item.starttime }}</div>
+                </div>
+            </a>
+        </li>
 
-            {% endfor %}
+        {% endfor %}
 
-        </ul>
-    </div>
-
+    </ul>
+</div>
 {% endblock %}

@@ -5,6 +5,13 @@ var myApp = new Framework7({
     // If it is webapp, we can enable hash navigation:
     pushState: true,
 
+    // disable status overlay
+    statusbarOverlay: false, 
+
+    //swipe panel
+    swipePanel: true,
+    swipePanelCloseOpposite: true,
+
     // Hide and show indicator during ajax requests
     onAjaxStart: function (xhr) {
         myApp.showIndicator();

@@ -1,32 +1,27 @@
 ﻿<!DOCTYPE html>
 <html>
-
 <head>
-    {% block head %}
+    <!-- Required meta tags-->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <!-- Your app title -->
     <title>otrrent</title>
-    <!-- Path to Framework7 Library CSS-->
+    <!-- Path to Framework7 iOS CSS theme styles-->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/framework7.ios.min.css') }}">
+    <!-- Path to Framework7 iOS related color styles -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/framework7.ios.colors.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/framework7-icons.css') }}">
-    <!-- Path to your custom app styles
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/my-app.css') }}">-->
-    {% endblock %}
 </head>
-
 <body>
-    <!-- Status bar overlay for fullscreen mode-->
+    <!-- Status bar overlay for full screen mode (PhoneGap) -->
     <div class="statusbar-overlay"></div>
-
     <!-- Panels overlay-->
     <div class="panel-overlay"></div>
-
     <!-- Left panel with reveal effect-->
     <div class="panel panel-left panel-reveal">
-        <div class="list-block">
+        <div class="content-block list-block">
             <ul>
                 <li>
                     <a href="{{ url_for('ui.history') }}" class="item-link item-content close-panel" data-ignore-cache="true">
@@ -34,7 +29,6 @@
                         <div class="item-inner item-title">Verlauf</div>
                     </a>
                 </li>
-                <li class="item-divider"></li>
                 <li>
                     <a id="settings" href="{{ url_for('ui.settings') }}" class="item-link item-content close-panel" data-ignore-cache="true">
                         <div class="item-media"><i class="f7-icons">settings</i></div>
@@ -44,18 +38,14 @@
             </ul>
         </div>
     </div>
-
-    <!-- Views-->
+    <!-- Views -->
     <div class="views">
-
-        <!-- Your main view, should have "view-main" class-->
+        <!-- Your main view, should have "view-main" class -->
         <div class="view view-main">
-
-            {% block navbar %}
             <!-- Top Navbar-->
+            {% block navbar%}
             <div class="navbar">
                 <div class="navbar-inner">
-
                     <!-- We have home navbar without left link-->
                     <div class="center sliding">{{ title }}</div>
                     <div class="right">
@@ -64,30 +54,23 @@
                 </div>
             </div>
             {% endblock %}
-
-            <!-- Pages, because we need fixed-through navbar and toolbar, it has additional appropriate classes-->
+            <!-- Pages container, because we use fixed-through navbar and toolbar, it has additional appropriate classes-->
             <div class="pages navbar-through">
-                <!-- Page, data-page contains page name-->
+                <!-- Page, "data-page" contains page name -->
                 <div data-page="{{ pagetitle }}" class="page">
 
-                    <!-- Search Bar -->
                     {% block searchbar %}
                     {% endblock %}
 
-                    <!-- Scrollable page content-->
+                    <!-- Scrollable page content -->
                     <div class="page-content">
-
                         {% block content %}
                         {% endblock %}
-
                     </div>
                 </div>
             </div>
-
-
         </div>
     </div>
-
     <!-- Path to Framework7 Library JS-->
     <script type="text/javascript" src="{{ url_for('static', filename='js/framework7.min.js') }}"></script>
 
@@ -97,7 +80,5 @@
     <!-- Path to your app js-->
     <script type="text/javascript" src="{{ url_for('static', filename='js/framework7.myiosapp.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/otrrent.js') }}"></script>
-
-
 </body>
-</html>
+</html>  

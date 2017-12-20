@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*
+
 """ flask imports """
 from flask import (
     render_template, 
@@ -82,7 +84,7 @@ def set_platform_session():
         platform = request.user_agent.platform
         log.info('request user agent platform: {!s}'.format(platform))
         
-        if platform in ['android','ios','windows']:
+        if platform in ['android','ios']:        #,'windows'
             session['platform'] = platform 
         else:
             session['platform'] = config['APPLICATION_UI_DEFAULT']
