@@ -1,5 +1,6 @@
 from flask_restplus import Namespace, Resource, fields
 from flask import request, g, session, send_from_directory
+from datetime import datetime
 
 from auth import generate_auth_token
 from azurestorage import db
@@ -77,6 +78,7 @@ class LoginUser(Resource):
 
         """ user exists ? Create a new and  """
         if not db.exists(loginuser):
+            loginuser.created = datetime.now()
             db.insert(loginuser)
             
         """ login user """

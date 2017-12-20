@@ -104,6 +104,7 @@ def index():
     for item in toplist:
         item['startdate'] = item.beginn.strftime('%d.%m.%Y')
         item['starttime'] = item.beginn.strftime('%H:%M')
+        item['previewimagelink'] = item['previewimagelink'].replace('http://','https://',1)
 
     """ render platform template """
     pathtemplate = session['platform'] + '/' + 'index.html'
@@ -131,6 +132,7 @@ def details(epgid):
     recording.Torrents = db.query(recording.Torrents)
     recording.startdate = recording.beginn.strftime('%d.%m.%Y')
     recording.starttime = recording.beginn.strftime('%H:%M')
+    recording.previewimagelink.replace('http://','https://',1)
 
     if request.method == 'POST':
 
@@ -268,6 +270,7 @@ def settings():
             if (form.FtpPassword.data != '') and (g.user.FtpPassword != form.FtpPassword.data):
                 g.user.FtpPassword = form.FtpPassword.data
 
+            g.user.updated = datetime.now()
             db.insert(g.user)        
 
         else:
