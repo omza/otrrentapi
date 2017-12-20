@@ -1,0 +1,54 @@
+{% extends "android/_layout.html" %}
+
+{% block navbar%}
+<div class="navbar">
+    <div class="navbar-inner">
+        <div class="left"><a href="#" class="back link"> <i class="icon icon-back"></i></a></div>
+        <div class="center sliding">{{ title }}</div>
+        <div class="right">
+            <!-- Right link contains only icon - additional "icon-only" class--><a href="#" class="link icon-only open-panel"> <i class="icon icon-bars"></i></a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="content-block-title">App Konfiguration</div>
+<div class="list-block">
+    <ul>
+        <li class="item-content">
+            <div class="item-inner">
+                <div class="item-title">UI</div>
+                <div class="item-after">{{ session['platform'] }}</div>
+            </div>
+        </li>
+        <li class="item-content">
+            <div class="item-inner">
+                <div class="item-title">Plattform</div>
+                <div class="item-after">{{ request.user_agent.platform }}</div>
+            </div>
+        </li>
+        <li class="item-content">
+            <div class="item-inner">
+                <div class="item-title">Browser</div>
+                <div class="item-after">{{ request.user_agent.browser }}</div>
+            </div>
+        </li>
+        <li class="item-content">
+            <div class="item-inner">
+                <div class="item-title">IP Adresse</div>
+                <div class="item-after">{{ request.remote_addr }}</div>
+            </div>
+        </li>
+        <li class="item-content">
+            <div class="item-inner">
+                <div class="item-title">Fingerprint</div>
+                <div class="item-after">{{ g.user.RowKey }}</div>
+            </div>
+        </li>
+    </ul>
+    <!--<div class="list-block-label">List block label text goes here</div>-->
+</div>
+{% endblock %}
+
+

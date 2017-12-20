@@ -194,7 +194,7 @@ def details(epgid):
                 """ success """
                 message.show = True
                 message.header = 'Erfolg'
-                message.text = '{!s} wird heruntergelden, decodiert und danach an Ihren Endpoint gepushed. Die Aufgabe {!s} wurde dazu erfolgreich angelegt'.format(job.sourcefile, job.id)
+                message.text = '{!s} wird heruntergeladen und an Ihren Endpoint gepushed. Die Aufgabe {!s} wurde dazu erfolgreich angelegt'.format(job.sourcefile, job.id)
 
                 """ add history """
                 AddHistory(g.user, 
@@ -309,6 +309,16 @@ def history():
         """ render platform template """
         pathtemplate = session['platform'] + '/' + 'history.html'
         return render_template(pathtemplate, title = 'Verlauf', pagetitle='history', items=historylist)
+
+@otrrentui.route('/about')
+def about():
+    """ retrieve top recordings with filters """
+
+
+
+    """ render platform template """
+    pathtemplate = session['platform'] + '/' + 'about.html'
+    return render_template(pathtemplate, title = 'Über', pagetitle='about')
 
 def PushTorrent(epgid, resolution, sourcefile, sourcelink, user:User):
     """ create a push queue message for torrent push """   

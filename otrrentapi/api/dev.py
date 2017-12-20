@@ -85,6 +85,9 @@ class LoginUser(Resource):
         token = generate_auth_token(loginuser) 
         session['authtoken'] = token
 
+        """ pop session platform """
+        session.pop('platform')
+
         """ prepare return dict """
         data['loggedin']  = True
         data['timeout'] = 600

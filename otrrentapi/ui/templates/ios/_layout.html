@@ -17,27 +17,56 @@
 <body>
     <!-- Status bar overlay for full screen mode (PhoneGap) -->
     <div class="statusbar-overlay"></div>
+
     <!-- Panels overlay-->
     <div class="panel-overlay"></div>
     <!-- Left panel with reveal effect-->
     <div class="panel panel-left panel-reveal">
-        <div class="content-block list-block">
-            <ul>
-                <li>
-                    <a href="{{ url_for('ui.history') }}" class="item-link item-content close-panel" data-ignore-cache="true">
-                        <div class="item-media"><i class="f7-icons">cloud_download</i></div>
-                        <div class="item-inner item-title">Verlauf</div>
-                    </a>
-                </li>
-                <li>
-                    <a id="settings" href="{{ url_for('ui.settings') }}" class="item-link item-content close-panel" data-ignore-cache="true">
-                        <div class="item-media"><i class="f7-icons">settings</i></div>
-                        <div class="item-inner item-title">Einstellungen</div>
-                    </a>
-                </li>
-            </ul>
+        <div class="view navbar-fixed">
+            <div class="pages">
+                <div data-page="panel-left" class="page">
+                    <div class="navbar">
+                        <div class="navbar-inner">
+                            <div class="center">otrrent</div>
+                        </div>
+                    </div>
+                    <div class="page-content">
+
+                        <div class="content-block-title">Menü</div>
+                        <div class="list-block">
+                            <ul>
+                                <li>
+                                    <a href="{{ url_for('ui.history') }}" class="item-link item-content close-panel" data-ignore-cache="true">
+                                        <div class="item-media"><i class="f7-icons">cloud_download</i></div>
+                                        <div class="item-inner item-title">Verlauf</div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a id="settings" href="{{ url_for('ui.settings') }}" class="item-link item-content close-panel" data-ignore-cache="true">
+                                        <div class="item-media"><i class="f7-icons">settings</i></div>
+                                        <div class="item-inner item-title">Einstellungen</div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a id="settings" href="{{ url_for('ui.about') }}" class="item-link item-content close-panel" data-ignore-cache="true">
+                                        <div class="item-media"><i class="f7-icons">info</i></div>
+                                        <div class="item-inner item-title">Über</div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="content-block">
+                            <p>Mit otrrent können Nutzer von onlineTVrecorder.com (OTR) per torrent verfügbare beliebteste Aufnahmen von OTR auswählen und die entsprechende torrent Datei an einen heimischen ftp-Server weiterleiten. Am heimischen Rechner kann dann mit einem bittorrent Client die entsprechende Sendung (otrkey) runtergeladen werden.</p>
+                            <p>Mit der Pro Version von otrrent können die Aufnahmen in der Cloud decodiert und geschnitten werden. Dafür benötigt otrrent die OTR Zugangsdaten.</p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+
     <!-- Views -->
     <div class="views">
         <!-- Your main view, should have "view-main" class -->
