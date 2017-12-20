@@ -1,6 +1,6 @@
 # Flask settings
 SERVER_NAME = None
-DEBUG = False  # Do not use debug mode in production
+DEBUG = True  # Do not use debug mode in production
 PORT = None
 HOST = None
 
@@ -13,7 +13,7 @@ BUNDLE_ERRORS = True
 
 # ottrent settings
 APPLICATION_PATH_LOG = '/usr/log/'
-APPLICATION_LOGLEVEL_CONSOLE = 20 # debug 
+APPLICATION_LOGLEVEL_CONSOLE = 10 # debug 
 APPLICATION_LOGLEVEL_FILE = 10 # debug
 APPLICATION_LOG_LEVEL = 10 # Debug
 APPLICATION_MAINLOGGER = 'otrrentapi'
