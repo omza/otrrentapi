@@ -58,8 +58,8 @@ class Settings(FlaskForm):
     Protocol = SelectField('Protokoll', validators=[validators.DataRequired()], choices=[('ftp', 'ftp'),('sftp', 'sftp')])
     Server = StringField('ftp Server', [validators.DataRequired()])
     Port = IntegerField('Port', [validators.DataRequired()])
-    FtpUser = StringField('User', [validators.DataRequired(), validators.Length(min=5, max=35)])
-    FtpPassword = PasswordField('Password')
+    FtpUser = StringField('ftp User', [validators.DataRequired(), validators.Length(min=5, max=35)])
+    FtpPassword = StringField('ftp Password', widget=PasswordInput(hide_value=False))
     ServerPath = StringField('Pfad', [validators.DataRequired(), validators.Length(min=1, max=35)])
 
 
@@ -132,7 +132,7 @@ def details(epgid):
     recording.Torrents = db.query(recording.Torrents)
     recording.startdate = recording.beginn.strftime('%d.%m.%Y')
     recording.starttime = recording.beginn.strftime('%H:%M')
-    recording.previewimagelink.replace('http://','https://',1)
+    recording.previewimagelink = recording.previewimagelink.replace('http://','https://',1)
 
     if request.method == 'POST':
 
@@ -264,10 +264,10 @@ def settings():
             if (g.user.ServerPath != form.ServerPath.data):
                 g.user.ServerPath = form.ServerPath.data
 
-            if (form.OtrPassword.data != '') and (g.user.OtrPassword != form.OtrPassword.data):
+            if (form.OtrPassword.data not in ['*****']) and (g.user.OtrPassword != form.OtrPassword.data):
                 g.user.OtrPassword = form.OtrPassword.data
 
-            if (form.FtpPassword.data != '') and (g.user.FtpPassword != form.FtpPassword.data):
+            if (form.FtpPassword.data not in ['*****']) and (g.user.FtpPassword != form.FtpPassword.data):
                 g.user.FtpPassword = form.FtpPassword.data
 
             g.user.updated = datetime.now()
@@ -276,13 +276,23 @@ def settings():
         else:
             form.PushVideo.data = g.user.PushVideo
             form.OtrUser.data = g.user.OtrUser
-            form.OtrPassword.data = g.user.OtrPassword
+
+            if g.user.OtrPassword != '':
+                form.OtrPassword.data = '*****'
+            else:
+                form.OtrPassword.data = ''
+
             form.UseCutlist.data = g.user.UseCutlist
             form.Protocol.data = g.user.Protocol
             form.Server.data = g.user.Server
             form.Port.data = g.user.Port
             form.FtpUser.data = g.user.FtpUser
-            form.FtpPassword.data = g.user.FtpPassword
+            
+            if g.user.FtpPassword != '':
+                form.FtpPassword.data = '*****'
+            else:
+                form.FtpPassword.data = ''
+
             form.ServerPath.data = g.user.ServerPath
 
         """ return """
@@ -307,6 +317,7 @@ def history():
             item['starttime'] = item.beginn.strftime('%H:%M')
             item['createdate'] = item.created.strftime('%d.%m.%Y')
             item['updatedate'] = item.updated.strftime('%d.%m.%Y %H:%M')
+            item['previewimagelink'] = item['previewimagelink'].replace('http://','https://',1)
 
 
         """ render platform template """
@@ -316,8 +327,6 @@ def history():
 @otrrentui.route('/about')
 def about():
     """ retrieve top recordings with filters """
-
-
 
     """ render platform template """
     pathtemplate = session['platform'] + '/' + 'about.html'

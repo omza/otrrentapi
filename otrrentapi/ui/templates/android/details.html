@@ -66,18 +66,21 @@
             <div class="card-content-inner">
 
                 {% for torrent in item.Torrents %}
-                <form action="{{ url_for('ui.details', epgid=item.Id) }}" method="POST" class="ajax-submit">
-                    <input type="hidden" name="Resolution" value="{{ torrent.Resolution }}">
-                    <input type="hidden" name="TorrentFile" value="{{ torrent.TorrentFile }}">
-                    <input type="hidden" name="TorrentLink" value="{{ torrent.TorrentLink }}">
-                    <button type="submit" name="{{ torrent.Resolution }}" class="button button-big button-fill button-raised ripple-yellow">
-                        {{ torrent.Resolution }}
-                        <span class='badge'>peer {{ torrent.loading }}</span>
-                        <span class="badge">seed {{ torrent.loaded }}</span>
-                        <span class="badge">reseed {{ torrent.finished }}</span>
-                    </button>
-                </form>
+                <p>
+                    <form action="{{ url_for('ui.details', epgid=item.Id) }}" method="POST" class="ajax-submit">
+                        <input type="hidden" name="Resolution" value="{{ torrent.Resolution }}">
+                        <input type="hidden" name="TorrentFile" value="{{ torrent.TorrentFile }}">
+                        <input type="hidden" name="TorrentLink" value="{{ torrent.TorrentLink }}">
+                        <button type="submit" name="{{ torrent.Resolution }}" class="button button-big button-fill button-raised ripple-yellow">
+                            {{ torrent.Resolution }}
+                            <span class='badge'>peer {{ torrent.loading }}</span>
+                            <span class="badge">seed {{ torrent.loaded }}</span>
+                            <span class="badge">reseed {{ torrent.finished }}</span>
+                        </button>
+                    </form>
+                </p>
                 {% endfor %}
+
             </div>
         </div>
     </div>

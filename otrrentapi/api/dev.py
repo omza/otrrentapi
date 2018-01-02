@@ -88,7 +88,8 @@ class LoginUser(Resource):
         session['authtoken'] = token
 
         """ pop session platform """
-        session.pop('platform')
+        if 'platform' in session:
+            session.pop('platform')
 
         """ prepare return dict """
         data['loggedin']  = True
