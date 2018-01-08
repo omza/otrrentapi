@@ -51,7 +51,7 @@ class Settings(FlaskForm):
     PushVideo = BooleanField('Video pushen?')
 
     OtrUser = StringField('OTR User', validators=[validators.Email()])
-    OtrPassword = PasswordField('OTR Password')
+    OtrPassword = StringField('OTR Password', widget=PasswordInput(hide_value=False))
     UseCutlist = BooleanField('Schnittliste verwenden?')
     #UseSubfolder = BooleanField('Use Cutlist for decoding?')
 
@@ -105,6 +105,8 @@ def index():
         item['startdate'] = item.beginn.strftime('%d.%m.%Y')
         item['starttime'] = item.beginn.strftime('%H:%M')
         item['previewimagelink'] = item['previewimagelink'].replace('http://','https://',1)
+        if not 'torrentCount' in item:
+            item['torrentCount'] = 0
 
     """ render platform template """
     pathtemplate = session['platform'] + '/' + 'index.html'
@@ -232,7 +234,8 @@ def settings():
     if not g.user:
         return index()
     
-    else:       
+    else:
+
         """ get request data """
         form = Settings()
 
@@ -251,25 +254,45 @@ def settings():
             
             if (g.user.Protocol != form.Protocol.data):
                 g.user.Protocol = form.Protocol.data
+                g.user.FtpConnectionChecked = False
             
             if (g.user.Server != form.Server.data):
                 g.user.Server = form.Server.data
+                g.user.FtpConnectionChecked = False
             
             if (g.user.Port != form.Port.data):
                 g.user.Port = form.Port.data
+                g.user.FtpConnectionChecked = False
             
             if (g.user.FtpUser != form.FtpUser.data):
                 g.user.FtpUser = form.FtpUser.data
+                g.user.FtpConnectionChecked = False
 
             if (g.user.ServerPath != form.ServerPath.data):
                 g.user.ServerPath = form.ServerPath.data
+                g.user.FtpConnectionChecked = False
 
             if (form.OtrPassword.data not in ['*****']) and (g.user.OtrPassword != form.OtrPassword.data):
                 g.user.OtrPassword = form.OtrPassword.data
 
             if (form.FtpPassword.data not in ['*****']) and (g.user.FtpPassword != form.FtpPassword.data):
                 g.user.FtpPassword = form.FtpPassword.data
+                g.user.FtpConnectionChecked = False
 
+            
+            """ check ftp Connection """
+            if not g.user.FtpConnectionChecked:
+                g.user.FtpConnectionChecked, validftpmessage = test_ftpconnection(g.user.Server, g.user.Port, g.user.FtpUser, g.user.FtpPassword, g.user.ServerPath)
+                
+                if not g.user.FtpConnectionChecked:
+                    log.error(validftpmessage)
+
+
+            """ check otr credentials """
+            if not g.user.OtrCredentialsChecked:
+                pass
+
+            """ update user """
             g.user.updated = datetime.now()
             db.insert(g.user)        
 

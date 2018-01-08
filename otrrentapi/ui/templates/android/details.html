@@ -56,7 +56,17 @@
         
         <div class="card-footer">
             <p class="color-gray">{{ item.sender }} {{ item.startdate}} {{ item.starttime}}</p>
-            <p class="color-gray">Bewertung: {{ item.rating }}</p>
+            <p>
+                <i class="material-icons">star</i>
+                <i class="material-icons">star</i>
+                <i class="material-icons">star</i>
+                <i class="material-icons">star</i>
+                {% if item.rating == 'hoch' %}
+                <i class="material-icons">star_border</i>
+                {% else %}
+                <i class="material-icons">star</i>
+                {% endif %}
+            </p>
         </div>
     </div>
 
@@ -66,19 +76,17 @@
             <div class="card-content-inner">
 
                 {% for torrent in item.Torrents %}
-                <p>
-                    <form action="{{ url_for('ui.details', epgid=item.Id) }}" method="POST" class="ajax-submit">
-                        <input type="hidden" name="Resolution" value="{{ torrent.Resolution }}">
-                        <input type="hidden" name="TorrentFile" value="{{ torrent.TorrentFile }}">
-                        <input type="hidden" name="TorrentLink" value="{{ torrent.TorrentLink }}">
-                        <button type="submit" name="{{ torrent.Resolution }}" class="button button-big button-fill button-raised ripple-yellow">
-                            {{ torrent.Resolution }}
-                            <span class='badge'>peer {{ torrent.loading }}</span>
-                            <span class="badge">seed {{ torrent.loaded }}</span>
-                            <span class="badge">reseed {{ torrent.finished }}</span>
-                        </button>
-                    </form>
-                </p>
+                <form action="{{ url_for('ui.details', epgid=item.Id) }}" method="POST" class="ajax-submit">
+                    <input type="hidden" name="Resolution" value="{{ torrent.Resolution }}">
+                    <input type="hidden" name="TorrentFile" value="{{ torrent.TorrentFile }}">
+                    <input type="hidden" name="TorrentLink" value="{{ torrent.TorrentLink }}">
+                    <button type="submit" name="{{ torrent.Resolution }}" class="button button-big button-fill button-raised ripple-yellow">
+                        {{ torrent.Resolution }}
+                        <span class='badge'>peer {{ torrent.loading }}</span>
+                        <span class="badge">seed {{ torrent.loaded }}</span>
+                        <span class="badge">reseed {{ torrent.finished }}</span>
+                    </button>
+                </form>
                 {% endfor %}
 
             </div>

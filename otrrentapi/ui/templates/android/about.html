@@ -13,42 +13,68 @@
 {% endblock %}
 
 {% block content %}
-<div class="content-block-title">App Konfiguration</div>
-<div class="list-block">
-    <ul>
-        <li class="item-content">
-            <div class="item-inner">
-                <div class="item-title">UI</div>
-                <div class="item-after">{{ session['platform'] }}</div>
-            </div>
-        </li>
-        <li class="item-content">
-            <div class="item-inner">
-                <div class="item-title">Plattform</div>
-                <div class="item-after">{{ request.user_agent.platform }}</div>
-            </div>
-        </li>
-        <li class="item-content">
-            <div class="item-inner">
-                <div class="item-title">Browser</div>
-                <div class="item-after">{{ request.user_agent.browser }}</div>
-            </div>
-        </li>
-        <li class="item-content">
-            <div class="item-inner">
-                <div class="item-title">IP Adresse</div>
-                <div class="item-after">{{ request.remote_addr }}</div>
-            </div>
-        </li>
-        <li class="item-content">
-            <div class="item-inner">
-                <div class="item-title">Fingerprint</div>
-                <div class="item-after">{{ g.user.RowKey }}</div>
-            </div>
-        </li>
-    </ul>
-    <!--<div class="list-block-label">List block label text goes here</div>-->
+
+<!-- Info -->
+<div class="content-block-title">Info</div>
+<div class="content-block">
+    <p>
+        Mit otrrent koennen Nutzer von onlineTVrecorder.com (OTR) per torrent verfuegbare beliebteste Aufnahmen von OTR auswaehlen
+        und die entsprechende torrent Datei an einen heimischen ftp-Server weiterleiten. Am heimischen Rechner kann dann mit einem bittorrent Client
+        die entsprechende Sendung (otrkey) runtergeladen werden.
+    </p>
+    <p>
+        Mit der Pro Version von otrrent koennen die Aufnahmen in der Cloud decodiert und geschnitten werden. Dafuer benoetigt otrrent die OTR Zugangsdaten. 
+        Diese Funktion ist noch nicht fertig. 
+    </p>
 </div>
+
+<!-- App -->
+<div class="card">
+    <div class="card-header">App</div>
+    <div class="card-content">
+        <div class="list-block">
+            <ul>
+                <li class="item-content">
+                    <div class="item-inner">
+                        <div class="item-title">Version</div>
+                        <div class="item-after">{{ config['APPLICATION_VERSION'] }}</div>
+                    </div>
+                </li>
+                <li class="item-content">
+                    <div class="item-inner">
+                        <div class="item-title">Autor</div>
+                        <div class="item-after">{{ session['platform'] }}</div>
+                    </div>
+                </li>
+                <li class="item-content">
+                    <div class="item-inner">
+                        <div class="item-title">UI</div>
+                        <div class="item-after">{{ session['platform'] }}</div>
+                    </div>
+                </li>
+                <li class="item-content">
+                    <div class="item-inner">
+                        <div class="item-title">Plattform</div>
+                        <div class="item-after">{{ request.user_agent.platform }}</div>
+                    </div>
+                </li>
+                <li class="item-content">
+                    <div class="item-inner">
+                        <div class="item-title">Browser</div>
+                        <div class="item-after">{{ request.user_agent.browser }}</div>
+                    </div>
+                </li>
+                <li class="item-content">
+                    <div class="item-inner">
+                        <div class="item-title">Fingerprint</div>
+                        <div class="item-after">{{ g.user.RowKey }}</div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- Credits/lizenzen -->
 {% endblock %}
 
 

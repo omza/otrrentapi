@@ -57,6 +57,7 @@ class Recording(StorageTableModel):
     programlink = ''
     rating = ''
     previewimagelink = ''
+    torrentCount = 0
     Torrents = StorageTableCollection(_tablename)
 
     def __setPartitionKey__(self):
@@ -151,6 +152,8 @@ class User(StorageTableModel):
     ServerPath = '/'
     created = datetime.datetime.strptime('01.01.1900 00:00:00', _datetimeformat)
     updated = datetime.datetime.strptime('01.01.1900 00:00:00', _datetimeformat)
+    FtpConnectionChecked = False
+    OtrCredentialsChecked = False
 
     def __setEncryptedProperties__(self):
         self._encryptedproperties = ['OtrUser', 'OtrPassword', 'Server', 'FtpUser', 'FtpPassword']
