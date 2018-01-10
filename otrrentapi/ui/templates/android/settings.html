@@ -152,11 +152,13 @@
         <div class="card-footer">
             <span>FTP Verbindung erfolgreich?</span>
             <span>
-            {% if g.user.FtpConnectionChecked %}
+                {% if g.user.FtpConnectionChecked is none %}
+                <i class="material-icons" style="color: yellow;">help</i>
+                {% elif g.user.FtpConnectionChecked %}
                 <i class="material-icons" style="color: green;">check_circle</i>
-            {% else %}
+                {% else %}
                 <i class="material-icons" style="color: red;">error</i>
-            {% endif %}
+                {% endif %}
             </span>
         </div>
     </div>
@@ -221,10 +223,12 @@
         <div class="card-footer">
             <span>OTR Zugangsdaten korrekt?</span>
             <span>
-                {% if User.OtrCredentialsChecked %}
+                {% if g.user.OtrCredentialsChecked is none %}
+                <i class="material-icons" style="color: yellow;">help</i>
+                {% elif g.user.OtrCredentialsChecked %}
                 <i class="material-icons" style="color: green;">check_circle</i>
                 {% else %}
-                <i class="material-icons" style="color: yellow;">help</i>
+                <i class="material-icons" style="color: red;">error</i>
                 {% endif %}
             </span>
         </div>

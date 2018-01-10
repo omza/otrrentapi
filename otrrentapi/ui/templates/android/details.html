@@ -1,97 +1,97 @@
 ﻿{% extends "android/_layout.html" %}
 
 {% block navbar%}
-    <div class="navbar">
-        <div class="navbar-inner">
-            <div class="left"><a href="#" class="back link"> <i class="icon icon-back"></i></a></div>
-            <div class="center sliding">{{ title }}</div>
-            <div class="right">
-                <!-- Right link contains only icon - additional "icon-only" class--><a href="#" class="link icon-only open-panel"> <i class="icon icon-bars"></i></a>
-            </div>
+<div class="navbar">
+    <div class="navbar-inner">
+        <div class="left"><a href="#" class="back link"> <i class="icon icon-back"></i></a></div>
+        <div class="center sliding">{{ title }}</div>
+        <div class="right">
+            <!-- Right link contains only icon - additional "icon-only" class--><a href="#" class="link icon-only open-panel"> <i class="icon icon-bars"></i></a>
         </div>
     </div>
+</div>
 {% endblock %}
 
 {% block content %}
-    <!-- Content Block Details -->
-
-    <!-- Alerts -->
+<!-- Content Block Details -->
+<!-- Alerts -->
     {% if message.show %}
-    <div class="content-block inset">
-        <div class="content-block-inner {% if message.error %}bg-pink color-white{% else %}bg-green{% endif %}">
-            <strong>{{ message.header}}</strong>
-            <p>{{ message.text}}</p>
-            {% if message.code != 0 %}<p class="color-gray">{{ message.code}}</p>{% endif %}
-        </div>
+<div class="content-block inset">
+    <div class="content-block-inner {% if message.error %}bg-pink color-white{% else %}bg-green{% endif %}">
+        <strong>{{ message.header}}</strong>
+        <p>{{ message.text}}</p>
+        {% if message.code != 0 %}<p class="color-gray">{{ message.code}}</p>{% endif %}
     </div>
+</div>
     {% endif %}
 
-    <!-- Details card -->
-    <div class="content-block-title">{{ item.titel }}</div>
-    <style>
-        .recording-header-pic .card-header {
-            height: 40vw;
-            background-size: cover;
-            background-position: center;
-        }
+<!-- Details card -->
+<div class="content-block-title">{{ item.titel }}</div>
+<style>
+    .recording-header-pic .card-header {
+        height: 40vw;
+        background-size: cover;
+        background-position: center;
+    }
 
-        .button {
-            display: block;
-            width: 100%;
-        }
+    .button {
+        display: block;
+        width: 100%;
+    }
+</style>
 
-    </style>
-    
-    <div class="card recording-header-pic">
-        <div style="background-image:url({{ item.previewimagelink }})" valign="bottom" class="card-header color-white no-border">
-            {{ item.titel }}<br />
-            {{ item.genre }}
+<div class="card recording-header-pic">
+    <div style="background-image:url({{ item.previewimagelink }})" valign="bottom" class="card-header color-white no-border">
+        {{ item.titel }}<br />
+        {{ item.genre }}
+    </div>
+
+    <div class="card-content">
+        <div class="card-content-inner">
+            <p>{{ item.text }}</p>
         </div>
-        
-        <div class="card-content">
-            <div class="card-content-inner">
-                <p>{{ item.text }}</p>
-            </div>
-        </div>
-        
-        <div class="card-footer">
-            <p class="color-gray">{{ item.sender }} {{ item.startdate}} {{ item.starttime}}</p>
+    </div>
+
+    <div class="card-footer">
+        <p class="color-gray">{{ item.sender }} {{ item.startdate}} {{ item.starttime}}</p>
+        <p>
+            <i class="material-icons">star</i>
+            <i class="material-icons">star</i>
+            <i class="material-icons">star</i>
+            {% if item.rating == 'hoch' %}
+            <i class="material-icons">star</i>
+            <i class="material-icons">star_border</i>
+            {% elif item.rating == 'sehr hoch' %}
+            <i class="material-icons">star</i>
+            <i class="material-icons">star</i>
+            {% else %}
+            <i class="material-icons">star_border</i>
+            <i class="material-icons">star_border</i>
+            {% endif %}
+        </p>
+    </div>
+</div>
+
+<!-- Torrents Card -->
+<div class="card">
+    <div class="card-header">Torrents</div>
+    <div class="card-content-inner">
+        {% for torrent in item.Torrents %}
+        <form action="{{ url_for('ui.details', epgid=item.Id) }}" method="POST" class="ajax-submit" style="width:100%; display:block;">
+            <input type="hidden" name="Resolution" value="{{ torrent.Resolution }}">
+            <input type="hidden" name="TorrentFile" value="{{ torrent.TorrentFile }}">
+            <input type="hidden" name="TorrentLink" value="{{ torrent.TorrentLink }}">
             <p>
-                <i class="material-icons">star</i>
-                <i class="material-icons">star</i>
-                <i class="material-icons">star</i>
-                <i class="material-icons">star</i>
-                {% if item.rating == 'hoch' %}
-                <i class="material-icons">star_border</i>
-                {% else %}
-                <i class="material-icons">star</i>
-                {% endif %}
+                <button type="submit" name="{{ torrent.Resolution }}" class="button button-big button-fill button-raised">
+                    {{ torrent.Resolution }}
+                    <span class="chip chip-label">fertig: {{ torrent.finished }}</span>
+                    <span class="chip chip-label">ladend {{ torrent.loading }}</span>
+                    <span class="chip chip-label">geladen {{ torrent.loaded }}</span>
+                </button>
             </p>
-        </div>
+        </form>
+        {% endfor %}
     </div>
-
-    <div class="content-block-title">Torrents</div>
-    <div class="card">
-        <div class="card-content">
-            <div class="card-content-inner">
-
-                {% for torrent in item.Torrents %}
-                <form action="{{ url_for('ui.details', epgid=item.Id) }}" method="POST" class="ajax-submit">
-                    <input type="hidden" name="Resolution" value="{{ torrent.Resolution }}">
-                    <input type="hidden" name="TorrentFile" value="{{ torrent.TorrentFile }}">
-                    <input type="hidden" name="TorrentLink" value="{{ torrent.TorrentLink }}">
-                    <button type="submit" name="{{ torrent.Resolution }}" class="button button-big button-fill button-raised ripple-yellow">
-                        {{ torrent.Resolution }}
-                        <span class='badge'>peer {{ torrent.loading }}</span>
-                        <span class="badge">seed {{ torrent.loaded }}</span>
-                        <span class="badge">reseed {{ torrent.finished }}</span>
-                    </button>
-                </form>
-                {% endfor %}
-
-            </div>
-        </div>
-    </div>
-
+</div>
 {% endblock %}
 

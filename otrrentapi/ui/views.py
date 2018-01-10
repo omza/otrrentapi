@@ -34,6 +34,8 @@ from azurestorage import queue
 
 db.register_model(User())
 db.register_model(History())
+db.register_model(Recording())
+db.register_model(Torrent())
 queue.register_model(PushMessage())
 queue.register_model(PushVideoMessage())
 
@@ -350,10 +352,12 @@ def history():
 @otrrentui.route('/about')
 def about():
     """ retrieve top recordings with filters """
+    message = Message()
+    message.show = False
 
     """ render platform template """
     pathtemplate = session['platform'] + '/' + 'about.html'
-    return render_template(pathtemplate, title = 'Über', pagetitle='about')
+    return render_template(pathtemplate, title = 'otrrent', pagetitle='about', message=message)
 
 def PushTorrent(epgid, resolution, sourcefile, sourcelink, user:User):
     """ create a push queue message for torrent push """   

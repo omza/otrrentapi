@@ -1,4 +1,4 @@
-{% extends "android/_layout.html" %}
+﻿{% extends "android/_layout.html" %}
 
 {% block navbar%}
 <div class="navbar">
@@ -13,25 +13,46 @@
 {% endblock %}
 
 {% block content %}
-
-<!-- Info -->
-<div class="content-block-title">Info</div>
-<div class="content-block">
-    <p>
-        Mit otrrent koennen Nutzer von onlineTVrecorder.com (OTR) per torrent verfuegbare beliebteste Aufnahmen von OTR auswaehlen
-        und die entsprechende torrent Datei an einen heimischen ftp-Server weiterleiten. Am heimischen Rechner kann dann mit einem bittorrent Client
-        die entsprechende Sendung (otrkey) runtergeladen werden.
-    </p>
-    <p>
-        Mit der Pro Version von otrrent koennen die Aufnahmen in der Cloud decodiert und geschnitten werden. Dafuer benoetigt otrrent die OTR Zugangsdaten. 
-        Diese Funktion ist noch nicht fertig. 
-    </p>
+{% autoescape true %}
+<!-- Über -->
+<div id="about" class="card">
+    <div class="card-header">Über</div>
+    <div class="card-content-inner">
+        <p>
+            Mit otrrent koennen Nutzer von onlineTVrecorder.com (OTR) per torrent verfuegbare beliebteste Aufnahmen von OTR auswaehlen
+            und die entsprechende torrent Datei an einen heimischen ftp-Server weiterleiten. Am heimischen Rechner kann dann mit einem bittorrent Client
+            die entsprechende Sendung (otrkey) runtergeladen werden.
+        </p>
+    </div>
 </div>
 
-<!-- App -->
+<!-- Pro User -->
+<div class="card">
+    <div class="card-header">Werde Pro User</div>
+    <div class="card-content-inner">
+        <p id="getprouser">Als otrrent Pro-User können Sie Aufnahmen in der Cloud decodieren, schneiden und dann als Video an Ihren ftp-Server senden lassen.</p>
+        <p>
+            Um diese Funktion nutzen zu können, ist eine Anmeldung unter OTR () notwendig. otrrent benötigt Ihre OTR Zugangsdaten um die von Ihnen aufgenommenen Sendungen decodieren zu können.
+            Ihre Zugangsdaten werden verschlüsselt übertragen und gespeichert. Ihre Daten werden nicht weitergegeben und nur zum decodieren einer Sendung genutzt.
+        </p>
+        <p>Diese Funktion wird noch entwickelt und steht in dieser Version noch nicht zu Verfügung.</p>
+    </div>
+</div>
+
+<!-- Pro User -->
+<div class="card" id="0123456xyz">
+    <div class="card-header">Werbefrei</div>
+    <div class="card-content-inner">
+        <p>Nutzen Sie otrrent ohne Werbung!</p>
+        <p>Diese Funktion wird noch entwickelt und steht in dieser Version noch nicht zu Verfügung.</p>
+    </div>
+</div>
+{% endautoescape %}
+
+<!-- App Konfiguration -->
 <div class="card">
     <div class="card-header">App</div>
-    <div class="card-content">
+    <div class="card-content" id="appconfig">
         <div class="list-block">
             <ul>
                 <li class="item-content">
@@ -74,7 +95,8 @@
         </div>
     </div>
 </div>
-<!-- Credits/lizenzen -->
+
+<!-- Hinweise & Lizenzen -->
 {% endblock %}
 
 
