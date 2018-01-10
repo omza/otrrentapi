@@ -13,41 +13,51 @@
 {% endblock %}
 
 {% block content %}
-{% autoescape true %}
+
+<!-- Alerts -->
+{% if message.show %}
+<div class="content-block inset">
+    <div class="content-block-inner {% if message.error %}bg-pink color-white{% else %}bg-green{% endif %}">
+        <strong>{{ message.header}}</strong>
+        <p>{{ message.text}}</p>
+        {% if message.code != 0 %}<p class="color-gray">{{ message.code}}</p>{% endif %}
+    </div>
+</div>
+{% endif %}
+
 <!-- Über -->
 <div id="about" class="card">
     <div class="card-header">Über</div>
     <div class="card-content-inner">
         <p>
-            Mit otrrent koennen Nutzer von onlineTVrecorder.com (OTR) per torrent verfuegbare beliebteste Aufnahmen von OTR auswaehlen
-            und die entsprechende torrent Datei an einen heimischen ftp-Server weiterleiten. Am heimischen Rechner kann dann mit einem bittorrent Client
-            die entsprechende Sendung (otrkey) runtergeladen werden.
+            Mit <strong>otrrent</strong> können Nutzer von <a href="http://www.onlinetvrecorder.com/" target="_blank" class="external">onlineTVrecorder.com</a> (OTR) per torrent verfuegbare beliebteste Aufnahmen von OTR auswaehlen und die entsprechende torrent Datei an einen heimischen ftp-Server weiterleiten.
+            Am heimischen Rechner kann dann mit einem bittorrent Client die entsprechende Sendung als otrkey-Datei runtergeladen werden. Die otrkey Dateien sind verschlüsselt und können nur decodiert werden, wenn Sie als OTR Nutzer die Sendung vor Ausstrahlung,&nbsp;wie in einem Videorecorder, programmiert haben.
+            <strong>otrrent</strong> benötigt für die Weiterleitung der torrent Datei die Zugangsdaten zu Ihrem ftp-Server.
         </p>
-    </div>
-</div>
-
-<!-- Pro User -->
-<div class="card">
-    <div class="card-header">Werde Pro User</div>
-    <div class="card-content-inner">
-        <p id="getprouser">Als otrrent Pro-User können Sie Aufnahmen in der Cloud decodieren, schneiden und dann als Video an Ihren ftp-Server senden lassen.</p>
         <p>
-            Um diese Funktion nutzen zu können, ist eine Anmeldung unter OTR () notwendig. otrrent benötigt Ihre OTR Zugangsdaten um die von Ihnen aufgenommenen Sendungen decodieren zu können.
-            Ihre Zugangsdaten werden verschlüsselt übertragen und gespeichert. Ihre Daten werden nicht weitergegeben und nur zum decodieren einer Sendung genutzt.
+            otrrent entwickle ich als hobby-programmierer&nbsp;nur nebenberuflich.&nbsp;die features sind&nbsp;auf mein persönliches nutzungsverhalten von OTR abgestimmt. ich hoffe das ich nicht nur mir mit der app eine freude mache!
+            die app ist noch nicht komplett durchgetestet und wird deshalb noch viele fehler&nbsp;haben. wenn ihr mich auf fehler aufmerksam macht werde ich diese beheben so wie es meine zeit erlaubt.
+            solltet ihr die app wegen fehlern oder Features nicht mehr nutzen wollen so entschuldige ich mich für eure zeit. einfach deinstallieren.gerne nehme ich vorschläge&nbsp;für die weiterentwicklung entgegen.
         </p>
-        <p>Diese Funktion wird noch entwickelt und steht in dieser Version noch nicht zu Verfügung.</p>
+        <p>
+            Als otrrent <strong>Pro-User</strong> können Sie Aufnahmen in der otrrent-Cloud decodieren, schneiden und dann als Video an Ihren ftp-Server senden lassen.
+            Um diese Funktion nutzen zu können, ist ein Nutzeraccount unter <a href="http://www.onlinetvrecorder.com/" target="_blank" class="external">onlineTVrecorder.com</a> (OTR) notwendig. otrrent benötigt Ihre OTR Zugangsdaten um die von Ihnen aufgenommenen Sendungen decodieren zu können.
+            Ihre Zugangsdaten werden verschlüsselt übertragen und gespeichert. Ihre Daten werden nicht weitergegeben und nur zum decodieren einer Sendung genutzt. In dieser Verion steht diese Funktion noch nicht zu Verfügung.
+        </p>
+        <p>
+            otrrent wird sich in nachfolgenden Versionen über <strong>Werbung</strong> finanzieren. Es wird aber eine Funktion geben otrrent ohne Werbung zu nutzen! Diese Funktion wird aber noch entwickelt
+            und steht in dieser Version noch nicht zu Verfügung.
+        </p>
     </div>
 </div>
 
-<!-- Pro User -->
-<div class="card" id="0123456xyz">
-    <div class="card-header">Werbefrei</div>
+<!-- Hinweise & Lizenzen -->
+<div id="about" class="card">
+    <div class="card-header">Lizenzen &amp; Hinweise</div>
     <div class="card-content-inner">
-        <p>Nutzen Sie otrrent ohne Werbung!</p>
-        <p>Diese Funktion wird noch entwickelt und steht in dieser Version noch nicht zu Verfügung.</p>
+        <p>Das Logo der otrrent app unterliegt der  <a href="http://creativecommons.org/licenses/by/3.0/" target="_blank" class="external">CC Attribution 3.0  Unported</a> Lizenz und wurde ursprünglich erstellt von <a href="http://dakirby309.deviantart.com/" target="_blank" class="external">dAKirby309</a></p>
     </div>
 </div>
-{% endautoescape %}
 
 <!-- App Konfiguration -->
 <div class="card">
@@ -95,8 +105,6 @@
         </div>
     </div>
 </div>
-
-<!-- Hinweise & Lizenzen -->
 {% endblock %}
 
 

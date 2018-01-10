@@ -351,13 +351,37 @@ def history():
 
 @otrrentui.route('/about')
 def about():
-    """ retrieve top recordings with filters """
+    """ retrieve request parameters """
     message = Message()
-    message.show = False
+    message.text = 'Entschuldigung! Diese Funktion wird noch entwickelt und steht in dieser Verion von otrrent noch nicht zu Verfügung.'
+    
+    menu = request.args.get('menu', default='none', type=str)
+    if menu == 'rate':
+        message.header = 'Bewerten Sie otrrent'
+        message.error = True    
+        message.show = True
+    
+    elif menu == 'adsfree':
+        message.header = 'Nutzen Sie otrrent Werbefrei!'
+        message.error = True    
+        message.show = True
+
+    elif menu == 'getprouser':
+        message.header = 'Nutzen Sie otrrent als Pro-User!'
+        message.error = True    
+        message.show = True
+
+    else:
+        message.show = False
 
     """ render platform template """
     pathtemplate = session['platform'] + '/' + 'about.html'
     return render_template(pathtemplate, title = 'otrrent', pagetitle='about', message=message)
+
+
+"""
+   logic
+"""
 
 def PushTorrent(epgid, resolution, sourcefile, sourcelink, user:User):
     """ create a push queue message for torrent push """   
