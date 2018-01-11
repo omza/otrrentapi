@@ -35,9 +35,9 @@
             <strong>otrrent</strong> benötigt für die Weiterleitung der torrent Datei die Zugangsdaten zu Ihrem ftp-Server.
         </p>
         <p>
-            otrrent entwickle ich als hobby-programmierer&nbsp;nur nebenberuflich.&nbsp;die features sind&nbsp;auf mein persönliches nutzungsverhalten von OTR abgestimmt. ich hoffe das ich nicht nur mir mit der app eine freude mache!
-            die app ist noch nicht komplett durchgetestet und wird deshalb noch viele fehler&nbsp;haben. wenn ihr mich auf fehler aufmerksam macht werde ich diese beheben so wie es meine zeit erlaubt.
-            solltet ihr die app wegen fehlern oder Features nicht mehr nutzen wollen so entschuldige ich mich für eure zeit. einfach deinstallieren.gerne nehme ich vorschläge&nbsp;für die weiterentwicklung entgegen.
+            <strong>otrrent</strong> entwickle ich nebenberuflich.&nbsp;Die Features sind&nbsp;auf mein persönliches Nutzungsverhalten von OTR abgestimmt. Ich hoffe das ich nicht nur mir mit der app eine Freude mache!
+            Die App ist derzeit noch alpha und wird deshalb noch viele Fehler&nbsp;haben. Solltet Ihr die App wegen Fehlern oder Features nicht mehr nutzen wollen so entschuldige ich mich für eure zeit. Einfach deinstallieren.
+            Gerne nehme ich Vorschläge&nbsp;für die Weiterentwicklung entgegen.
         </p>
         <p>
             Als otrrent <strong>Pro-User</strong> können Sie Aufnahmen in der otrrent-Cloud decodieren, schneiden und dann als Video an Ihren ftp-Server senden lassen.
@@ -53,9 +53,56 @@
 
 <!-- Hinweise & Lizenzen -->
 <div id="about" class="card">
-    <div class="card-header">Lizenzen &amp; Hinweise</div>
+    <div class="card-header">Lizenzen &amp; rechtliche Hinweise</div>
     <div class="card-content-inner">
-        <p>Das Logo der otrrent app unterliegt der  <a href="http://creativecommons.org/licenses/by/3.0/" target="_blank" class="external">CC Attribution 3.0  Unported</a> Lizenz und wurde ursprünglich erstellt von <a href="http://dakirby309.deviantart.com/" target="_blank" class="external">dAKirby309</a></p>
+        <div class="list-block media-list">
+            <ul>
+                <li class="item-content">
+                    <div class="item-inner">
+                        <div class="item-subtitle">Inhalte</div>
+                        <div class="item-text">
+                            Alle Inhalte dieser App - insbesondere EPG, Top-Aufnahmen &amp; Torrents - sind Eigentum von <a href="http://www.onlinetvrecorder.com/" target="_blank" class="external">onlineTVrecorder.com</a> der Internet TV AG, Seychelles. Alle Rechte liegen bei der Internet TV AG. Diese App zeigt die Daten unverfälscht an.
+                        </div>
+                    </div>
+                </li>
+                <li class="item-content">
+                    <div class="item-inner">
+                        <div class="item-subtitle">Framework7</div>
+                        <div class="item-text">
+                            <strong>otrrent</strong> nutzt <a href="https://framework7.io/" target="_blank" class="external">Framework7</a> um als Web App ein natives Nutzergefühl auf android und iOS Geräten zu ermöglichen.
+                        </div>
+                    </div>
+                </li>
+                <li class="item-content">
+                    <div class="item-inner">
+                        <div class="item-subtitle">Fingerprint2</div>
+                        <div class="item-text">
+                            <strong>otrrent</strong> nutzt zur Erkennung des Gerätes die Javascript Bibliothek <a href="https://github.com/Valve/fingerprintjs2" target="_blank" class="external">Fingerprint2</a> unter MIT Lizenz. Unter dem Fingerprint speichert otrrent die Einstellungen und der Verlauf (Historie) in der Cloud.
+                        </div>
+                    </div>
+                </li>
+                <li class="item-content">
+                    <div class="item-inner">
+                        <div class="item-subtitle">dAKirby309</div>
+                        <div class="item-text">
+                            Das Logo der otrrent app unterliegt der  <a href="http://creativecommons.org/licenses/by/3.0/" target="_blank" class="external">CC Attribution 3.0  Unported</a> Lizenz und wurde ursprünglich erstellt von <a href="http://dakirby309.deviantart.com/" target="_blank" class="external">dAKirby309</a>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Datenschutzerklärung -->
+<div id="about" class="card">
+    <div class="card-header">Datenschutzerklärung</div>
+    <div class="card-content-inner">
+        <p>
+            Mit <strong>otrrent</strong> können Nutzer von <a href="http://www.onlinetvrecorder.com/" target="_blank" class="external">onlineTVrecorder.com</a> (OTR) per torrent verfuegbare beliebteste Aufnahmen von OTR auswaehlen und die entsprechende torrent Datei an einen heimischen ftp-Server weiterleiten.
+            Am heimischen Rechner kann dann mit einem bittorrent Client die entsprechende Sendung als otrkey-Datei runtergeladen werden. Die otrkey Dateien sind verschlüsselt und können nur decodiert werden, wenn Sie als OTR Nutzer die Sendung vor Ausstrahlung,&nbsp;wie in einem Videorecorder, programmiert haben.
+            <strong>otrrent</strong> benötigt für die Weiterleitung der torrent Datei die Zugangsdaten zu Ihrem ftp-Server.
+        </p>
     </div>
 </div>
 
@@ -63,42 +110,42 @@
 <div class="card">
     <div class="card-header">App</div>
     <div class="card-content" id="appconfig">
-        <div class="list-block">
+        <div class="list-block media-list">
             <ul>
                 <li class="item-content">
                     <div class="item-inner">
-                        <div class="item-title">Version</div>
-                        <div class="item-after">{{ config['APPLICATION_VERSION'] }}</div>
+                        <div class="item-subtitle">Version</div>
+                        <div class="item-text">{{ config['APPLICATION_VERSION'] }}</div>
                     </div>
                 </li>
                 <li class="item-content">
                     <div class="item-inner">
-                        <div class="item-title">Autor</div>
-                        <div class="item-after">{{ session['platform'] }}</div>
+                        <div class="item-subtitle">Autor</div>
+                        <div class="item-text"><a href="https://app-workshop.de/" target="_blank" class="external">app workshop UG (haftungsbeschränkt)</a></div>
                     </div>
                 </li>
                 <li class="item-content">
                     <div class="item-inner">
-                        <div class="item-title">UI</div>
-                        <div class="item-after">{{ session['platform'] }}</div>
+                        <div class="item-subtitle">UI</div>
+                        <div class="item-text">{{ session['platform'] }}</div>
                     </div>
                 </li>
                 <li class="item-content">
                     <div class="item-inner">
-                        <div class="item-title">Plattform</div>
-                        <div class="item-after">{{ request.user_agent.platform }}</div>
+                        <div class="item-subtitle">Plattform</div>
+                        <div class="item-text">{{ request.user_agent.platform }}</div>
                     </div>
                 </li>
                 <li class="item-content">
                     <div class="item-inner">
-                        <div class="item-title">Browser</div>
-                        <div class="item-after">{{ request.user_agent.browser }}</div>
+                        <div class="item-subtitle">Browser</div>
+                        <div class="item-text">{{ request.user_agent.browser }}</div>
                     </div>
                 </li>
                 <li class="item-content">
                     <div class="item-inner">
-                        <div class="item-title">Fingerprint</div>
-                        <div class="item-after">{{ g.user.RowKey }}</div>
+                        <div class="item-subtitle">Fingerprint</div>
+                        <div class="item-text">{{ g.user.RowKey }}</div>
                     </div>
                 </li>
             </ul>
