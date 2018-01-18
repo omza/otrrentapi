@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*
-
 """ flask imports """
 from flask import (
     render_template, 
@@ -69,6 +67,11 @@ class Settings(FlaskForm):
 @otrrentui.before_request
 def set_platform_session():
 
+    """ retrieve device uuid """
+    deviceuuid = request.args.get('deviceuuid', None)
+    log.debug('request deviceuuid: {!s}'.format(deviceuuid))
+    session['deviceuuid'] = deviceuuid                  
+
     """ retrieve user from session cookie """
     if ('authtoken' in session):
         user = verify_auth_token(session['authtoken'])
@@ -84,7 +87,7 @@ def set_platform_session():
     if (not 'platform' in session):
 
         platform = request.user_agent.platform
-        log.info('request user agent platform: {!s}'.format(platform))
+        log.debug('request user agent platform: {!s}'.format(platform))
         
         if platform in ['android','ios']:        #,'windows'
             session['platform'] = platform 

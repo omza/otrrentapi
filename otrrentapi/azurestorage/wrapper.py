@@ -359,6 +359,10 @@ class StorageTableContext():
                     log.debug('can not get table entity:  Table {}, PartitionKey {}, RowKey {} because {!s}'.format(storagemodel._tablename, storagemodel.PartitionKey, storagemodel.RowKey, e))
                     storagemodel._exists = False
 
+                except Exception as e:
+                    log.debug('can not get table entity:  Table {}, PartitionKey {}, RowKey {} because {!s}'.format(storagemodel._tablename, storagemodel.PartitionKey, storagemodel.RowKey, e))
+                    storagemodel._exists = False
+
             else:
                 log.debug('please register model {} first to {!s}'.format(modelname, self._models))
 

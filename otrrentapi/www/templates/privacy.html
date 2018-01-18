@@ -1,0 +1,254 @@
+﻿<!DOCTYPE html>
+
+<html lang="de">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="otrrent landing page">
+    <meta name="author" content="app workshop UG (haftungsbeschränkt)">
+    <title>otrrent</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+
+    <!-- Custom fonts for this template -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendor/font-awesome/css/font-awesome.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendor/simple-line-icons/css/simple-line-icons.css') }}">
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Muli" rel="stylesheet">
+
+    <!-- Plugin CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='device-mockups/device-mockups.min.css') }}">
+
+    <!-- Custom styles for this template -->
+    <link href="{{ url_for('static', filename='css/new-age.css') }}" rel="stylesheet">
+</head>
+<body id="page-top">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+        <div class="container">
+            <a class="navbar-brand js-scroll-trigger" href="#page-top">
+                <img src="{{ url_for('static', filename='img/icon-36-ldpi.png') }}" />
+                otrrent
+            </a>
+            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                Menu
+                <i class="fa fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="{{ url_for('www.index') }}#download">Download</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="{{ url_for('www.index') }}#features">Funktionen</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="{{ url_for('ui.index') }}">Web App</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="{{ url_for('api.doc') }}">Api</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="{{ url_for('www.index') }}#help">FAQ</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- header -->
+    <section class="download bg-primary text-center" id="download">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 mx-auto">
+                    <h2 class="section-heading">Datenschutzerklärung</h2>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- content -->
+    <section class="text-center" id="privacy">
+        <div class="container">
+            <h2>Datenschutzerklärung für die App "otrrent"</h2>
+            <p class="text-muted">
+                Stand: 17.01.2018
+                <hr />
+            </p>
+
+            <h2>Datenschutz</h2>
+            <p class="text-muted">
+                Wir nehmen den Schutz Ihrer persönlichen Daten sehr ernst. Wir behandeln Ihre personenbezogenen Daten vertraulich und entsprechend der gesetzlichen Datenschutzvorschriften
+                sowie dieser Datenschutzerklärung.
+                Diese Datenschutzerklärung gilt für unsere mobilen iPhone-, Android-, Windows Universal Apps sowie unsere hosted Web Apps (im Folgenden "App").
+                In ihr werden Art, Zweck und Umfang der Datenerhebung im Rahmen der App-Nutzung erläutert. Wir weisen darauf hin, dass die Datenübertragung im Internet Sicherheitslücken aufweisen kann. Ein
+                lückenloser Schutz der Daten vor dem Zugriff durch Dritte ist nicht möglich.
+            </p>
+
+            <h2>Verantwortliche Stelle</h2>
+            <p class="text-muted">
+                "Verantwortliche Stelle" ist die Stelle, die personenbezogene Daten (z.B. Namen, EMail-Adressen o.
+                Ä.) erhebt, verarbeitet oder nutzt.Verantwortliche Stelle für die Datenverarbeitung im Rahmen dieser App ist:<br />
+
+                app workshop UG (haftungsbeschränkt)<br />
+                Alsterredder 10b<br />
+                22395 Hamburg<br />
+                Telefon: +49 40 88 23 21 82<br />
+                Telefax: +49 40 88 23 21 83<br />
+                E-Mail: oliver@app-workshop.de<br />
+            </p>
+
+            <h2>Welche personenbezogenen Daten werden erfasst?</h2>
+            <p class="text-muted">
+                Wir erheben, speichern und verarbeiten verschiedene Kategorien personenbezogener Daten.
+                Personenbezogene Daten sind Daten, die Rückschlüsse auf Ihre Person zulassen (z.B. E-Mail-Adresse,
+                Name, IP-Adresse u. Ä.).
+
+                Wenn Sie diese App installieren und nutzen werden folgende personenbezogenen Daten von Ihnen
+                erfasst:
+            </p>
+
+            <h3>(1) Device Fingerprint</h3>
+            <p class="text-muted">
+                Die Erfassung erfolgt zu folgendem Zweck:
+                .....................................................................................................
+            </p>
+            <h3>(2) Einstellungen (Benutzerprofil)</h3>
+            <p class="text-muted">
+                Die Erfassung erfolgt zu folgendem Zweck:
+                .....................................................................................................
+            </p>
+            <h3>(3) Historie der gepushten Torrent Dateien</h3>
+            <p class="text-muted">
+                Die Erfassung erfolgt zu folgendem Zweck:
+                .....................................................................................................
+            </p>
+
+            <p class="text-muted">Die Erfassung personenbezogener Daten durch diese App erfolgt nur, wenn wir rechtlich hierzu berechtigt sind oder Sie der in Frage stehenden Datenerfassung ausdrücklich zugestimmt haben.</p>
+
+            <h2>Datenerhebung im Rahmen der App-Nutzung</h2>
+            <p class="text-muted">
+                Personenbezogene Daten können im Rahmen der App-Nutzung insbesondere auf folgende Weise
+                erhoben werden:
+            </p>
+
+            <h3>(1) Sie geben die Daten selbst bei uns ein (z.B. Nutzername und E-MailAdresse)</h3>
+            <p class="text-muted">
+                Sofern Sie in unserer App einen Account anlegen, uns über unser Kontaktformular kontaktieren oder
+                Kommentare / Bewertungen posten, werden die von Ihnen selbst eingegebenen Daten bei uns
+                gespeichert. Sollten Sie ein Profil in der App anlegen, werden die im Profil hinterlegten Informationen
+                ebenfalls bei uns gespeichert (z.B. EMail-Adresse, Nutzernamen, Telefonnummer, Fotos u. Ä.). Diese
+                Daten geben wir nicht ohne Ihre Einwilligung weiter.
+            </p>
+
+            <h3>(2) Ihre Daten werden automatisch von unseren Systemen oder den von uns beauftragten Dienstleistern erfasst (z.B. Analysedaten)</h3>
+            <p class="text-muted">
+                Unsere Webseiten/Apps nutzen die Funktionen von Google Analytics Remarketing in Verbindung mit den geräteübergreifenden Funktionen von Google AdWords und Google DoubleClick. Anbieter ist die Google Inc. 1600 Amphitheatre Parkway Mountain View, CA 94043, USA.
+                Diese Funktion ermöglicht es die mit Google Analytics Remarketing erstellten Werbe-Zielgruppen mit den geräteübergreifenden Funktionen von Google AdWords und Google-DoubleClick zu verknüpfen. Auf diese Weise können interessenbezogene, personalisierte Werbebotschaften, die in Abhängigkeit Ihres früheren Nutzungs- und Surfverhaltens auf einem Endgerät (z.B. Handy) an Sie angepasst wurden auch auf einem anderen Ihrer Endgeräte (z.B. Tablet oder PC) angezeigt werden.
+                Haben Sie eine entsprechende Einwilligung erteilt, verknüpft Google zu diesem Zweck Ihren Web- und App-Browserverlauf mit Ihrem Google-Konto. Auf diese Weise können auf jedem Endgerät auf dem Sie sich mit Ihrem Google-Konto anmelden, dieselben personalisierten Werbebotschaften geschaltet werden.
+                Zur Unterstützung dieser Funktion erfasst Google Analytics google-authentifizierte ID´s der Nutzer, die vorübergehend mit unseren Google-Analytics-Daten verknüpft werden, um Zielgruppen für die geräteübergreifende Anzeigenwerbung zu definieren und zu erstellen.
+                Sie können dem geräteübergreifenden Remarketing/Targeting dauerhaft widersprechen, indem Sie personalisierte Werbung in Ihrem Google-Konto deaktivieren; folgen Sie hierzu diesem Link: <a href="https://www.google.com/settings/ads/onweb/">https://www.google.com/settings/ads/onweb/</a>
+                Weitergehende Informationen und die Datenschutzbestimmungen finden Sie in der Datenschutzerklärung von Google unter: <a href="https://www.google.com/policies/technologies/ads/">https://www.google.com/policies/technologies/ads/</a>
+            </p>
+            <h3>(3) Ihre Daten werden aufgrund der Zugriffsrechte, die diese App erfordert und die sie uns erteilt haben, erfasst (z.B. Standortdaten)</h3>
+            <p class="text-muted">Zur Bereitstellung unserer Dienste über die App, benötigen wir auf Ihrem Gerät keine Zugriffsrechte.</p>
+
+
+            <h2>Cookies</h2>
+            <p class="text-muted">
+
+                ottrent verwendet als Web App so genannte Cookies. Cookies richten auf Ihrem Rechner/Gerät keinen Schaden an und enthalten keine Viren. Cookies dienen dazu, unser Angebot nutzerfreundlicher, effektiver und sicherer zu machen. Cookies sind kleine Textdateien, die auf Ihrem Rechner abgelegt werden und die Ihr Browser speichert.
+                Die meisten der von uns verwendeten Cookies sind so genannte „Session-Cookies“. Sie werden nach Ende Ihres Besuchs automatisch gelöscht. Andere Cookies bleiben auf Ihrem Endgerät gespeichert, bis Sie diese löschen. Diese Cookies ermöglichen es uns, Ihren Browser beim nächsten Besuch wiederzuerkennen.
+                Sie können Ihren Browser so einstellen, dass Sie über das Setzen von Cookies informiert werden und Cookies nur im Einzelfall erlauben, die Annahme von Cookies für bestimmte Fälle oder generell ausschließen sowie das automatische Löschen der Cookies beim Schließen des Browser aktivieren. Bei der Deaktivierung von Cookies kann die Funktionalität dieser Website eingeschränkt sein.
+            </p>
+
+            <h2>Server-Log-Files</h2>
+            <p class="text-muted">
+
+                Der Provider der Seiten erhebt und speichert automatisch Informationen in so genannten Server-Log Files, die Ihr Browser automatisch an uns übermittelt. Dies sind:<br /><br />
+                Browsertyp und Browserversion<br />
+                verwendetes Betriebssystem<br />
+                Referrer URL<br />
+                Hostname des zugreifenden Rechners<br />
+                Uhrzeit der Serveranfrage<br /><br />
+                Diese Daten sind nicht bestimmten Personen zuordenbar. Eine Zusammenführung dieser Daten mit anderen Datenquellen wird nicht vorgenommen. Wir behalten uns vor, diese Daten nachträglich zu prüfen, wenn uns konkrete Anhaltspunkte für eine rechtswidrige Nutzung bekannt werden.
+            </p>
+            <h2>Google Adsense</h2>
+            <p class="text-muted">
+
+                Diese Website/App benutzt Google AdSense, einen Dienst zum Einbinden von Werbeanzeigen der Google Inc. ("Google"). Anbieter ist die Google Inc., 1600 Amphitheatre Parkway Mountain View, CA 94043, USA.
+                Google AdSense verwendet so genannte "Cookies", Textdateien, die auf Ihrem Computer gespeichert werden und die eine Analyse der Benutzung der Website ermöglicht. Google AdSense verwendet auch so genannte Web Beacons (unsichtbare Grafiken). Durch diese Web Beacons können Informationen wie der Besucherverkehr auf diesen Seiten ausgewertet werden.
+                Die durch Cookies und Web Beacons erzeugten Informationen über die Benutzung dieser Website (einschließlich Ihrer IP-Adresse) und Auslieferung von Werbeformaten werden an einen Server von Google in den USA übertragen und dort gespeichert. Diese Informationen können von Google an Vertragspartner von Google weiter gegeben werden. Google wird Ihre IP-Adresse jedoch nicht mit anderen von Ihnen gespeicherten Daten zusammenführen.
+                Sie können die Installation der Cookies durch eine entsprechende Einstellung Ihrer Browser Software verhindern; wir weisen Sie jedoch darauf hin, dass Sie in diesem Fall gegebenenfalls nicht sämtliche Funktionen dieser Website voll umfänglich nutzen können. Durch die Nutzung dieser Website erklären Sie sich mit der Bearbeitung der über Sie erhobenen Daten durch Google in der zuvor beschriebenen Art und Weise und zu dem zuvor benannten Zweck einverstanden.
+            </p>
+
+            <h2>Google AdWords und Google Conversion Tracking</h2>
+            <p class="text-muted">
+
+                Diese Webseite/App verwendet Google AdWords. AdWords ist ein Online-Werbeprogramm der Google Inc., 1600 Amphitheatre Parkway, Mountain View, CA 94043, United States (“Google”).
+                Im Rahmen von Google AdWords nutzen wir das so genannte Conversion-Tracking. Wenn Sie auf eine von Google geschaltete Anzeige klicken wird ein Cookie für das Conversion-Tracking gesetzt. Bei Cookies handelt es sich um kleine Textdateien, die der Internet-Browser auf dem Computer des Nutzers ablegt. Diese Cookies verlieren nach 30 Tagen ihre Gültigkeit und dienen nicht der persönlichen Identifizierung der Nutzer. Besucht der Nutzer bestimmte Seiten dieser Website und das Cookie ist noch nicht abgelaufen, können Google und wir erkennen, dass der Nutzer auf die Anzeige geklickt hat und zu dieser Seite weitergeleitet wurde.
+                Jeder Google AdWords-Kunde erhält ein anderes Cookie. Die Cookies können nicht über die Websites von AdWords-Kunden nachverfolgt werden. Die mithilfe des Conversion-Cookies eingeholten Informationen dienen dazu, Conversion-Statistiken für AdWords-Kunden zu erstellen, die sich für Conversion-Tracking entschieden haben. Die Kunden erfahren die Gesamtanzahl der Nutzer, die auf ihre Anzeige geklickt haben und zu einer mit einem Conversion-Tracking-Tag versehenen Seite weitergeleitet wurden. Sie erhalten jedoch keine Informationen, mit denen sich Nutzer persönlich identifizieren lassen. Wenn Sie nicht am Tracking teilnehmen möchten, können Sie dieser Nutzung widersprechen, indem Sie das Cookie des Google Conversion-Trackings über ihren Internet-Browser unter Nutzereinstellungen leicht deaktivieren. Sie werden sodann nicht in die Conversion-Tracking Statistiken aufgenommen.
+                Mehr Informationen zu Google AdWords und Google Conversion-Tracking finden Sie in den Datenschutzbestimmungen von Google: <a href="https://www.google.de/policies/privacy/">https://www.google.de/policies/privacy/</a>
+                Sie können Ihren Browser so einstellen, dass Sie über das Setzen von Cookies informiert werden und Cookies nur im Einzelfall erlauben, die Annahme von Cookies für bestimmte Fälle oder generell ausschließen sowie das automatische Löschen der Cookies beim Schließen des Browser aktivieren. Bei der Deaktivierung von Cookies kann die Funktionalität dieser Website eingeschränkt sein.
+            </p>
+            <h2>Verschlüsselung</h2>
+            <p class="text-muted">
+                Diese App nutzt aus Gründen der Sicherheit und zum Schutz der Übertragung vertraulicher Inhalte,
+                wie zum Beispiel der Anfragen die Sie an uns als App-Betreiber senden oder der Kommunikation der
+                App-Nutzer untereinander, eine Verschlüsselung. Durch diese Verschlüsselung wird verhindert, dass
+                die Daten, die Sie übermitteln, von unbefugten Dritten mitgelesen werden können.
+            </p>
+            <h2>Auskunft, Löschung, Sperrung</h2>
+            <p class="text-muted">
+                Sie haben jederzeit das Recht auf unentgeltliche Auskunft über Ihre gespeicherten
+                personenbezogenen Daten, deren Herkunft und Empfänger und den Zweck der Datenverarbeitung
+                sowie ein Recht auf Berichtigung, Sperrung oder Löschung dieser Daten. Hierzu sowie zu weiteren
+                Fragen zum Thema personenbezogene Daten können Sie sich jederzeit unter der im Impressum
+                angegebenen Adresse an uns wenden.
+            </p>
+            <h2>Beschwerderecht bei der zuständigen Aufsichtsbehörde</h2>
+            <p class="text-muted">
+                Wir weisen Sie darauf hin, dass Ihnen im Falle datenschutzrechtlicher Verstöße ein Beschwerderecht
+                bei der zuständigen Aufsichtsbehörde zusteht. Zuständige Aufsichtsbehörde in
+                datenschutzrechtlichen Fragen ist in der Regel der Landesdatenschutzbeauftragte des Bundeslandes,
+                in dem unser Unternehmen seinen Hauptsitz hat. Eine Liste der Datenschutzbeauftragten sowie
+                deren Kontaktdaten können folgendem Link entnommen werden:
+                <a href="https://www.bfdi.bund.de/DE/Infothek/Anschriften_Links/anschriften_links-node.html">https://www.bfdi.bund.de/DE/Infothek/Anschriften_Links/anschriften_links-node.html</a>
+            </p>
+            <h2>Widerspruch Werbe-Mails</h2>
+            <p class="text-muted">
+                Der Nutzung von im Rahmen der Impressumspflicht veröffentlichten Kontaktdaten zur Übersendung
+                von nicht ausdrücklich angeforderter Werbung und Informationsmaterialien wird hiermit
+                widersprochen. Die Betreiber der App behalten sich ausdrücklich rechtliche Schritte im Falle der
+                unverlangten Zusendung von Werbeinformationen, etwa durch Spam-E-Mails, vor.</p>
+            <h2>Änderung dieser Datenschutzerklärung</h2>
+            <p class="text-muted">Wir behalten uns das Recht vor, diese Datenschutzbestimmungen unter Einhaltung der gesetzlichen Vorgaben jederzeit zu ändern.</p>
+
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p class="text-muted">&copy; 2018 <a href="https://app-workshop.de">app workshop UG (Haftungsbeschränkt).</a> All Rights Reserved.</p>
+            <p class="text-muted">Powered by New Age! <a href="https://startbootstrap.com/template-overviews/new-age/">New Age</a> is a web app landing page theme for Bootstrap created by <a href="https://startbootstrap.com/">Start Bootstrap</a>.</p>
+            <ul class="list-inline">
+                <li class="list-inline-item"><a href="{{ url_for('www.impressum') }}">Impressum</a></li>
+                <li class="list-inline-item"><a href="{{ url_for('www.privacy') }}">Datenschutzerklärung</a></li>
+            </ul>
+        </div>
+    </footer>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
+    <!-- Plugin JavaScript -->
+    <script src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+
+    <!-- Custom scripts for this template -->
+    <script src="{{ url_for('static', filename='js/new-age.min.js') }}"></script>
+</body>
+</html>

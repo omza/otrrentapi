@@ -9,6 +9,7 @@ from sys import stdout
 from flask import Flask
 from api import otrrentapi
 from ui.views import otrrentui
+from www.views import otrrentwww
 
 import logging
 import logging.handlers
@@ -31,6 +32,7 @@ app.config.update(config)
 """ register blueprints api and manage --------------------------------------------------------  """
 app.register_blueprint(otrrentapi)
 app.register_blueprint(otrrentui)
+app.register_blueprint(otrrentwww)
 
 
 
