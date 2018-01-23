@@ -83,6 +83,12 @@
             <input type="hidden" name="TorrentLink" value="{{ torrent.TorrentLink }}">
             <p>
                 <button type="submit" name="{{ torrent.Resolution }}" class="button button-big button-fill button-raised">
+                    
+                    <div class="chip">
+                        <div class="chip-media bg-pink">{{ torrent.Resolution }}</div>
+                        <div class="chip-label">{{ torrent.Resolution }}</div>
+                    </div>
+
                     {{ torrent.Resolution }}
                     <span class="chip chip-label">fertig: {{ torrent.finished }}</span>
                     <span class="chip chip-label">ladend {{ torrent.loading }}</span>

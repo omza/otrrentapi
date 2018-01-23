@@ -70,7 +70,7 @@ def set_platform_session():
     """ retrieve device uuid """
     deviceuuid = request.args.get('deviceuuid', None)
     log.debug('request deviceuuid: {!s}'.format(deviceuuid))
-    session['deviceuuid'] = deviceuuid                  
+    session['deviceuuid'] = deviceuuid
 
     """ retrieve user from session cookie """
     if ('authtoken' in session):

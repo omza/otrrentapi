@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/framework7.material.colors.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/material-icons.css') }}">
     {% endblock %}
+
 </head>
 
 <body class="theme-green">
@@ -75,7 +76,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a id="privacy" href="https://otrrent.app-workshop.de/privacystatement.html" target="_blank" class="item-link item-content close-panel external">
+                                    <a id="privacy" href="{{ url_for('www.privacy') }}" target="_blank" class="item-link item-content close-panel external">
                                         <div class="item-media"><i class="material-icons">lock</i></div>
                                         <div class="item-inner item-title">Datenschutzerklärung</div>
                                     </a>
@@ -221,6 +222,20 @@
         }
 
         var Authentification = new OtrrentAuth();
+
+        if (!sessionStorage.cookiedisclaimershown) {
+
+            myApp.addNotification({
+                title: 'Cookies',
+                message: "Diese Webseite/App verwendet Cookies um im Rahmen Ihrer Sitzung einen Authentifizierungstoken zu speichern. Indem Sie auf OK klicken oder diese Website weiter nutzen, stimmen Sie der Speicherung von Cookies auf Ihrem Endgerät zu. Näheres erfahren Sie aus unserer <a href='{{ url_for('www.privacy') }}' target='_blank' class='external'>Datenschutzerklärung</a>",
+                button: {
+                    text: 'OK'
+                },
+                onClose: function () {
+                    sessionStorage.cookiedisclaimershown = true;
+                }
+            });   
+        }
     </script>
     {% else %}
     <script>
@@ -231,7 +246,7 @@
 
             // attributes
             this.ClientID = localStorage.getItem('ClientID') === null ? '' : localStorage.getItem('ClientID');
-            this.Fingerprint = "{{ session['deviceuuid'] }}";
+            this.Fingerprint = device.uuid;
             this.LoggedIn = false;
             this.SessionTimeout = 0;
 
@@ -283,7 +298,6 @@
 
     </script>
     {% endif %}
-
 
 </body>
 </html>
