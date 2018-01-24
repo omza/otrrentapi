@@ -55,42 +55,10 @@
 <div id="about" class="card">
     <div class="card-header">Lizenzen &amp; rechtliche Hinweise</div>
     <div class="card-content-inner">
-        <div class="list-block media-list">
-            <ul>
-                <li class="item-content">
-                    <div class="item-inner">
-                        <div class="item-subtitle">Inhalte</div>
-                        <div class="item-text">
-                            Alle Inhalte dieser App - insbesondere EPG, Top-Aufnahmen &amp; Torrents - sind Eigentum von <a href="http://www.onlinetvrecorder.com/" target="_blank" class="external">onlineTVrecorder.com</a> der Internet TV AG, Seychelles. Alle Rechte liegen bei der Internet TV AG. Diese App zeigt die Daten unverfälscht an.
-                        </div>
-                    </div>
-                </li>
-                <li class="item-content">
-                    <div class="item-inner">
-                        <div class="item-subtitle">Framework7</div>
-                        <div class="item-text">
-                            <strong>otrrent</strong> nutzt <a href="https://framework7.io/" target="_blank" class="external">Framework7</a> um als Web App ein natives Nutzergefühl auf android und iOS Geräten zu ermöglichen.
-                        </div>
-                    </div>
-                </li>
-                <li class="item-content">
-                    <div class="item-inner">
-                        <div class="item-subtitle">Fingerprint2</div>
-                        <div class="item-text">
-                            <strong>otrrent</strong> nutzt zur Erkennung des Gerätes die Javascript Bibliothek <a href="https://github.com/Valve/fingerprintjs2" target="_blank" class="external">Fingerprint2</a> unter MIT Lizenz. Unter dem Fingerprint speichert otrrent die Einstellungen und der Verlauf (Historie) in der Cloud.
-                        </div>
-                    </div>
-                </li>
-                <li class="item-content">
-                    <div class="item-inner">
-                        <div class="item-subtitle">dAKirby309</div>
-                        <div class="item-text">
-                            Das Logo der otrrent app unterliegt der  <a href="http://creativecommons.org/licenses/by/3.0/" target="_blank" class="external">CC Attribution 3.0  Unported</a> Lizenz und wurde ursprünglich erstellt von <a href="http://dakirby309.deviantart.com/" target="_blank" class="external">dAKirby309</a>
-                        </div>
-                    </div>
-                </li>
-            </ul>
-        </div>
+        <p>Die <strong>Inhalte</strong> dieser App - insbesondere EPG, Top-Aufnahmen &amp; Torrents - sind Eigentum von <a href="http://www.onlinetvrecorder.com/" target="_blank" class="external">onlineTVrecorder.com</a> der Internet TV AG, Seychelles. Alle Rechte liegen bei der Internet TV AG. Diese App zeigt die Daten unverfälscht an.</p>
+        <p><strong>Framework7</strong>. otrrent nutzt <a href="https://framework7.io/" target="_blank" class="external">Framework7</a> um als Web App ein natives Nutzergefühl auf android und iOS Geräten zu ermöglichen.</p>
+        <p><strong>Fingerprint2</strong>. otrrent nutzt zur Erkennung des Gerätes die Javascript Bibliothek <a href="https://github.com/Valve/fingerprintjs2" target="_blank" class="external">Fingerprint2</a> unter MIT Lizenz. Unter dem Fingerprint speichert otrrent die Einstellungen und der Verlauf (Historie) in der Cloud.</p>
+        <p><strong>dAKirby309</strong>. Das Logo der otrrent app unterliegt der  <a href="http://creativecommons.org/licenses/by/3.0/" target="_blank" class="external">CC Attribution 3.0  Unported</a> Lizenz und wurde ursprünglich erstellt von <a href="http://dakirby309.deviantart.com/" target="_blank" class="external">dAKirby309</a></p>
     </div>
 </div>
 
@@ -132,7 +100,9 @@
                 </li>
                 <li class="item-content">
                     <div class="item-inner">
-                        <div class="item-subtitle">Fingerprint</div>
+                        <div class="item-subtitle">
+                            {% if session['deviceuuid'] is none %}Fingerprint{% else %}Device Uuid{% endif %}
+                        </div>
                         <div class="item-text">{{ g.user.RowKey }}</div>
                     </div>
                 </li>

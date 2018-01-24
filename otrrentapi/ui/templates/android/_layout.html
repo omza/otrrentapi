@@ -246,7 +246,7 @@
 
             // attributes
             this.ClientID = localStorage.getItem('ClientID') === null ? '' : localStorage.getItem('ClientID');
-            this.Fingerprint = device.uuid;
+            this.Fingerprint = "{{ session['deviceuuid'] }}";
             this.LoggedIn = false;
             this.SessionTimeout = 0;
 
