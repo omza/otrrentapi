@@ -32,12 +32,50 @@
                 <div class="item-inner">
                     <div class="item-title-row">
                         <div class="item-title">{{ item.titel }}</div>
-                        <div class="item-after"><span class="chip chip-label">{{ item.tasktype }}</span>&nbsp;<span class="chip chip-label">{{ item.resolution }}</span></div>
+                        <div class="item-after">
+                            {% if item.resolution == 'HD' %}
+                            <div class="chip">
+                                <div class="chip-media bg-orange">{{ item.resolution }}</div>
+                                <div class="chip-label">{{ item.tasktype }}</div>
+                            </div>
+                            {% elif item.resolution == 'HQ' %}
+                            <div class="chip">
+                                <div class="chip-media bg-red">{{ item.resolution }}</div>
+                                <div class="chip-label">{{ item.tasktype }}</div>
+                            </div>
+                            {% elif item.resolution == 'HD.AC3' %}
+                            <div class="chip">
+                                <div class="chip-media bg-orange">HD</div>
+                                <div class="chip-label">{{ item.tasktype }}</div>
+                            </div>
+                            {% elif item.resolution == 'MP4' %}
+                            <div class="chip">
+                                <div class="chip-media bg-green">{{ item.resolution }}</div>
+                                <div class="chip-label">{{ item.tasktype }}</div>
+                            </div>
+                            {% else %}
+                            <div class="chip">
+                                <div class="chip-media bg-blue">{{ item.resolution }}</div>
+                                <div class="chip-label">{{ item.tasktype }}</div>
+                            </div>
+                            {% endif %}
+                        </div>
                     </div>
 
                     <div class="item-subtitle">{{ item.genre }}</div>
                     <div class="item-text">{{ item.sender }} {{ item.startdate }} {{ item.starttime }}</div>
-                    <span class="chip chip-label">{{ item.status }}</span>&nbsp;<span class="chip chip-label">{{ item.updatedate }}</span>
+                    <div class="chip">
+                        <div class="chip-media">
+                            {% if item.status in ['error', 'deleted'] %}
+                            <i class="material-icons" style="color: red;">error</i>
+                            {% elif item.status in ['finished'] %}
+                            <i class="material-icons" style="color: green;">check_circle</i>
+                            {% else %}
+                            <i class="material-icons" style="color: yellow;">help</i>
+                            {% endif %}
+                        </div>
+                        <div class="chip-label">{{ item.status }}&nbsp;am&nbsp;{{ item.updatedate }}</div>
+                    </div>
                 </div>
             </li>
 

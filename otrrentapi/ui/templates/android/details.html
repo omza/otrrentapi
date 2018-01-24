@@ -83,16 +83,45 @@
             <input type="hidden" name="TorrentLink" value="{{ torrent.TorrentLink }}">
             <p>
                 <button type="submit" name="{{ torrent.Resolution }}" class="button button-big button-fill button-raised">
-                    
+                    {% if torrent.Resolution == 'HD' %}
                     <div class="chip">
-                        <div class="chip-media bg-pink">{{ torrent.Resolution }}</div>
-                        <div class="chip-label">{{ torrent.Resolution }}</div>
+                        <div class="chip-media bg-orange">{{ torrent.Resolution }}</div>
+                        <div class="chip-label">mpg.HD.avi.</div>
                     </div>
+                    {% elif torrent.Resolution == 'HQ' %}
+                    <div class="chip">
+                        <div class="chip-media bg-red">{{ torrent.Resolution }}</div>
+                        <div class="chip-label">mpg.HQ.avi.</div>
+                    </div>
+                    {% elif torrent.Resolution == 'HD.AC3' %}
+                    <div class="chip">
+                        <div class="chip-media bg-orange">HD</div>
+                        <div class="chip-label">mpg.HD.ac3.</div>
+                    </div>
+                    {% elif torrent.Resolution == 'MP4' %}
+                    <div class="chip">
+                        <div class="chip-media bg-green">{{ torrent.Resolution }}</div>
+                        <div class="chip-label">mpg.mp4.</div>
+                    </div>
+                    {% else %}
+                    <div class="chip">
+                        <div class="chip-media bg-blue">{{ torrent.Resolution }}</div>
+                        <div class="chip-label">.mpg.avi.</div>
+                    </div>
+                    {% endif %}
 
-                    {{ torrent.Resolution }}
-                    <span class="chip chip-label">fertig: {{ torrent.finished }}</span>
-                    <span class="chip chip-label">ladend {{ torrent.loading }}</span>
-                    <span class="chip chip-label">geladen {{ torrent.loaded }}</span>
+                    {% if torrent.loaded >= torrent.finished %}
+                    <div class="chip">
+                        <div class="chip-media bg-blue">{{ torrent.loaded }}</div>
+                        <div class="chip-label">geladen</div>
+                    </div>
+                    {% else %}
+                    <div class="chip">
+                        <div class="chip-media bg-blue">{{ torrent.finished }}</div>
+                        <div class="chip-label">fertig</div>
+                    </div>
+                    {% endif %}
+
                 </button>
             </p>
         </form>

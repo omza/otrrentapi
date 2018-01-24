@@ -35,11 +35,18 @@
                     <div class="item-title-row">
                         <div class="item-title">{{ item.titel }}</div>
                         {% if item.torrentCount > 0 %}
-                        <div class="item-after"><span class="chip chip-label">{{ item.torrentCount }}</span></div>
+                        <div class="item-after">
+                            <div class="chip">
+                                <div class="chip-media bg-blue">{{ item.torrentCount }}</div>
+                                <div class="chip-label">torrents</div>
+                            </div>
+                        </div>
                         {% endif %}
                     </div>
                     <div class="item-subtitle">{{ item.genre }}</div>
-                    <div class="item-text">{{ item.sender }} {{ item.startdate }} {{ item.starttime }}</div>
+                    <div class="item-text">
+                        {{ item.sender }} {{ item.startdate }} {{ item.starttime }}
+                    </div>
                 </div>
             </a>
         </li>
