@@ -52,24 +52,26 @@
                         <a class="nav-link js-scroll-trigger" href="{{ url_for('api.doc') }}">Api</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="{{ url_for('www.index') }}#help">FAQ</a>
+                        <a class="nav-link js-scroll-trigger" href="{{ url_for('www.index') }}#faq">FAQ</a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
+
+    <!-- Header and Mockup-->
     <header class="masthead">
         <div class="container h-100">
             <div class="row h-100">
                 <div class="col-lg-7 my-auto">
                     <div class="header-content mx-auto">
-                        <h1 class="mb-5">Die App für Auswahl und Download von torrents über onlinetvrecorder.com</h1>
+                        <h1 class="mb-5">TOP Aufnahmen von onlinetvrecorder.com auswählen und torrents downloaden!</h1>
                         <a href="#download" class="btn btn-outline btn-xl js-scroll-trigger">Download!</a>
                     </div>
                 </div>
                 <div class="col-lg-5 my-auto">
                     <div class="device-container">
-                        <div class="device-mockup nexus7 portrait">
+                        <div class="device-mockup galaxy_s5 portrait black">
                             <div class="device">
                                 <div class="screen">
                                     <!-- Demo image for screen mockup, you can put an image here, some HTML, an animation, video, or anything else! -->
@@ -91,10 +93,10 @@
             <div class="row">
                 <div class="col-md-8 mx-auto">
                     <h2 class="section-heading">Download otrrent</h2>
-                    <p>otrrent ist verfügbar auf android und als Web app! Download now to get started!</p>
+                    <p>otrrent ist verfügbar auf android und als Web app!</p>
                     <div class="badges">
                         <a class="badge-link" href="#"><img src="{{ url_for('static', filename='img/google-play-badge.svg') }}" alt=""></a>
-                        <a class="badge-link" href="#"><img src="{{ url_for('static', filename='img/app-store-badge.svg') }}" alt=""></a>
+                        <!--<a class="badge-link" href="#"><img src="{{ url_for('static', filename='img/app-store-badge.svg') }}" alt=""></a>-->
                     </div>
                 </div>
             </div>
@@ -111,7 +113,7 @@
             <div class="row">
                 <div class="col-lg-4 my-auto">
                     <div class="device-container">
-                        <div class="device-mockup nexus7 portrait">
+                        <div class="device-mockup galaxy_s5 portrait black">
                             <div class="device">
                                 <div class="screen">
                                     <!-- Demo image for screen mockup, you can put an image here, some HTML, an animation, video, or anything else! -->
@@ -151,34 +153,36 @@
                 <div class="col-lg-8 my-auto">
                     <div class="container-fluid">
                         <div class="row">
+
                             <div class="col-lg-6">
                                 <div class="feature-item">
                                     <i class="icon-screen-smartphone text-primary"></i>
                                     <h3>TOP Aufnahmen</h3>
-                                    <p class="text-muted">Mit otrrent können Nutzer von onlineTVrecorder.com (OTR), die otrkey Dateien per bittorrent runterladen, eine Sendung aus den beliebtesten Aufnahmen von OTR auswählen und die entsprechende torrent Datei an einen heimischen ftp-Server weiterleiten. Am heimischen Rechner kann dann mit einem bittorrent Client die entsprechende Sendung (otrkey) runtergeladen werden.</p>
+                                    <p class="text-muted">Mit otrrent können Nutzer von onlineTVrecorder.com (OTR) in den beliebtesten Aufnahmen von OTR stöbern und sich Details der Aufzeichnung ansehen. Es werden nur Sendungen angezeigt für die ein Torrent vorhanden ist.</p>
                                 </div>
                             </div>
+
                             <div class="col-lg-6">
                                 <div class="feature-item">
-                                    <i class="icon-camera text-primary"></i>
+                                    <i class="icon-action-redo text-primary"></i>
                                     <h3>Torrent push</h3>
-                                    <p class="text-muted">Put an image, video, animation, or anything else in the screen!</p>
+                                    <p class="text-muted">Senden Sie mit einem Klick die Torrentdatei an Ihren FTP-Endpoint. Am heimischen Rechner kann dann mit einem bittorrent Client die entsprechende Sendung (otrkey) runtergeladen werden.</p>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="feature-item">
-                                    <i class="icon-present text-primary"></i>
+                                    <i class="icon-basket text-primary"></i>
                                     <h3>Werbefrei</h3>
-                                    <p class="text-muted">As always, this theme is free to download and use for any purpose!</p>
+                                    <p class="text-muted">Nutzen Sie otrrent ohne Werbung! Per In-App Kauf entfernen Sie die Werbeeinblendungen um die beste Nutzererfahrung zu erleben. otrrent blendet in der alpha-Version noch keine Werbung ein!</p>
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="feature-item">
-                                    <i class="icon-lock-open text-primary"></i>
+                                    <i class="icon-film text-primary"></i>
                                     <h3>Decodieren &amp; Schneiden</h3>
-                                    <p class="text-muted">Since this theme is MIT licensed, you can use it commercially!</p>
+                                    <p class="text-muted">Werden Sie per In-App Kauf zum Pro-User! Wählen Sie mit Einem-Klick eine Sendung aus. otrrent decodiert und schneidet für Sie den otrkey und sendet das Video an Ihren FTP Endpoint.</p>
                                 </div>
                             </div>
                         </div>
@@ -191,14 +195,14 @@
     <section class="cta">
         <div class="cta-content">
             <div class="container">
-                <h2>Stop waiting.<br>Start building.</h2>
-                <a href="#contact" class="btn btn-outline btn-xl js-scroll-trigger">Let's Get Started!</a>
+                <h2>Was mache ich mit der Torrent Datei?</h2>
+                <a href="#faq" class="btn btn-outline btn-xl js-scroll-trigger">Antworten Hier!</a>
             </div>
         </div>
         <div class="overlay"></div>
     </section>
 
-    <section class="contact bg-primary" id="contact">
+    <section class="contact" id="faq">
         <div class="container">
             <h2>
                 We
@@ -224,39 +228,313 @@
             </ul>
         </div>
     </section>
+
     <footer>
         <div class="container">
             <p>&copy; 2018 <a href="https://app-workshop.de">app workshop UG (Haftungsbeschränkt).</a> All Rights Reserved.</p>
             <p>Powered by New Age! <a href="https://startbootstrap.com/template-overviews/new-age/">New Age</a> is a web app landing page theme for Bootstrap created by <a href="https://startbootstrap.com/">Start Bootstrap</a>.</p>
             <ul class="list-inline">
                 <li class="list-inline-item">
-                    <a href="{{ url_for('www.impressum') }}">Impressum</a>
+                    <a href="#impressum" data-toggle="modal" data-target="#impressum">Impressum</a>
                 </li>
                 <li class="list-inline-item">
-                    <a href="{{ url_for('www.privacy') }}">Datenschutzerklärung</a>
-                </li>
-                <li class="list-inline-item">
-                    <a href="#">FAQ</a>
+                    <a href="#privacy" data-toggle="modal" data-target="#privacy">Datenschutzerklärung</a>
                 </li>
             </ul>
         </div>
     </footer>
 
     <!-- Bootstrap core JavaScript -->
-
     <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
-
     <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
     <!-- Plugin JavaScript -->
-
     <script src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script>
 
     <!-- Custom scripts for this template -->
-
     <script src="{{ url_for('static', filename='js/new-age.min.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+
+            if (window.location.href.indexOf('#impressum') != -1) {
+                $('#impressum').modal('show');
+            }
+
+            if (window.location.href.indexOf('#privacy') != -1) {
+                $('#privacy').modal('show');
+            }
+
+        });
+    </script>
+
+    <!-- Impressum -->
+    <div id="impressum" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg">
+
+            <div class="modal-content">
+
+                <div class="modal-header bg-primary">
+                    <h2>Impressum</h2>
+                    <a href="#" class="btn btn-outline js-scroll-trigger" data-dismiss="modal">X</a>
+                </div>
+
+                <div class="modal-body container text-center">
+                    <h2>Angaben gemäß § 5 TMG:</h2>
+                    <p class="text-muted">
+                        app workshop UG (haftungsbeschränkt)<br />
+                        Alsterredder 10b<br />
+                        22395 Hamburg
+                    </p>
+
+                    <h2>Vertreten durch:</h2>
+                    <p class="text-muted">Jens Oliver Meyer zu Altenschildesche</p>
+
+                    <h2>Kontakt:</h2>
+                    <p class="text-muted">
+                        Telefon: +49 40 88 23 21 82<br />
+                        Telefax: +49 40 88 23 21 83<br />
+                        E-Mail: oliver@app-workshop.de
+                    </p>
+
+                    <h2>Registereintrag:</h2>
+                    <p class="text-muted">
+                        Eintragung im Handelsregister. <br />
+                        Registergericht:Amtsgericht Hamburg <br />
+                        Registernummer: HRB 128556
+                    </p>
+
+                    <h2>Umsatzsteuer:</h2>
+                    <p class="text-muted">
+                        Umsatzsteuer-Identifikationsnummer gemäß §27 a Umsatzsteuergesetz:<br />
+                        DE 815 451 011
+                    </p>
+
+                    <h2>Streitschlichtung</h2>
+                    <p class="text-muted">Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
+
+                    <h2>Haftung für Inhalte</h2> <p class="text-muted">Als Diensteanbieter sind wir gemäß § 7 Abs.1 TMG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 TMG sind wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen.</p> <p class="text-muted">Verpflichtungen zur Entfernung oder Sperrung der Nutzung von Informationen nach den allgemeinen Gesetzen bleiben hiervon unberührt. Eine diesbezügliche Haftung ist jedoch erst ab dem Zeitpunkt der Kenntnis einer konkreten Rechtsverletzung möglich. Bei Bekanntwerden von entsprechenden Rechtsverletzungen werden wir diese Inhalte umgehend entfernen.</p> <h2>Haftung für Links</h2> <p class="text-muted">Unser Angebot enthält Links zu externen Webseiten Dritter, auf deren Inhalte wir keinen Einfluss haben. Deshalb können wir für diese fremden Inhalte auch keine Gewähr übernehmen. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich. Die verlinkten Seiten wurden zum Zeitpunkt der Verlinkung auf mögliche Rechtsverstöße überprüft. Rechtswidrige Inhalte waren zum Zeitpunkt der Verlinkung nicht erkennbar.</p> <p class="text-muted">Eine permanente inhaltliche Kontrolle der verlinkten Seiten ist jedoch ohne konkrete Anhaltspunkte einer Rechtsverletzung nicht zumutbar. Bei Bekanntwerden von Rechtsverletzungen werden wir derartige Links umgehend entfernen.</p> <h2>Urheberrecht</h2> <p class="text-muted">Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers. Downloads und Kopien dieser Seite sind nur für den privaten, nicht kommerziellen Gebrauch gestattet.</p> <p class="text-muted">Soweit die Inhalte auf dieser Seite nicht vom Betreiber erstellt wurden, werden die Urheberrechte Dritter beachtet. Insbesondere werden Inhalte Dritter als solche gekennzeichnet. Sollten Sie trotzdem auf eine Urheberrechtsverletzung aufmerksam werden, bitten wir um einen entsprechenden Hinweis. Bei Bekanntwerden von Rechtsverletzungen werden wir derartige Inhalte umgehend entfernen.</p>
+
+                    <h1>Site Notice</h1>
+
+                    <h2>Information provided according to Sec. 5 German Telemedia Act (TMG):</h2>
+                    <p class="text-muted">
+                        app workshop UG (haftungsbeschränkt)<br />
+                        Alsterredder 10b<br />
+                        22395 Hamburg
+                    </p>
+
+                    <h2>Represented by:</h2>
+                    <p class="text-muted">Jens Oliver Meyer zu Altenschildesche</p>
+
+                    <h2>Contact:</h2>
+                    <p class="text-muted">
+                        Telephone: +49 40 88 23 21 82<br />
+                        Telefax: +49 40 88 23 21 83<br />
+                        E-Mail: oliver@app-workshop.de
+                    </p>
+
+                    <h2>Register entry:</h2>
+                    <p class="text-muted">
+                        Entry in the Handelsregister. <br />
+                        Registering court:Amtsgericht Hamburg <br />
+                        Registration number: HRB 128556
+                    </p>
+
+                    <h2>VAT:</h2>
+                    <p class="text-muted">
+                        VAT Id number according to Sec. 27 a German Value Added Tax Act:<br />
+                        DE 815 451 011
+                    </p>
+
+                    <h2>Dispute resolution</h2>
+                    <p class="text-muted">We do not take part in online dispute resolutions at consumer arbitration boards.</p>
+
+                    <h2>Liability for Contents</h2> <p class="text-muted">As service providers, we are liable for own contents of these websites according to Sec. 7, paragraph 1 German Telemedia Act (TMG). However, according to Sec. 8 to 10 German Telemedia Act (TMG), service providers are not obligated to permanently monitor submitted or stored information or to search for evidences that indicate illegal activities.</p> <p class="text-muted">Legal obligations to removing information or to blocking the use of information remain unchallenged. In this case, liability is only possible at the time of knowledge about a specific violation of law. Illegal contents will be removed immediately at the time we get knowledge of them.</p> <h2>Liability for Links</h2> <p class="text-muted">Our offer includes links to external third party websites. We have no influence on the contents of those websites, therefore we cannot guarantee for those contents. Providers or administrators of linked websites are always responsible for their own contents.</p> <p class="text-muted">The linked websites had been checked for possible violations of law at the time of the establishment of the link. Illegal contents were not detected at the time of the linking. A permanent monitoring of the contents of linked websites cannot be imposed without reasonable indications that there has been a violation of law. Illegal links will be removed immediately at the time we get knowledge of them.</p> <h2>Copyright</h2> <p class="text-muted">Contents and compilations published on these websites by the providers are subject to German copyright laws. Reproduction, editing, distribution as well as the use of any kind outside the scope of the copyright law require a written permission of the author or originator. Downloads and copies of these websites are permitted for private use only.<br /> The commercial use of our contents without permission of the originator is prohibited.</p> <p class="text-muted">Copyright laws of third parties are respected as long as the contents on these websites do not originate from the provider. Contributions of third parties on this site are indicated as such. However, if you notice any violations of copyright law, please inform us. Such contents will be removed immediately.</p><p class="text-muted"> </p>
+
+                </div>
+
+                <div class="modal-footer bg-primary">
+                    <a href="#" class="btn btn-outline btn-xl js-scroll-trigger" data-dismiss="modal">Schliessen</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Privacy Statement-->
+    <div id="privacy" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg">
+
+            <div class="modal-content">
+
+                <div class="modal-header bg-primary text-center">
+                    <h2>Datenschutzerklärung für die App "otrrent"</h2>
+                    <a href="#" class="btn btn-outline js-scroll-trigger" data-dismiss="modal">X</a>
+                </div>
+
+                <div class="modal-body container text-center">
+                    <p class="text-muted">
+                        Stand: 25.01.2018
+                    </p>
+                    <h2>Datenschutz</h2>
+                    <p class="text-muted">
+                        Wir nehmen den Schutz Ihrer persönlichen Daten sehr ernst. Wir behandeln Ihre personenbezogenen Daten vertraulich und entsprechend der gesetzlichen Datenschutzvorschriften
+                        sowie dieser Datenschutzerklärung.
+                        Diese Datenschutzerklärung gilt für unsere mobilen iPhone-, Android-, Windows Universal Apps sowie unsere hosted Web Apps (im Folgenden "App").
+                        In ihr werden Art, Zweck und Umfang der Datenerhebung im Rahmen der App-Nutzung erläutert. Wir weisen darauf hin, dass die Datenübertragung im Internet Sicherheitslücken aufweisen kann. Ein
+                        lückenloser Schutz der Daten vor dem Zugriff durch Dritte ist nicht möglich.
+                    </p>
+
+                    <h2>Verantwortliche Stelle</h2>
+                    <p class="text-muted">
+                        "Verantwortliche Stelle" ist die Stelle, die personenbezogene Daten (z.B. Namen, EMail-Adressen o.
+                        Ä.) erhebt, verarbeitet oder nutzt.Verantwortliche Stelle für die Datenverarbeitung im Rahmen dieser App ist:<br />
+
+                        app workshop UG (haftungsbeschränkt)<br />
+                        Alsterredder 10b<br />
+                        22395 Hamburg<br />
+                        Telefon: +49 40 88 23 21 82<br />
+                        Telefax: +49 40 88 23 21 83<br />
+                        E-Mail: oliver@app-workshop.de<br />
+                    </p>
+
+                    <h2>Welche personenbezogenen Daten werden erfasst?</h2>
+                    <p class="text-muted">
+                        Wir erheben, speichern und verarbeiten verschiedene Kategorien personenbezogener Daten.
+                        Personenbezogene Daten sind Daten, die Rückschlüsse auf Ihre Person zulassen (z.B. E-Mail-Adresse,
+                        Name, IP-Adresse u. Ä.).
+
+                        Wenn Sie diese App installieren und nutzen werden folgende personenbezogenen Daten von Ihnen
+                        erfasst:
+                    </p>
+
+                    <h3>(1) Device Fingerprint</h3>
+                    <p class="text-muted">
+                        Die Erfassung erfolgt zu folgendem Zweck:
+                        .....................................................................................................
+                    </p>
+                    <h3>(2) Einstellungen (Benutzerprofil)</h3>
+                    <p class="text-muted">
+                        Die Erfassung erfolgt zu folgendem Zweck:
+                        .....................................................................................................
+                    </p>
+                    <h3>(3) Historie der gepushten Torrent Dateien</h3>
+                    <p class="text-muted">
+                        Die Erfassung erfolgt zu folgendem Zweck:
+                        .....................................................................................................
+                    </p>
+
+                    <p class="text-muted">Die Erfassung personenbezogener Daten durch diese App erfolgt nur, wenn wir rechtlich hierzu berechtigt sind oder Sie der in Frage stehenden Datenerfassung ausdrücklich zugestimmt haben.</p>
+
+                    <h2>Datenerhebung im Rahmen der App-Nutzung</h2>
+                    <p class="text-muted">
+                        Personenbezogene Daten können im Rahmen der App-Nutzung insbesondere auf folgende Weise
+                        erhoben werden:
+                    </p>
+
+                    <h3>(1) Sie geben die Daten selbst bei uns ein (z.B. Nutzername und E-MailAdresse)</h3>
+                    <p class="text-muted">
+                        Sofern Sie in unserer App einen Account anlegen, uns über unser Kontaktformular kontaktieren oder
+                        Kommentare / Bewertungen posten, werden die von Ihnen selbst eingegebenen Daten bei uns
+                        gespeichert. Sollten Sie ein Profil in der App anlegen, werden die im Profil hinterlegten Informationen
+                        ebenfalls bei uns gespeichert (z.B. EMail-Adresse, Nutzernamen, Telefonnummer, Fotos u. Ä.). Diese
+                        Daten geben wir nicht ohne Ihre Einwilligung weiter.
+                    </p>
+
+                    <h3>(2) Ihre Daten werden automatisch von unseren Systemen oder den von uns beauftragten Dienstleistern erfasst (z.B. Analysedaten)</h3>
+                    <p class="text-muted">
+                        Unsere Webseiten/Apps nutzen die Funktionen von Google Analytics Remarketing in Verbindung mit den geräteübergreifenden Funktionen von Google AdWords und Google DoubleClick. Anbieter ist die Google Inc. 1600 Amphitheatre Parkway Mountain View, CA 94043, USA.
+                        Diese Funktion ermöglicht es die mit Google Analytics Remarketing erstellten Werbe-Zielgruppen mit den geräteübergreifenden Funktionen von Google AdWords und Google-DoubleClick zu verknüpfen. Auf diese Weise können interessenbezogene, personalisierte Werbebotschaften, die in Abhängigkeit Ihres früheren Nutzungs- und Surfverhaltens auf einem Endgerät (z.B. Handy) an Sie angepasst wurden auch auf einem anderen Ihrer Endgeräte (z.B. Tablet oder PC) angezeigt werden.
+                        Haben Sie eine entsprechende Einwilligung erteilt, verknüpft Google zu diesem Zweck Ihren Web- und App-Browserverlauf mit Ihrem Google-Konto. Auf diese Weise können auf jedem Endgerät auf dem Sie sich mit Ihrem Google-Konto anmelden, dieselben personalisierten Werbebotschaften geschaltet werden.
+                        Zur Unterstützung dieser Funktion erfasst Google Analytics google-authentifizierte ID´s der Nutzer, die vorübergehend mit unseren Google-Analytics-Daten verknüpft werden, um Zielgruppen für die geräteübergreifende Anzeigenwerbung zu definieren und zu erstellen.
+                        Sie können dem geräteübergreifenden Remarketing/Targeting dauerhaft widersprechen, indem Sie personalisierte Werbung in Ihrem Google-Konto deaktivieren; folgen Sie hierzu diesem Link: <a href="https://www.google.com/settings/ads/onweb/">https://www.google.com/settings/ads/onweb/</a>
+                        Weitergehende Informationen und die Datenschutzbestimmungen finden Sie in der Datenschutzerklärung von Google unter: <a href="https://www.google.com/policies/technologies/ads/">https://www.google.com/policies/technologies/ads/</a>
+                    </p>
+                    <h3>(3) Ihre Daten werden aufgrund der Zugriffsrechte, die diese App erfordert und die sie uns erteilt haben, erfasst (z.B. Standortdaten)</h3>
+                    <p class="text-muted">Zur Bereitstellung unserer Dienste über die App, benötigen wir auf Ihrem Gerät keine Zugriffsrechte.</p>
 
 
+                    <h2>Cookies</h2>
+                    <p class="text-muted">
+
+                        ottrent verwendet als Web App so genannte Cookies. Cookies richten auf Ihrem Rechner/Gerät keinen Schaden an und enthalten keine Viren. Cookies dienen dazu, unser Angebot nutzerfreundlicher, effektiver und sicherer zu machen. Cookies sind kleine Textdateien, die auf Ihrem Rechner abgelegt werden und die Ihr Browser speichert.
+                        Die meisten der von uns verwendeten Cookies sind so genannte „Session-Cookies“. Sie werden nach Ende Ihres Besuchs automatisch gelöscht. Andere Cookies bleiben auf Ihrem Endgerät gespeichert, bis Sie diese löschen. Diese Cookies ermöglichen es uns, Ihren Browser beim nächsten Besuch wiederzuerkennen.
+                        Sie können Ihren Browser so einstellen, dass Sie über das Setzen von Cookies informiert werden und Cookies nur im Einzelfall erlauben, die Annahme von Cookies für bestimmte Fälle oder generell ausschließen sowie das automatische Löschen der Cookies beim Schließen des Browser aktivieren. Bei der Deaktivierung von Cookies kann die Funktionalität dieser Website eingeschränkt sein.
+                    </p>
+
+                    <h2>Server-Log-Files</h2>
+                    <p class="text-muted">
+
+                        Der Provider der Seiten erhebt und speichert automatisch Informationen in so genannten Server-Log Files, die Ihr Browser automatisch an uns übermittelt. Dies sind:<br /><br />
+                        Browsertyp und Browserversion<br />
+                        verwendetes Betriebssystem<br />
+                        Referrer URL<br />
+                        Hostname des zugreifenden Rechners<br />
+                        Uhrzeit der Serveranfrage<br /><br />
+                        Diese Daten sind nicht bestimmten Personen zuordenbar. Eine Zusammenführung dieser Daten mit anderen Datenquellen wird nicht vorgenommen. Wir behalten uns vor, diese Daten nachträglich zu prüfen, wenn uns konkrete Anhaltspunkte für eine rechtswidrige Nutzung bekannt werden.
+                    </p>
+                    <h2>Google Adsense</h2>
+                    <p class="text-muted">
+
+                        Diese Website/App benutzt Google AdSense, einen Dienst zum Einbinden von Werbeanzeigen der Google Inc. ("Google"). Anbieter ist die Google Inc., 1600 Amphitheatre Parkway Mountain View, CA 94043, USA.
+                        Google AdSense verwendet so genannte "Cookies", Textdateien, die auf Ihrem Computer gespeichert werden und die eine Analyse der Benutzung der Website ermöglicht. Google AdSense verwendet auch so genannte Web Beacons (unsichtbare Grafiken). Durch diese Web Beacons können Informationen wie der Besucherverkehr auf diesen Seiten ausgewertet werden.
+                        Die durch Cookies und Web Beacons erzeugten Informationen über die Benutzung dieser Website (einschließlich Ihrer IP-Adresse) und Auslieferung von Werbeformaten werden an einen Server von Google in den USA übertragen und dort gespeichert. Diese Informationen können von Google an Vertragspartner von Google weiter gegeben werden. Google wird Ihre IP-Adresse jedoch nicht mit anderen von Ihnen gespeicherten Daten zusammenführen.
+                        Sie können die Installation der Cookies durch eine entsprechende Einstellung Ihrer Browser Software verhindern; wir weisen Sie jedoch darauf hin, dass Sie in diesem Fall gegebenenfalls nicht sämtliche Funktionen dieser Website voll umfänglich nutzen können. Durch die Nutzung dieser Website erklären Sie sich mit der Bearbeitung der über Sie erhobenen Daten durch Google in der zuvor beschriebenen Art und Weise und zu dem zuvor benannten Zweck einverstanden.
+                    </p>
+
+                    <h2>Google AdWords und Google Conversion Tracking</h2>
+                    <p class="text-muted">
+
+                        Diese Webseite/App verwendet Google AdWords. AdWords ist ein Online-Werbeprogramm der Google Inc., 1600 Amphitheatre Parkway, Mountain View, CA 94043, United States (“Google”).
+                        Im Rahmen von Google AdWords nutzen wir das so genannte Conversion-Tracking. Wenn Sie auf eine von Google geschaltete Anzeige klicken wird ein Cookie für das Conversion-Tracking gesetzt. Bei Cookies handelt es sich um kleine Textdateien, die der Internet-Browser auf dem Computer des Nutzers ablegt. Diese Cookies verlieren nach 30 Tagen ihre Gültigkeit und dienen nicht der persönlichen Identifizierung der Nutzer. Besucht der Nutzer bestimmte Seiten dieser Website und das Cookie ist noch nicht abgelaufen, können Google und wir erkennen, dass der Nutzer auf die Anzeige geklickt hat und zu dieser Seite weitergeleitet wurde.
+                        Jeder Google AdWords-Kunde erhält ein anderes Cookie. Die Cookies können nicht über die Websites von AdWords-Kunden nachverfolgt werden. Die mithilfe des Conversion-Cookies eingeholten Informationen dienen dazu, Conversion-Statistiken für AdWords-Kunden zu erstellen, die sich für Conversion-Tracking entschieden haben. Die Kunden erfahren die Gesamtanzahl der Nutzer, die auf ihre Anzeige geklickt haben und zu einer mit einem Conversion-Tracking-Tag versehenen Seite weitergeleitet wurden. Sie erhalten jedoch keine Informationen, mit denen sich Nutzer persönlich identifizieren lassen. Wenn Sie nicht am Tracking teilnehmen möchten, können Sie dieser Nutzung widersprechen, indem Sie das Cookie des Google Conversion-Trackings über ihren Internet-Browser unter Nutzereinstellungen leicht deaktivieren. Sie werden sodann nicht in die Conversion-Tracking Statistiken aufgenommen.
+                        Mehr Informationen zu Google AdWords und Google Conversion-Tracking finden Sie in den Datenschutzbestimmungen von Google: <a href="https://www.google.de/policies/privacy/">https://www.google.de/policies/privacy/</a>
+                        Sie können Ihren Browser so einstellen, dass Sie über das Setzen von Cookies informiert werden und Cookies nur im Einzelfall erlauben, die Annahme von Cookies für bestimmte Fälle oder generell ausschließen sowie das automatische Löschen der Cookies beim Schließen des Browser aktivieren. Bei der Deaktivierung von Cookies kann die Funktionalität dieser Website eingeschränkt sein.
+                    </p>
+                    <h2>Verschlüsselung</h2>
+                    <p class="text-muted">
+                        Diese App nutzt aus Gründen der Sicherheit und zum Schutz der Übertragung vertraulicher Inhalte,
+                        wie zum Beispiel der Anfragen die Sie an uns als App-Betreiber senden oder der Kommunikation der
+                        App-Nutzer untereinander, eine Verschlüsselung. Durch diese Verschlüsselung wird verhindert, dass
+                        die Daten, die Sie übermitteln, von unbefugten Dritten mitgelesen werden können.
+                    </p>
+                    <h2>Auskunft, Löschung, Sperrung</h2>
+                    <p class="text-muted">
+                        Sie haben jederzeit das Recht auf unentgeltliche Auskunft über Ihre gespeicherten
+                        personenbezogenen Daten, deren Herkunft und Empfänger und den Zweck der Datenverarbeitung
+                        sowie ein Recht auf Berichtigung, Sperrung oder Löschung dieser Daten. Hierzu sowie zu weiteren
+                        Fragen zum Thema personenbezogene Daten können Sie sich jederzeit unter der im Impressum
+                        angegebenen Adresse an uns wenden.
+                    </p>
+                    <h2>Beschwerderecht bei der zuständigen Aufsichtsbehörde</h2>
+                    <p class="text-muted">
+                        Wir weisen Sie darauf hin, dass Ihnen im Falle datenschutzrechtlicher Verstöße ein Beschwerderecht
+                        bei der zuständigen Aufsichtsbehörde zusteht. Zuständige Aufsichtsbehörde in
+                        datenschutzrechtlichen Fragen ist in der Regel der Landesdatenschutzbeauftragte des Bundeslandes,
+                        in dem unser Unternehmen seinen Hauptsitz hat. Eine Liste der Datenschutzbeauftragten sowie
+                        deren Kontaktdaten können folgendem Link entnommen werden:
+                        <a href="https://www.bfdi.bund.de/DE/Infothek/Anschriften_Links/anschriften_links-node.html">https://www.bfdi.bund.de/DE/Infothek/Anschriften_Links/anschriften_links-node.html</a>
+                    </p>
+                    <h2>Widerspruch Werbe-Mails</h2>
+                    <p class="text-muted">
+                        Der Nutzung von im Rahmen der Impressumspflicht veröffentlichten Kontaktdaten zur Übersendung
+                        von nicht ausdrücklich angeforderter Werbung und Informationsmaterialien wird hiermit
+                        widersprochen. Die Betreiber der App behalten sich ausdrücklich rechtliche Schritte im Falle der
+                        unverlangten Zusendung von Werbeinformationen, etwa durch Spam-E-Mails, vor.
+                    </p>
+                    <h2>Änderung dieser Datenschutzerklärung</h2>
+                    <p class="text-muted">Wir behalten uns das Recht vor, diese Datenschutzbestimmungen unter Einhaltung der gesetzlichen Vorgaben jederzeit zu ändern.</p>
+
+
+                </div>
+
+                <div class="modal-footer bg-primary">
+                    <a href="#" class="btn btn-outline btn-xl js-scroll-trigger" data-dismiss="modal">Schliessen</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
 </body>
 
 

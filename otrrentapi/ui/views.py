@@ -93,7 +93,7 @@ def set_platform_session():
             session['platform'] = platform 
         else:
             session['platform'] = config['APPLICATION_UI_DEFAULT']
-            log.info('default platform: {!s}'.format(session['platform']))
+            log.debug('default platform: {!s}'.format(session['platform']))
     
 
 
@@ -503,12 +503,10 @@ def ExistsHistory(fingerprint, epgid ) -> bool:
     """ get job history for users fingerprint and epg id """
     historylist = StorageTableCollection('history', "PartitionKey eq '" + fingerprint + "'")
     historylist = db.query(historylist)
-    
-    for history in historylist:
-        if history['epgid'] == epgid:
-            if history['status'] != 'deleted':
-                return True
-            else:
-                return False
 
+    identicalepgs = [item for item in historylist if item['epgid'] == int(epgid)]
+    
+    if len(identicalepgs) > 0:
+        return True
+    else:
         return False

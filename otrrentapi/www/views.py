@@ -24,14 +24,3 @@ def index():
     """ render platform template """
     return render_template('index.html')
 
-@otrrentwww.route('/impressum')
-def impressum():
-
-    """ render platform template """
-    return render_template('impressum.html')
-
-@otrrentwww.route('/privacy')
-def privacy():
-
-    """ render platform template """
-    return render_template('privacy.html')

@@ -36,10 +36,9 @@
                         <div class="item-title">{{ item.titel }}</div>
                         {% if item.torrentCount > 0 %}
                         <div class="item-after">
-                            <div class="chip">
-                                <div class="chip-media bg-blue">{{ item.torrentCount }}</div>
-                                <div class="chip-label">torrents</div>
-                            </div>
+                            <span class="chip-media {% if item.torrentCount >= 3 %}bg-red{% elif item.torrentCount == 2%}bg-orange{% else %}bg-blue{% endif %}">
+                                {{ item.torrentCount }}
+                            </span>
                         </div>
                         {% endif %}
                     </div>
@@ -47,6 +46,7 @@
                     <div class="item-text">
                         {{ item.sender }} {{ item.startdate }} {{ item.starttime }}
                     </div>
+
                 </div>
             </a>
         </li>

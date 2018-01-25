@@ -76,7 +76,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a id="privacy" href="{{ url_for('www.privacy') }}" target="_blank" class="item-link item-content close-panel external">
+                                    <a id="privacy" href="{{ url_for('www.index') }}#privacy" target="_blank" class="item-link item-content close-panel external">
                                         <div class="item-media"><i class="material-icons">lock</i></div>
                                         <div class="item-inner item-title">Datenschutzerklärung</div>
                                     </a>
@@ -227,7 +227,7 @@
 
             myApp.addNotification({
                 title: 'Cookies',
-                message: "Diese Webseite/App verwendet Cookies um im Rahmen Ihrer Sitzung einen Authentifizierungstoken zu speichern. Indem Sie auf OK klicken oder diese Website weiter nutzen, stimmen Sie der Speicherung von Cookies auf Ihrem Endgerät zu. Näheres erfahren Sie aus unserer <a href='{{ url_for('www.privacy') }}' target='_blank' class='external'>Datenschutzerklärung</a>",
+                message: "Diese Webseite/App verwendet Cookies um im Rahmen Ihrer Sitzung einen Authentifizierungstoken zu speichern. Indem Sie auf OK klicken oder diese Website weiter nutzen, stimmen Sie der Speicherung von Cookies auf Ihrem Endgerät zu. Näheres erfahren Sie aus unserer <a href='{{ url_for('www.index') }}#privacy' target='_blank' class='external'>Datenschutzerklärung</a>",
                 button: {
                     text: 'OK'
                 },
