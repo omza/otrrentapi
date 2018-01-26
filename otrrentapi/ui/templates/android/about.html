@@ -101,7 +101,11 @@
                 <li class="item-content">
                     <div class="item-inner">
                         <div class="item-subtitle">
-                            {% if session['deviceuuid'] is none %}Fingerprint{% else %}Device Uuid{% endif %}
+                            {% if session['deviceuuid'] is none %}
+                            Fingerprint
+                            {% else %}
+                            Device UUID {{ session['deviceuuid'] }}
+                            {% endif %}
                         </div>
                         <div class="item-text">{{ g.user.RowKey }}</div>
                     </div>

@@ -46,14 +46,15 @@
                         <a class="nav-link js-scroll-trigger" href="{{ url_for('www.index') }}#features">Funktionen</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="{{ url_for('www.index') }}#faq">Automation</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link js-scroll-trigger" href="{{ url_for('ui.index') }}">Web App</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link js-scroll-trigger" href="{{ url_for('api.doc') }}">Api</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="{{ url_for('www.index') }}#faq">FAQ</a>
-                    </li>
+
                 </ul>
             </div>
         </div>
@@ -76,9 +77,6 @@
                                 <div class="screen">
                                     <!-- Demo image for screen mockup, you can put an image here, some HTML, an animation, video, or anything else! -->
                                     <img src="{{ url_for('static', filename='img/topaufnahmen.png') }}" class="img-fluid" alt="">
-                                </div>
-                                <div class="button">
-                                    <!-- You can hook the "home button" to some JavaScript events or just remove it -->
                                 </div>
                             </div>
                         </div>
@@ -110,6 +108,7 @@
                 <p class="text-muted">Das geht mit otrrent</p>
                 <hr>
             </div>
+
             <div class="row">
                 <div class="col-lg-4 my-auto">
                     <div class="device-container">
@@ -182,7 +181,7 @@
                                 <div class="feature-item">
                                     <i class="icon-film text-primary"></i>
                                     <h3>Decodieren &amp; Schneiden</h3>
-                                    <p class="text-muted">Werden Sie per In-App Kauf zum Pro-User! Wählen Sie mit Einem-Klick eine Sendung aus. otrrent decodiert und schneidet für Sie den otrkey und sendet das Video an Ihren FTP Endpoint.</p>
+                                    <p class="text-muted">Werden Sie per In-App Kauf zum Pro-User! Wählen Sie mit Einem-Klick eine Sendung aus. otrrent decodiert und schneidet für Sie den otrkey und sendet das Video an Ihren FTP Endpoint.otrrent bietet in der alpha-Version noch keinen Pro-User Status an!</p>
                                 </div>
                             </div>
                         </div>
@@ -195,37 +194,294 @@
     <section class="cta">
         <div class="cta-content">
             <div class="container">
-                <h2>Was mache ich mit der Torrent Datei?</h2>
-                <a href="#faq" class="btn btn-outline btn-xl js-scroll-trigger">Antworten Hier!</a>
+                <h2>waschen, schneiden, fönen?</h2>
+                <a href="#faq" class="btn btn-outline btn-xl js-scroll-trigger">download, decodieren, schneiden!</a>
             </div>
         </div>
         <div class="overlay"></div>
     </section>
 
-    <section class="contact" id="faq">
-        <div class="container">
-            <h2>
-                We
-                <i class="fa fa-heart"></i>
-                new friends!
-            </h2>
-            <ul class="list-inline list-social">
-                <li class="list-inline-item social-twitter">
-                    <a href="#">
-                        <i class="fa fa-twitter"></i>
-                    </a>
-                </li>
-                <li class="list-inline-item social-facebook">
-                    <a href="#">
-                        <i class="fa fa-facebook"></i>
-                    </a>
-                </li>
-                <li class="list-inline-item social-google-plus">
-                    <a href="#">
-                        <i class="fa fa-google-plus"></i>
-                    </a>
-                </li>
-            </ul>
+    <section class="features" id="faq">
+        <div class="container text-center">
+
+            <div class="section-heading">
+                <h2>otrrent Automation am Heimrechner</h2>
+                <p class="text-muted">otrrent hilft ja nur, wenn am zielrechner die torrent-datei entsprechend verarbeitet werden kann. in diesem beitrag beschreibe ich als beispielkonfiguration das zusammenspiel zwischen otrrent und verschiedenen tools auf meinem heimrechner</p>
+            </div>
+
+            <h3>schritt 1) einrichten eines ftp-servers</h3>
+            <div class="row">
+                <div class="col-xl text-left">
+                    <p class="text-muted">mit otrrent werden die ausgewählten torrents auf den ftp-server meiner fritz-box hochgeladen. da die fritz box auch als router/modem ins WAN dient ist die box in der regel 24/7 online und für otrrent ereichbar. die einrichtung habe ich anhand des skriptes "FTP-Zugriff auf USB-Speicher am Anschluss für USB-Geräte" von avm durchführen können.</p>
+                </div>
+            </div>
+            <br />
+
+            <h3>schritt 2) einrichten eines bittorrent-clients</h3>
+            <div class="row">
+                <div class="col-sm">
+                    <img class="d-block img-fluid" src="{{ url_for('static', filename='img/Verzeichnisse.PNG') }}">
+                </div>
+                <div class="col-xl text-right">
+                    <p class="text-muted">im heimnetz betreibe ich einen Windows Home Server 2011, der zeitgesteuert und bei bedarf online ist. auf diesem rechner habe ich den uTorrent client installiert. Es gibt natürlich noch viele andere bittorrent clients, ich verwende aber uTorrent mit folgenden einstellungen im menü "Optionen\Einstellungen":</p>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-sm">
+                    <img class="d-block img-fluid" src="{{ url_for('static', filename='img/WebUI.PNG') }}">
+                </div>
+                <div class="col-xl text-right">
+                    <p class="text-muted">danach habe ich den uTorrent über die kommandozeile mit "sc.exe"  als dienst eingerichtet, so das uTorrent auch läuft, wenn kein benutzer am rechner angemeldet ist. wie das geht beschreibt folgender KnowledgeBase artikel "Erstellung eines Windows-Dienstes mit "Sc.exe"</p>
+                </div>
+            </div>
+            <br />
+
+            <h3>schritt 3) übergabe der torrent-datei vom ftp-Server an den bittorrent-client</h3>
+            <div class="row">
+                <div class="col-xl text-left">
+                    <p class="text-muted">
+                        mit einem powershell skript verschiebe ich nun die "*.otrkey.torrent" dateien von einem ftp-server auf das lokale verzeichnis in dem uTorrent die torrent-dateien erwartet. das powershell skript lasse ich dann als zeitgesteuerte aufgabe ausführen. der TechNet artikel "Aufgabenplanung: So wird es gemacht" beschreibt die einrichtung einer Aufgabe.
+                        das folgende powershell skript können sie gerne verwenden:
+                    </p>
+                </div>
+                <div class="col-sm text-left">
+                    <pre class="pre-scrollable"><code>
+                    #Download der torrentdateien von einem ftp server
+                    #------------------------------------------------------------------------------------------------
+                    # Zusammengestellt von app workshop UG (haftungsbeschränkt)
+
+
+                    #Variablendeklaration
+                    #----------------------------------------------------------------------------------------
+
+                    $localTorrentPath = "Austauschverzeichnis mit uTorrent"
+                    $ftpserver = "--------"
+                    $ftpPath = "/"
+                    $ftpFilter = "*.torrent"
+                    $ftpUsername = "----------"
+                    $ftpPassword = "----------"
+                    $ftpserverUrl = $ftpserver + $ftpPath + $ftpFilter
+
+                    cls
+
+
+                    # Function zum Auslesen
+                    #----------------------------------------------------------------------------------------
+
+                    function Receive-Stream {
+                    #.Synopsis
+                    #  Read a stream to the end and close it
+                    #.Description
+                    #  Will read from a byte stream and output a string or a file
+                    #.Param reader
+                    #  The stream to read from
+                    #.Param fileName
+                    #  A file to write to. If this parameter is provided, the function will output to file
+                    #.Param encoding
+                    #  The text encoding, if you want to override the default.
+                    param( [System.IO.Stream]$reader, $fileName, $encoding = [System.Text.Encoding]::GetEncoding( $null ) )
+
+                    if($fileName) {
+                    $writer = new-object System.IO.FileStream $fileName, "Create"
+                    } else {
+                    [string]$output = ""
+                    }
+
+                    [byte[]]$buffer = new-object byte[] 4096
+                    [int]$total = [int]$count = 0
+                    do
+                    {
+                    $count = $reader.Read($buffer, 0, $buffer.Length)
+                    if($fileName) {
+                    $writer.Write($buffer, 0, $count)
+                    } else {
+                    $output += $encoding.GetString($buffer, 0, $count)
+                    }
+                    } while ($count -gt 0)
+
+                    $reader.Close()
+                    if(!$fileName) { $output }
+                    }
+
+                    # Start verarbeitung
+                    # FTP Session mit Methode System.Net.FtpWebRequest.ListDirectory
+                    #-------------------------------------------------------------------------------------------------------------------------
+                    [System.Net.FtpWebRequest] $ftp = [System.Net.WebRequest]::Create("$ftpserverUrl")
+                    $ftp.Method = [System.Net.WebRequestMethods+FTP]::ListDirectory
+                    $ftp.Credentials = New-Object System.Net.NetworkCredential($ftpUsername, $ftpPassword)
+
+                    $response = $ftp.getresponse()
+                    $response.StatusCode
+
+                    #if( $response.StatusCode -ne "ClosingData" ) {
+                    #  throw "Response Status: $($response.StatusDescription)"
+                    #}
+
+
+                    $global:ftpOutputCache = (Receive-Stream $response.GetResponseStream())
+                    $list = $global:ftpOutputCache -replace "(?:.|\n)*
+                    \s+((?:.*|\n)+)\s+
+
+                    (?:.|\n)*",'$1' -split "`n"
+
+                    $response.close
+                    $ftp.close
+
+                    # lade torrent dateien im RemoteVerzeichnis  per ftp runter
+                    #--------------------------------------------------------------
+
+                    $( foreach($line in $list | ? { $_ }) {
+
+                    # bei fehlern versuche nächstes programm
+                    trap {
+                    [void]$foreach.moveNext()
+                    continue
+                    }
+
+
+                    $urltorrent = $ftpserver + $ftpPath + $line
+                    $filetorrent = $localTorrentPath + $line
+
+                    # Zieldatei bereits vorhanden, dann löschen und nochmal runterladen
+                    if (Test-Path -Path $filetorrent) {
+                    Remove-Item $filetorrent
+                    }
+
+                    # Download von FTP
+                    $clnt = new-object System.Net.WebClient
+                    $clnt.credentials = New-Object System.Net.NetworkCredential($ftpUsername,$ftpPassword)
+                    $clnt.DownloadFile($urltorrent,$filetorrent)
+                    $clnt.close
+
+                    #ist torrentdatei ordentlich runtergeladen ?
+
+                    if (Test-Path -Path $filetorrent) {
+
+                    #Lösche Remote File
+                    # FTP Session mit Methode System.Net.FtpWebRequest.Deletefile
+                    #-------------------------------------------------------------------------------------------------------------------------
+                    [System.Net.FtpWebRequest] $ftp = [System.Net.WebRequest]::Create("$urltorrent")
+                    $ftp.Method = [System.Net.WebRequestMethods+FTP]::Deletefile
+                    $ftp.Credentials = New-Object System.Net.NetworkCredential($ftpUsername, $ftpPassword)
+
+                    $response = $ftp.getresponse()
+                    $response.StatusCode
+
+                    $response.close
+                    $ftp.close
+
+                    }
+                    }
+                    )
+
+                    # Ende
+                    #-------------------------------------------------------------------------------------------------------------------------
+                    </code></pre>
+                </div>
+            </div>
+            <br />
+
+            <h3>Schritt 4) automatisches dekodieren und schneiden der otrkey-Dateien</h3>
+            <div class="row">
+                <div class="col-sm">
+                    <pre class="pre-scrollable">
+                        <code>
+                            #Variablendeklaration
+                            #----------------------------------------------------------------------------------------
+                            $inputPath = "--------"
+                            $outputPathPre = "-------"
+                            $otrUsername = "--------"
+                            $otrPassword = "---------"
+                            $otrDecoder = "---------------"
+                            $uTorrent = "C:\Users\------\AppData\Roaming\uTorrent\uTorrent.exe"
+
+                            # Stoppe uTorrent
+                            #----------------------------------------------------------------------------------------
+                            Stop-Process -processname uTorrent* -Force
+
+                            # Über alle Dateien im Decodeverzeichnis
+                            #----------------------------------------------------------------------------------------
+                            ForEach( $File in Get-ChildItem -Path $inputPath -Filter "*.otrkey")
+                            {
+                            #pfade bestimmen
+                            $inputFile = $File.FullName
+                            $outputPath = "none"
+                            #Gibt es ein Spezialverzeichnis wie z.B. Homeland?
+                            $check = $outputPathPre + "\" + $File.BaseName.split("_")[0]
+                            If (Test-Path $check) { $outputPath = $check }
+                            Else
+                            {
+                            #Passt Der, Die Das Verzeichnis
+                            $check = $File.BaseName.Substring(0,3)
+                            Switch ($check)
+                            {
+                            "Der" {$outputPath = $outputPathPre + "\_Der"}
+                            "Die" {$outputPath = $outputPathPre + "\_Die"}
+                            "Das" {$outputPath = $outputPathPre + "\_Das"}
+                            }
+
+                            #Sonst anfangsbuchstaben
+                            If ($outputPath = "none")
+                            {
+                            $check = $File.BaseName.Substring(0,1)
+                            Switch ($check)
+                            {
+                            { @("1", "2", "3", "4", "5", "6", "7","8","9","0") -contains $_ } {$outputPath = $outputPathPre + "\_1-9"}
+                            { @("a", "A") -contains $_ } {$outputPath = $outputPathPre + "\_A"}
+                            { @("b", "B") -contains $_ } {$outputPath = $outputPathPre + "\_B"}
+                            { @("c", "C") -contains $_ } {$outputPath = $outputPathPre + "\_C"}
+                            { @("d", "D") -contains $_ } {$outputPath = $outputPathPre + "\_D"}
+                            { @("e", "E") -contains $_ } {$outputPath = $outputPathPre + "\_E"}
+                            { @("f", "F") -contains $_ } {$outputPath = $outputPathPre + "\_F"}
+                            { @("g", "G") -contains $_ } {$outputPath = $outputPathPre + "\_G"}
+                            { @("h", "H") -contains $_ } {$outputPath = $outputPathPre + "\_H"}
+                            { @("i", "I","j", "J") -contains $_ } {$outputPath = $outputPathPre + "\_I-J"}
+                            { @("k", "K") -contains $_ } {$outputPath = $outputPathPre + "\_K"}
+                            { @("l", "L") -contains $_ } {$outputPath = $outputPathPre + "\_L"}
+                            { @("m", "M") -contains $_ } {$outputPath = $outputPathPre + "\_M"}
+                            { @("n", "N","o", "O") -contains $_ } {$outputPath = $outputPathPre + "\_N-O"}
+                            { @("p", "P","q", "Q") -contains $_ } {$outputPath = $outputPathPre + "\_P-Q"}
+                            { @("r", "R") -contains $_ } {$outputPath = $outputPathPre + "\_R"}
+                            { @("s", "S") -contains $_ } {$outputPath = $outputPathPre + "\_S"}
+                            { @("t", "T") -contains $_ } {$outputPath = $outputPathPre + "\_T"}
+                            { @("u", "U","v", "V","w", "W","x", "X","y", "Y","z", "Z") -contains $_ } {$outputPath = $outputPathPre + "\_U-Z"}
+                            default {$outputPath = $outputPathPre}
+                            }
+                            }
+                            }
+                            #Argumente zusammenbauen
+
+                            $arguments ="-i ""$inputFile"" -o ""$outputPath"" -e ""$otrUsername"" -p ""$otrPassword"" -f -C auto"
+
+                            # rufe decoder auf
+                            #Start-Process $otrDecoder -argumentlist $arguments -Wait -verb open
+
+                            # lösche datei
+                            Remove-Item $inputFile -recurse -force
+
+                            }
+
+                            #Starte uTorrent
+                            #----------------------------------------------------------------------------------------
+                            Start-Process $uTorrent
+                        </code>
+                    </pre>
+                </div>
+                <div class="col-xl text-right">
+                    <p class="text-muted">von onlineTVrecorder.com gibt es ein konsolen programm zum dekodieren und schneiden, welches man gut für eine evtl. weitere automatisierung nach dem download der otrkey Datei verwenden kann. den "EasyDecoder" bekommen sie hier.als kleine hilfestellung folgt nun mein powershell skript um mit der konsolenversion des otrdecoder runtergeladene *otrkey Dateien zu dekodieren und mit einer schnittliste automatisch zu schneiden. dabei steckt die intelligenz im otrdecoder und nicht im Skript:</p>
+                </div>
+            </div>
+            <br />
+
+            <h3>keine haftung und kein support!</h3>
+            <div class="row">
+                <div class="col-xl text-left">
+                    <p class="text-muted">diese seite beschreibt eine beispielhafte sytemkonfiguration. die inhalte sind ohne gewähr.  ich und die app workshop UG (haftungsbeschränkt) übernehmen keine haftung für fehler und evtl. schäden und geben keinen support. bei fragen versuche ich im rahmen meiner möglichkeiten zu helfen.</p>
+                </div>
+            </div>
+            <br />
+
         </div>
     </section>
 
@@ -233,14 +489,7 @@
         <div class="container">
             <p>&copy; 2018 <a href="https://app-workshop.de">app workshop UG (Haftungsbeschränkt).</a> All Rights Reserved.</p>
             <p>Powered by New Age! <a href="https://startbootstrap.com/template-overviews/new-age/">New Age</a> is a web app landing page theme for Bootstrap created by <a href="https://startbootstrap.com/">Start Bootstrap</a>.</p>
-            <ul class="list-inline">
-                <li class="list-inline-item">
-                    <a href="#impressum" data-toggle="modal" data-target="#impressum">Impressum</a>
-                </li>
-                <li class="list-inline-item">
-                    <a href="#privacy" data-toggle="modal" data-target="#privacy">Datenschutzerklärung</a>
-                </li>
-            </ul>
+            <p><a href="#impressum" data-toggle="modal" data-target="#impressum">Impressum</a>&nbsp;<a href="#privacy" data-toggle="modal" data-target="#privacy">Datenschutzerklärung</a></p>
         </div>
     </footer>
 
@@ -400,39 +649,36 @@
 
                     <h2>Welche personenbezogenen Daten werden erfasst?</h2>
                     <p class="text-muted">
-                        Wir erheben, speichern und verarbeiten verschiedene Kategorien personenbezogener Daten.
-                        Personenbezogene Daten sind Daten, die Rückschlüsse auf Ihre Person zulassen (z.B. E-Mail-Adresse,
-                        Name, IP-Adresse u. Ä.).
-
-                        Wenn Sie diese App installieren und nutzen werden folgende personenbezogenen Daten von Ihnen
-                        erfasst:
+                        Wir erheben, speichern und verarbeiten verschiedene Kategorien personenbezogener Daten. Personenbezogene Daten sind Daten, die Rückschlüsse auf Ihre Person zulassen (z.B. E-Mail-Adresse, Name, IP-Adresse u. Ä.).
+                        Die Erfassung personenbezogener Daten durch diese App erfolgt nur, wenn wir rechtlich hierzu berechtigt sind oder Sie der in Frage stehenden Datenerfassung ausdrücklich zugestimmt haben.
                     </p>
-
-                    <h3>(1) Device Fingerprint</h3>
                     <p class="text-muted">
-                        Die Erfassung erfolgt zu folgendem Zweck:
-                        .....................................................................................................
-                    </p>
-                    <h3>(2) Einstellungen (Benutzerprofil)</h3>
-                    <p class="text-muted">
-                        Die Erfassung erfolgt zu folgendem Zweck:
-                        .....................................................................................................
-                    </p>
-                    <h3>(3) Historie der gepushten Torrent Dateien</h3>
-                    <p class="text-muted">
-                        Die Erfassung erfolgt zu folgendem Zweck:
-                        .....................................................................................................
+                        Wenn Sie diese App installieren und nutzen werden folgende personenbezogenen Daten von Ihnen erfasst:
                     </p>
 
-                    <p class="text-muted">Die Erfassung personenbezogener Daten durch diese App erfolgt nur, wenn wir rechtlich hierzu berechtigt sind oder Sie der in Frage stehenden Datenerfassung ausdrücklich zugestimmt haben.</p>
+                    <h4>(1) Device Fingerprint oder Device UUID</h4>
+                    <p class="text-muted">
+                        Beim ersten Start wird bei der Web App ein Fingerprint und auf einem mobilen Gerät die Device Universally Unique Identifier (UUID) ermittelt und gespeichert.
+                        Zusammen mit einer geheimen Client ID wird automatisch ein eindeutiges "Benutzerkonto" angelegt unter dem die App Einstellungen (*2) und der Verlauf (*3) gespeichert werden.
+                    </p>
+                    <h4>(2) App Einstellungen (Benutzerprofil)</h4>
+                    <p class="text-muted">
+                        otrrent benötigt die Zugangsdaten zu Ihrem FTP Endpoint um die Torrent- oder Videodateien abzulegen. Möchten Sie otrrent als Pro-User nutzen benötigen wir die Zugangsdaten zu Ihrem OTR Konto um die von Ihnen gewählten Aufnahmen decodieren und schneiden zu können.
+                        Alle Einstellungen und Daten des Benutzerprofils geben Sie selbst bei uns ein und werden verschlüsselt bei uns gespeichert,
+                        ausschliesslich für den angegebenen Zweck genutzt und auf keinen Fall an Dritte weitergegeben
+                    </p>
+                    <h4>(3) Historie der gepushten Torrent/Video Dateien (Verlauf)</h4>
+                    <p class="text-muted">
+                        Zu einem Benutzerkonto (*1) speichern wir die von Ihnen ausgewählten Sendungen als Historie um Ihnen in der App einen Status zur Verarbeitung zu geben und ein mehrfaches Auswählen der gleichen Sendung zu vermeiden.
+                        Wir behalten uns vor die Historie anonymisiert zu analysieren um die beliebtesten Aufnahmen der otrrent Nutzer anzubieten. Der Verlauf wird bei uns unverschlüsselt gespeichert, ausschliesslich für den angegebenen Zweck genutzt und auf keinen Fall an Dritte weitergegeben
+                    </p>
 
                     <h2>Datenerhebung im Rahmen der App-Nutzung</h2>
                     <p class="text-muted">
-                        Personenbezogene Daten können im Rahmen der App-Nutzung insbesondere auf folgende Weise
-                        erhoben werden:
+                        Personenbezogene Daten können im Rahmen der App-Nutzung insbesondere auf folgende Weise erhoben werden:
                     </p>
 
-                    <h3>(1) Sie geben die Daten selbst bei uns ein (z.B. Nutzername und E-MailAdresse)</h3>
+                    <h4>(1) Sie geben die Daten selbst bei uns ein (z.B. Nutzername und E-MailAdresse)</h4>
                     <p class="text-muted">
                         Sofern Sie in unserer App einen Account anlegen, uns über unser Kontaktformular kontaktieren oder
                         Kommentare / Bewertungen posten, werden die von Ihnen selbst eingegebenen Daten bei uns
@@ -441,18 +687,28 @@
                         Daten geben wir nicht ohne Ihre Einwilligung weiter.
                     </p>
 
-                    <h3>(2) Ihre Daten werden automatisch von unseren Systemen oder den von uns beauftragten Dienstleistern erfasst (z.B. Analysedaten)</h3>
+                    <h4>(2) Ihre Daten werden automatisch von unseren Systemen oder den von uns beauftragten Dienstleistern erfasst (z.B. Analysedaten)</h4>
                     <p class="text-muted">
                         Unsere Webseiten/Apps nutzen die Funktionen von Google Analytics Remarketing in Verbindung mit den geräteübergreifenden Funktionen von Google AdWords und Google DoubleClick. Anbieter ist die Google Inc. 1600 Amphitheatre Parkway Mountain View, CA 94043, USA.
                         Diese Funktion ermöglicht es die mit Google Analytics Remarketing erstellten Werbe-Zielgruppen mit den geräteübergreifenden Funktionen von Google AdWords und Google-DoubleClick zu verknüpfen. Auf diese Weise können interessenbezogene, personalisierte Werbebotschaften, die in Abhängigkeit Ihres früheren Nutzungs- und Surfverhaltens auf einem Endgerät (z.B. Handy) an Sie angepasst wurden auch auf einem anderen Ihrer Endgeräte (z.B. Tablet oder PC) angezeigt werden.
                         Haben Sie eine entsprechende Einwilligung erteilt, verknüpft Google zu diesem Zweck Ihren Web- und App-Browserverlauf mit Ihrem Google-Konto. Auf diese Weise können auf jedem Endgerät auf dem Sie sich mit Ihrem Google-Konto anmelden, dieselben personalisierten Werbebotschaften geschaltet werden.
-                        Zur Unterstützung dieser Funktion erfasst Google Analytics google-authentifizierte ID´s der Nutzer, die vorübergehend mit unseren Google-Analytics-Daten verknüpft werden, um Zielgruppen für die geräteübergreifende Anzeigenwerbung zu definieren und zu erstellen.
+                        Zur Unterstützung dieser Funktion erfasst Google Analytics google-xauthentifizierte ID´s der Nutzer, die vorübergehend mit unseren Google-Analytics-Daten verknüpft werden, um Zielgruppen für die geräteübergreifende Anzeigenwerbung zu definieren und zu erstellen.
                         Sie können dem geräteübergreifenden Remarketing/Targeting dauerhaft widersprechen, indem Sie personalisierte Werbung in Ihrem Google-Konto deaktivieren; folgen Sie hierzu diesem Link: <a href="https://www.google.com/settings/ads/onweb/">https://www.google.com/settings/ads/onweb/</a>
                         Weitergehende Informationen und die Datenschutzbestimmungen finden Sie in der Datenschutzerklärung von Google unter: <a href="https://www.google.com/policies/technologies/ads/">https://www.google.com/policies/technologies/ads/</a>
                     </p>
-                    <h3>(3) Ihre Daten werden aufgrund der Zugriffsrechte, die diese App erfordert und die sie uns erteilt haben, erfasst (z.B. Standortdaten)</h3>
-                    <p class="text-muted">Zur Bereitstellung unserer Dienste über die App, benötigen wir auf Ihrem Gerät keine Zugriffsrechte.</p>
+                    <h4>(3) Ihre Daten werden aufgrund der Zugriffsrechte, die diese App erfordert und die sie uns erteilt haben, erfasst (z.B. Standortdaten)</h4>
+                    <p class="text-muted">
+                        Zur Bereitstellung unserer Dienste über die App, benötigen wir die im folgenden aufgezählten
+                        Zugriffsrechte, die es uns ermöglichen, auf bestimmte Funktionen Ihres Geräts zuzugreifen.
+                    </p>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            Gerätenummer Ihres Smartphones<br />
+                            Mit der Device UUID und einer geheimen Client ID legt otrrent bei erster Nutzung automatisch ein Benutzerkonto an. Mit diesem Benutzerkonto authentifiziert sich die App bei weiterer Nutzung beim otrrent Server.
+                        </li>
+                    </ul>
 
+                    <p></p>
 
                     <h2>Cookies</h2>
                     <p class="text-muted">
@@ -463,16 +719,18 @@
                     </p>
 
                     <h2>Server-Log-Files</h2>
+                    <p class="text-muted">Der Provider der Seiten erhebt und speichert automatisch Informationen in so genannten Server-Log Files, die Ihr Browser automatisch an uns übermittelt. Dies sind:</p>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Browsertyp und Browserversion</li>
+                        <li class="list-group-item">verwendetes Betriebssystem</li>
+                        <li class="list-group-item">Referrer URL</li>
+                        <li class="list-group-item">Hostname des zugreifenden Rechners</li>
+                        <li class="list-group-item">Uhrzeit der Serveranfrage</li>
+                    </ul>
                     <p class="text-muted">
-
-                        Der Provider der Seiten erhebt und speichert automatisch Informationen in so genannten Server-Log Files, die Ihr Browser automatisch an uns übermittelt. Dies sind:<br /><br />
-                        Browsertyp und Browserversion<br />
-                        verwendetes Betriebssystem<br />
-                        Referrer URL<br />
-                        Hostname des zugreifenden Rechners<br />
-                        Uhrzeit der Serveranfrage<br /><br />
                         Diese Daten sind nicht bestimmten Personen zuordenbar. Eine Zusammenführung dieser Daten mit anderen Datenquellen wird nicht vorgenommen. Wir behalten uns vor, diese Daten nachträglich zu prüfen, wenn uns konkrete Anhaltspunkte für eine rechtswidrige Nutzung bekannt werden.
                     </p>
+
                     <h2>Google Adsense</h2>
                     <p class="text-muted">
 
