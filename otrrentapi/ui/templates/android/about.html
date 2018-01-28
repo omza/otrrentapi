@@ -27,22 +27,17 @@
 
 <!-- Über -->
 <div id="about" class="card">
-    <div class="card-header">Über</div>
+    <div class="card-header">otrrent</div>
     <div class="card-content-inner">
         <p>
             Mit <strong>otrrent</strong> können Nutzer von <a href="http://www.onlinetvrecorder.com/" target="_blank" class="external">onlineTVrecorder.com</a> (OTR) per torrent verfuegbare beliebteste Aufnahmen von OTR auswaehlen und die entsprechende torrent Datei an einen heimischen ftp-Server weiterleiten.
-            Am heimischen Rechner kann dann mit einem bittorrent Client die entsprechende Sendung als otrkey-Datei runtergeladen werden. Die otrkey Dateien sind verschlüsselt und können nur decodiert werden, wenn Sie als OTR Nutzer die Sendung vor Ausstrahlung,&nbsp;wie in einem Videorecorder, programmiert haben.
-            <strong>otrrent</strong> benötigt für die Weiterleitung der torrent Datei die Zugangsdaten zu Ihrem ftp-Server.
+            Am heimischen Rechner kann dann mit einem bittorrent Client die entsprechende Sendung als otrkey-Datei runtergeladen werden. <strong>otrrent</strong> benötigt für die Weiterleitung der torrent Datei die Zugangsdaten zu Ihrem ftp-Server.
         </p>
-        <p>
-            <strong>otrrent</strong> entwickle ich nebenberuflich.&nbsp;Die Features sind&nbsp;auf mein persönliches Nutzungsverhalten von OTR abgestimmt. Ich hoffe das ich nicht nur mir mit der app eine Freude mache!
-            Die App ist derzeit noch alpha und wird deshalb noch viele Fehler&nbsp;haben. Solltet Ihr die App wegen Fehlern oder Features nicht mehr nutzen wollen so entschuldige ich mich für eure zeit. Einfach deinstallieren.
-            Gerne nehme ich Vorschläge&nbsp;für die Weiterentwicklung entgegen.
-        </p>
+
         <p>
             Als otrrent <strong>Pro-User</strong> können Sie Aufnahmen in der otrrent-Cloud decodieren, schneiden und dann als Video an Ihren ftp-Server senden lassen.
             Um diese Funktion nutzen zu können, ist ein Nutzeraccount unter <a href="http://www.onlinetvrecorder.com/" target="_blank" class="external">onlineTVrecorder.com</a> (OTR) notwendig. otrrent benötigt Ihre OTR Zugangsdaten um die von Ihnen aufgenommenen Sendungen decodieren zu können.
-            Ihre Zugangsdaten werden verschlüsselt übertragen und gespeichert. Ihre Daten werden nicht weitergegeben und nur zum decodieren einer Sendung genutzt. In dieser Verion steht diese Funktion noch nicht zu Verfügung.
+            Ihre Zugangsdaten werden verschlüsselt übertragen und gespeichert. Ihre Daten werden nicht weitergegeben und nur zum decodieren der von Ihnen ausgewählten Sendungen genutzt. In dieser Verion steht diese Funktion noch nicht zu Verfügung.
         </p>
         <p>
             otrrent wird sich in nachfolgenden Versionen über <strong>Werbung</strong> finanzieren. Es wird aber eine Funktion geben otrrent ohne Werbung zu nutzen! Diese Funktion wird aber noch entwickelt
@@ -56,6 +51,7 @@
     <div class="card-header">Lizenzen &amp; rechtliche Hinweise</div>
     <div class="card-content-inner">
         <p>Die <strong>Inhalte</strong> dieser App - insbesondere EPG, Top-Aufnahmen &amp; Torrents - sind Eigentum von <a href="http://www.onlinetvrecorder.com/" target="_blank" class="external">onlineTVrecorder.com</a> der Internet TV AG, Seychelles. Alle Rechte liegen bei der Internet TV AG. Diese App zeigt die Daten unverfälscht an.</p>
+        <p>Die <strong>otrkey Dateien</strong> sind verschlüsselt und können nur decodiert werden, wenn Sie als OTR Nutzer die Sendung vor Ausstrahlung,&nbsp;wie in einem Videorecorder, programmiert haben.</p>
         <p><strong>Framework7</strong>. otrrent nutzt <a href="https://framework7.io/" target="_blank" class="external">Framework7</a> um als Web App ein natives Nutzergefühl auf android und iOS Geräten zu ermöglichen.</p>
         <p><strong>Fingerprint2</strong>. otrrent nutzt zur Erkennung des Gerätes die Javascript Bibliothek <a href="https://github.com/Valve/fingerprintjs2" target="_blank" class="external">Fingerprint2</a> unter MIT Lizenz. Unter dem Fingerprint speichert otrrent die Einstellungen und der Verlauf (Historie) in der Cloud.</p>
         <p><strong>dAKirby309</strong>. Das Logo der otrrent app unterliegt der  <a href="http://creativecommons.org/licenses/by/3.0/" target="_blank" class="external">CC Attribution 3.0  Unported</a> Lizenz und wurde ursprünglich erstellt von <a href="http://dakirby309.deviantart.com/" target="_blank" class="external">dAKirby309</a></p>
@@ -104,7 +100,7 @@
                             {% if session['deviceuuid'] is none %}
                             Fingerprint
                             {% else %}
-                            Device UUID {{ session['deviceuuid'] }}
+                            Device UUID
                             {% endif %}
                         </div>
                         <div class="item-text">{{ g.user.RowKey }}</div>

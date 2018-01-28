@@ -68,9 +68,9 @@ class Settings(FlaskForm):
 def set_platform_session():
 
     """ retrieve device uuid """
-    deviceuuid = request.args.get('deviceuuid', None)
-    log.debug('request deviceuuid: {!s}'.format(deviceuuid))
-    session['deviceuuid'] = deviceuuid
+    if (not 'deviceuuid' in session):
+        session['deviceuuid'] = request.args.get('deviceuuid', None)
+        log.debug('request deviceuuid: {!s}'.format(session['deviceuuid']))
 
     """ retrieve user from session cookie """
     if ('authtoken' in session):
@@ -379,7 +379,7 @@ def about():
 
     """ render platform template """
     pathtemplate = session['platform'] + '/' + 'about.html'
-    return render_template(pathtemplate, title = 'otrrent', pagetitle='about', message=message)
+    return render_template(pathtemplate, title = 'Über', pagetitle='about', message=message)
 
 
 """

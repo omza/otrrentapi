@@ -35,15 +35,6 @@ app.register_blueprint(otrrentui)
 app.register_blueprint(otrrentwww)
 
 
-
-# log App configuration/setting  if in debug mode
-# --------------------------------------------------------
-if app.debug:
-    for key, value in app.config.items():
-        if key.find('APPLICATION') >= 0:
-            log.debug('{} = {!s}'.format(key, value))
-
-
 # main
 # -----------------------------------------------------------
 if __name__ == '__main__':
