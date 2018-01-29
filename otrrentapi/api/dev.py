@@ -39,6 +39,8 @@ login = api.model('login with fingerprint and (not required) client',{
     'Fingerprint': fields.String(attribute='RowKey', required=True, description=''),
     'LoggedIn': fields.Boolean(attribute='loggedin',required=False, description='user identified and logged in', default=False),
     'SessionTimeout': fields.Integer(attribute='timeout', required=False, description='Session Timeout in seconds (default 22)', default=600),
+    'DeviceUUID': fields.String(attribute='deviceuuid', description='Mobile Device UUID - set by app'),
+    'CordovaPlatform': fields.String(attribute='platform', description='App Platform - iOS, Android, WP')
     })
 
 
@@ -57,23 +59,21 @@ class LoginUser(Resource):
     @api.expect(login)
     @api.marshal_list_with(login)
     def post(self):
+
         """ parse request data and use model attribute info"""
         data = request.json
-        log.debug(data)
-        
-        if 'ClientId' in data:
-            if data['ClientId'] == "":
-                data['ClientId'] = config['APPLICATION_CLIENT_ID']
-        else:
-            data['ClientId'] = config['APPLICATION_CLIENT_ID']  
-
         for key, value in login.items():
             if key in data:
                 data[value.attribute] = data.pop(key)
                 #log.debug('{!s}: {!s}'.format(value.attribute, data[value.attribute]))
-
-      
+        
         """ retrieve user info """
+        if 'PartitionKey' in data:
+            if data['PartitionKey'] == "":
+                data['PartitionKey'] = config['APPLICATION_CLIENT_ID']
+        else:
+            data['PartitionKey'] = config['APPLICATION_CLIENT_ID']
+            
         loginuser = db.get(User(**data))
 
         """ user exists ? Create a new and  """
@@ -91,9 +91,18 @@ class LoginUser(Resource):
         if 'platform' in session:
             session.pop('platform')
 
+        """ App login ? """
+        if ('deviceuuid' in data) and ('platform' in data):
+            session['deviceuuid'] = data['deviceuuid']
+            session['platform'] = data['platform']
+        else:
+            session['deviceuuid'] = None
+
         """ prepare return dict """
         data['loggedin']  = True
         data['timeout'] = 600
+
+        log.debug(session)
 
         return data, 200 
 

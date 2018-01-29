@@ -67,10 +67,7 @@ class Settings(FlaskForm):
 @otrrentui.before_request
 def set_platform_session():
 
-    """ retrieve device uuid """
-    if (not 'deviceuuid' in session):
-        session['deviceuuid'] = request.args.get('deviceuuid', None)
-        log.debug('request deviceuuid: {!s}'.format(session['deviceuuid']))
+    log.debug('Start before_request')
 
     """ retrieve user from session cookie """
     if ('authtoken' in session):
@@ -78,22 +75,39 @@ def set_platform_session():
         if not user:
             session.pop('authtoken')
             g.user = None
+            log.debug('User not found')
         else:
             g.user = user
+            log.debug('Logged in:'.format(g.user.RowKey))
     else:
         g.user = None
+        log.debug('Logged Out')
+
+    """ retrieve device uuid """
+    if ('deviceuuid' in session):
+        #session['deviceuuid'] = session['deviceuuid']
+        log.debug('deviceuuid: {!s}'.format(session['deviceuuid']))
+
+    else:
+        session['deviceuuid'] = None
+        log.debug('Not in Session deviceuuid: {!s}'.format(session['deviceuuid']))
+
 
     """ retrieve platform parameter and set to session cookie """
-    if (not 'platform' in session):
-
+    if ('platform' in session):
+        #session['platform'] = session['platform']
+        log.debug('platform: {!s}'.format(session['platform']))
+    else:
         platform = request.user_agent.platform
-        log.debug('request user agent platform: {!s}'.format(platform))
         
         if platform in ['android','ios']:        #,'windows'
             session['platform'] = platform 
         else:
             session['platform'] = config['APPLICATION_UI_DEFAULT']
-            log.debug('default platform: {!s}'.format(session['platform']))
+        
+        log.debug('request platform: {!s}'.format(session['platform']))
+
+    log.debug(session)
     
 
 
