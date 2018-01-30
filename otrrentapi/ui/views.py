@@ -88,6 +88,12 @@ def set_platform_session():
         #session['deviceuuid'] = session['deviceuuid']
         log.debug('deviceuuid: {!s}'.format(session['deviceuuid']))
 
+    elif ('deviceuuid' in request.args):
+        session['deviceuuid'] = request.args.get('deviceuuid', None)
+        if ('cordovaplatform' in request.args):
+            session['platform'] = str.lower(request.args.get('cordovaplatform', None))
+        log.debug('From web app: deviceuuid={!s} and platform {!s}'.format(session['deviceuuid'], session['platform']))
+
     else:
         session['deviceuuid'] = None
         log.debug('Not in Session deviceuuid: {!s}'.format(session['deviceuuid']))

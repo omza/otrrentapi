@@ -38,9 +38,7 @@ login = api.model('login with fingerprint and (not required) client',{
     'ClientId': fields.String(attribute='PartitionKey', description='Link or path to torrent or video file to be pushed'),
     'Fingerprint': fields.String(attribute='RowKey', required=True, description=''),
     'LoggedIn': fields.Boolean(attribute='loggedin',required=False, description='user identified and logged in', default=False),
-    'SessionTimeout': fields.Integer(attribute='timeout', required=False, description='Session Timeout in seconds (default 22)', default=600),
-    'DeviceUUID': fields.String(attribute='deviceuuid', description='Mobile Device UUID - set by app'),
-    'CordovaPlatform': fields.String(attribute='platform', description='App Platform - iOS, Android, WP')
+    'SessionTimeout': fields.Integer(attribute='timeout', required=False, description='Session Timeout in seconds (default 22)', default=600)
     })
 
 
@@ -86,17 +84,6 @@ class LoginUser(Resource):
         g.user = loginuser
         token = generate_auth_token(loginuser) 
         session['authtoken'] = token
-
-        """ pop session platform """
-        if 'platform' in session:
-            session.pop('platform')
-
-        """ App login ? """
-        if ('deviceuuid' in data) and ('platform' in data):
-            session['deviceuuid'] = data['deviceuuid']
-            session['platform'] = data['platform']
-        else:
-            session['deviceuuid'] = None
 
         """ prepare return dict """
         data['loggedin']  = True
