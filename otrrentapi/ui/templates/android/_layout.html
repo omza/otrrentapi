@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/framework7.material.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/framework7.material.colors.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/material-icons.css') }}">
-
+    {% if not g.user.AdsRemoved %}
     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <script>
         (adsbygoogle = window.adsbygoogle || []).push({
@@ -20,7 +20,7 @@
             enable_page_level_ads: true
         });
     </script>
-
+    {% endif %}
 
     {% endblock %}
 
@@ -58,33 +58,36 @@
                                         <div class="item-inner item-title">Einstellungen</div>
                                     </a>
                                 </li>
-
+                                {% if not g.user.AdsRemoved %}
                                 <li>
                                     <a id="adsfree" href="{{ url_for('ui.about') }}?menu=adsfree" class="item-link item-content close-panel">
                                         <div class="item-media"><i class="material-icons">notifications_off</i></div>
                                         <div class="item-inner item-title">Werbefrei</div>
                                     </a>
                                 </li>
-
+                                {% endif %}
+                                {% if not g.user.ProUser %}
                                 <li>
                                     <a id="getprouser" href="{{ url_for('ui.about') }}?menu=getprouser" class="item-link item-content close-panel">
                                         <div class="item-media"><i class="material-icons">person_add</i></div>
                                         <div class="item-inner item-title">Pro User</div>
                                     </a>
                                 </li>
-
+                                {% endif %}
                             </ul>
                         </div>
 
                         <div class="content-block-title">App</div>
                         <div class="list-block">
                             <ul>
+                                {% if not session['deviceuuid'] is none %}
                                 <li>
                                     <a id="rate" href="{{ url_for('ui.about') }}?menu=rate" class="item-link item-content close-panel">
                                         <div class="item-media"><i class="material-icons">star</i></div>
                                         <div class="item-inner item-title">Bewerten</div>
                                     </a>
                                 </li>
+                                {% endif %}
                                 <li>
                                     <a id="privacy" href="{{ url_for('www.index') }}#privacy" target="_blank" class="item-link item-content close-panel external">
                                         <div class="item-media"><i class="material-icons">lock</i></div>
