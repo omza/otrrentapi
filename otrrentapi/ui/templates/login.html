@@ -1,0 +1,43 @@
+﻿<!DOCTYPE html>
+
+<html lang="de" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>otrrent login</title>
+</head>
+<body>
+    <!-- login-->
+
+    <!-- Path to Fingerprint2 Library JS-->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/fingerprint2.min.js') }}"></script>
+
+    <script>
+        // Login with ClientID and Device Fingerprint
+        // --------------------------------------------------------------------------------------
+
+        //get a hash, representing your device fingerprint
+        new Fingerprint2().get(function (result) {
+
+            //login credentials
+            var ClientID = "{{ config['APPLICATION_CLIENT_ID'] }}";
+            var Fingerprint = result;
+
+            // If current page has a query string, append action to the end of the query string, else
+            // create our query string
+            var next_page = location.href;
+            if (next_page.indexOf("?") > -1) {
+                next_page += '&clientid=' + ClientID;
+            } else {
+                next_page += '?clientid=' + ClientID;
+            }
+            next_page += '&fingerprint=' + Fingerprint;
+
+            //redirect 
+            window.location = next_page;
+
+            });
+
+    </script>
+
+</body>
+</html>

@@ -25,20 +25,6 @@
         <!-- Divider -->
         {% if loop.changed(item.startdate) %}
         <li class="item-divider">{{ item.startdate }}</li>
-        {% if not g.user.AdsRemoved %}
-        <li class="item-content">
-            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-format="fluid"
-                 data-ad-layout-key="-hs+1-7-a+1b"
-                 data-ad-client="ca-pub-6230052197390545"
-                 data-ad-slot="1160467221"></ins>
-            <script>
-                (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
-        </li>
-        {% endif %}
         {% endif %}
 
         <!-- Listitems -->
