@@ -14,6 +14,26 @@
 
 {% block content %}
 <!-- Content Block Details -->
+
+<!-- Success Modal -->
+<div class="popup" id="popup-success">
+    <div class="content-block">
+        <p><a href="#" class="close-popup">Close popup</a></p>
+        <p>
+            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <!-- otrrent.ui.success -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-6230052197390545"
+                 data-ad-slot="7455827549"
+                 data-ad-format="auto"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </p>
+    </div>
+</div>
+
 <!-- Alerts -->
     {% if message.show %}
 <div class="content-block inset">
@@ -23,6 +43,12 @@
         {% if message.code != 0 %}<p class="color-gray">{{ message.code}}</p>{% endif %}
     </div>
 </div>
+
+<script>
+    window.alert('Show Popup');
+    //myApp.popup('#popup-success');
+</script>
+
     {% endif %}
 
 <!-- Details card -->
@@ -69,6 +95,22 @@
             <i class="material-icons">star_border</i>
             {% endif %}
         </p>
+    </div>
+</div>
+
+<!-- Content ads -->
+<div class="content-block-inner">
+    <div>
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-format="fluid"
+             data-ad-layout-key="-fd-s+7c-3c-k4"
+             data-ad-client="ca-pub-6230052197390545"
+             data-ad-slot="1160467221"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
     </div>
 </div>
 
@@ -128,5 +170,6 @@
         {% endfor %}
     </div>
 </div>
-{% endblock %}
+
+    {% endblock %}
 

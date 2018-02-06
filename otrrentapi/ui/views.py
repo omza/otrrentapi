@@ -65,55 +65,80 @@ class Settings(FlaskForm):
 """ set session platform variable """
 @otrrentui.before_request
 def before_request():
-    if request.endpoint != 'ui.login':
-        log.debug('Start before_request')
+    """ prapare session auth code """
+    log.debug('Start before_request')
 
-        """ retrieve user from session cookie """
-        if ('authtoken' in session):
-            user = verify_auth_token(session['authtoken'])
-            if not user:
-                session.pop('authtoken')
-                g.user = None
-                log.debug('User not found')
-            else:
-                g.user = user
-                log.debug('Logged in: {!s}, AdsRemoved: {!s}, ProUser: {!s}'.format(g.user.RowKey, g.user.AdsRemoved, g.user.ProUser))
-        else:
+    """ retrieve user from session cookie """
+    if ('authtoken' in session):
+        user = verify_auth_token(session['authtoken'])
+        if not user:
+            session.pop('authtoken')
             g.user = None
-            log.debug('Logged Out redirect to login from endpoint: {!s}'.format(request.endpoint))
-            return redirect(url_for('ui.login'))
-
-        """ retrieve device uuid """
-        if ('deviceuuid' in session):
-            #session['deviceuuid'] = session['deviceuuid']
-            log.debug('deviceuuid: {!s}'.format(session['deviceuuid']))
-
-        elif ('deviceuuid' in request.args):
-            session['deviceuuid'] = request.args.get('deviceuuid', None)
-            if ('cordovaplatform' in request.args):
-                session['platform'] = str.lower(request.args.get('cordovaplatform', None))
-            log.debug('From web app: deviceuuid={!s} and platform {!s}'.format(session['deviceuuid'], session['platform']))
-
+            log.debug('User not found')
         else:
-            session['deviceuuid'] = None
-            log.debug('Not in Session deviceuuid: {!s}'.format(session['deviceuuid']))
+            g.user = user
+            log.debug('Logged in: {!s}, AdsRemoved: {!s}, ProUser: {!s}'.format(g.user.RowKey, g.user.AdsRemoved, g.user.ProUser))
+
+    elif ('clientid' in request.args) and (('fingerprint' in request.args) or ('deviceuuid' in request.args)):
+        """ credentials delivered in request args  """
+        log.debug('credentials delivered!')
+
+        """ parse request data """
+        clientid = request.args.get('clientid', config['APPLICATION_CLIENT_ID'])
+        fingerprint = request.args.get('fingerprint', '')
+        deviceuuid = request.args.get('deviceuuid', None)
+
+        if not deviceuuid is None:
+            fingerprint = deviceuuid
+
+        """ request user """            
+        loginuser = db.get(User(PartitionKey=clientid, RowKey=fingerprint))
+
+        """ user exists ? Create a new and  """
+        if not db.exists(loginuser):
+            loginuser.created = datetime.now()
+            db.insert(loginuser)
+            
+        """ login user """
+        #log.debug(loginuser.dict())
+        g.user = loginuser
+        session['authtoken'] = generate_auth_token(loginuser) 
+
+    else:
+        g.user = None
+        log.debug('Logged Out redirect to login from endpoint: {!s}'.format(request.endpoint))
+
+    """ retrieve device uuid """
+    if ('deviceuuid' in session):
+        #session['deviceuuid'] = session['deviceuuid']
+        log.debug('deviceuuid: {!s}'.format(session['deviceuuid']))
+
+    elif ('deviceuuid' in request.args):
+        session['deviceuuid'] = request.args.get('deviceuuid', None)
+        if ('cordovaplatform' in request.args):
+            session['platform'] = str.lower(request.args.get('cordovaplatform', None))
+        log.debug('From web app: deviceuuid={!s} and platform {!s}'.format(session['deviceuuid'], session['platform']))
+
+    else:
+        session['deviceuuid'] = None
+        log.debug('Not in Session deviceuuid: {!s}'.format(session['deviceuuid']))
 
 
-        """ retrieve platform parameter and set to session cookie """
-        if ('platform' in session):
-            #session['platform'] = session['platform']
-            log.debug('platform: {!s}'.format(session['platform']))
+    """ retrieve platform parameter and set to session cookie """
+    if ('platform' in session):
+        #session['platform'] = session['platform']
+        log.debug('platform: {!s}'.format(session['platform']))
+    else:
+        platform = request.user_agent.platform
+        
+        if platform in ['android','ios']:        #,'windows'
+            session['platform'] = platform 
         else:
-            platform = request.user_agent.platform
+            session['platform'] = config['APPLICATION_UI_DEFAULT']
         
-            if platform in ['android','ios']:        #,'windows'
-                session['platform'] = platform 
-            else:
-                session['platform'] = config['APPLICATION_UI_DEFAULT']
-        
-            log.debug('request platform: {!s}'.format(session['platform']))
+        log.debug('request platform: {!s}'.format(session['platform']))
 
-        log.debug(session)
+    log.debug(session)
     
 """ view to top recordings """        
 @otrrentui.route('/')
@@ -398,80 +423,6 @@ def about():
     """ render platform template """
     pathtemplate = session['platform'] + '/' + 'about.html'
     return render_template(pathtemplate, title = 'Über', pagetitle='about', message=message)
-
-@otrrentui.route('/login')
-def login():
-        log.debug('Start login...')
-
-        """ already logged in ? """
-        if ('authtoken' in session):
-            log.debug('already logged in!')
-            return redirect(url_for('ui.index'))
-
-        elif ('clientid' in request.args) and (('fingerprint' in request.args) or ('deviceuuid' in request.args)):
-            """ credentials delivered in request args  """
-            log.debug('credentials delivered!')
-
-            """ parse request data """
-            clientid = request.args.get('clientid', config['APPLICATION_CLIENT_ID'])
-            fingerprint = request.args.get('fingerprint', '')
-            deviceuuid = request.args.get('deviceuuid', None)
-            cordovaplatform  = request.args.get('cordovaplatform', None)
-
-            if not deviceuuid is None:
-                fingerprint = deviceuuid
-
-            """ request user """            
-            loginuser = db.get(User(PartitionKey=clientid, RowKey=fingerprint))
-
-            """ user exists ? Create a new and  """
-            if not db.exists(loginuser):
-                loginuser.created = datetime.now()
-                db.insert(loginuser)
-            
-            """ login user """
-            #log.debug(loginuser.dict())
-            g.user = loginuser
-            token = generate_auth_token(loginuser) 
-            session['authtoken'] = token
-
-            """ retrieve device uuid """
-            if ('deviceuuid' in session):
-                #session['deviceuuid'] = session['deviceuuid']
-                log.debug('deviceuuid: {!s}'.format(session['deviceuuid']))
-
-            elif ('deviceuuid' in request.args):
-                session['deviceuuid'] = request.args.get('deviceuuid', None)
-                if ('cordovaplatform' in request.args):
-                    session['platform'] = str.lower(request.args.get('cordovaplatform', None))
-                log.debug('From web app: deviceuuid={!s} and platform {!s}'.format(session['deviceuuid'], session['platform']))
-
-            else:
-                session['deviceuuid'] = None
-                log.debug('Not in Session deviceuuid: {!s}'.format(session['deviceuuid']))
-
-
-            """ retrieve platform parameter and set to session cookie """
-            if ('platform' in session):
-                #session['platform'] = session['platform']
-                log.debug('platform: {!s}'.format(session['platform']))
-            else:
-                platform = request.user_agent.platform
-        
-                if platform in ['android','ios']:        #,'windows'
-                    session['platform'] = platform 
-                else:
-                    session['platform'] = config['APPLICATION_UI_DEFAULT']
-        
-                log.debug('request platform: {!s}'.format(session['platform']))
-
-            return redirect(url_for('ui.index')) 
-
-        else:
-            log.debug('login page')
-            """ render login page """
-            return render_template('login.html')
-
 
 
 """
