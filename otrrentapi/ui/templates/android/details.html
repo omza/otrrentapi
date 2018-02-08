@@ -20,36 +20,35 @@
     <div class="content-block">
         <p><a href="#" class="close-popup">Close popup</a></p>
         <p>
-            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-            <!-- otrrent.ui.success -->
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-6230052197390545"
-                 data-ad-slot="7455827549"
-                 data-ad-format="auto"></ins>
-            <script>
-                (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
+
         </p>
     </div>
 </div>
 
 <!-- Alerts -->
-    {% if message.show %}
+{% if message.show %}
 <div class="content-block inset">
     <div class="content-block-inner {% if message.error %}bg-pink color-white{% else %}bg-green{% endif %}">
         <strong>{{ message.header}}</strong>
         <p>{{ message.text}}</p>
         {% if message.code != 0 %}<p class="color-gray">{{ message.code}}</p>{% endif %}
     </div>
+
+    <div class="content-block-inner" style="margin-top:5px; border-style:solid; border-width:thin; border-color:green;">
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <!-- otrrent.ui.success -->
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-6230052197390545"
+             data-ad-slot="7455827549"
+             data-ad-format="auto"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+
 </div>
-
-<script>
-    window.alert('Show Popup');
-    //myApp.popup('#popup-success');
-</script>
-
-    {% endif %}
+{% endif %}
 
 <!-- Details card -->
 <div class="content-block-title">{{ item.titel }}</div>
@@ -100,17 +99,19 @@
 
 <!-- Content ads -->
 {% if not g.user.AdsRemoved %}
-<div class="content-block-inner">
-    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-    <ins class="adsbygoogle"
-            style="display:block"
-            data-ad-format="fluid"
-            data-ad-layout-key="-fd-s+7c-3c-k4"
-            data-ad-client="ca-pub-6230052197390545"
-            data-ad-slot="1160467221"></ins>
-    <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
+<div class="content-block inset">
+    <div class="content-block-inner" style="margin-top:5px; border-style:solid; border-width:thin; border-color:green;">
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-format="fluid"
+             data-ad-layout-key="-fd-s+7c-3c-k4"
+             data-ad-client="ca-pub-6230052197390545"
+             data-ad-slot="1160467221"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
 </div>
 {% endif %}
 
