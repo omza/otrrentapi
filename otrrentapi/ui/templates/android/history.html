@@ -23,7 +23,25 @@
 
             <!-- Divider -->
             {% if loop.changed(item.createdate) %}
-                <li class="item-divider">{{ item.createdate }}</li>
+            <li class="item-divider">{{ item.createdate }}</li>
+            {% if not g.user.AdsRemoved %}
+            <!-- Ads after Divider -->
+            <li class="item-content">
+                <div class="item-inner" style="margin-top:5px; margin-bottom:5px; margin-right:5px; border-style:solid; border-width:thin; border-color:green;">
+                    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-format="fluid"
+                         data-ad-layout-key="-fd-s+7c-3c-k4"
+                         data-ad-client="ca-pub-6230052197390545"
+                         data-ad-slot="1160467221"></ins>
+                    <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                </div>
+            </li>
+            {% endif %}
+
             {% endif %}
 
             <!-- Listitems -->
