@@ -14,17 +14,6 @@
 
 {% block content %}
 <!-- Content Block Details -->
-
-<!-- Success Modal -->
-<div class="popup" id="popup-success">
-    <div class="content-block">
-        <p><a href="#" class="close-popup">Close popup</a></p>
-        <p>
-
-        </p>
-    </div>
-</div>
-
 <!-- Alerts -->
 {% if message.show %}
 <div class="content-block inset">
@@ -34,10 +23,11 @@
         {% if message.code != 0 %}<p class="color-gray">{{ message.code}}</p>{% endif %}
     </div>
 
+    <!--
     <div class="content-block-inner" style="margin-top:5px; border-style:solid; border-width:thin; border-color:green;">
-        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-        <!-- otrrent.ui.success -->
-        <ins class="adsbygoogle"
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>-->
+    <!-- otrrent.ui.success -->
+    <!--<ins class="adsbygoogle"
              style="display:block"
              data-ad-client="ca-pub-6230052197390545"
              data-ad-slot="7455827549"
@@ -45,7 +35,7 @@
         <script>
             (adsbygoogle = window.adsbygoogle || []).push({});
         </script>
-    </div>
+    </div>-->
 
 </div>
 {% endif %}
@@ -97,7 +87,7 @@
     </div>
 </div>
 
-<!-- Content ads -->
+<!-- Content ads
 {% if not g.user.AdsRemoved %}
 <div class="content-block inset">
     <div class="content-block-inner" style="margin-top:5px; border-style:solid; border-width:thin; border-color:green;">
@@ -113,7 +103,7 @@
         </script>
     </div>
 </div>
-{% endif %}
+{% endif %}-->
 
 
 <!-- Torrents Card -->
