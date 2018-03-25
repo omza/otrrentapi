@@ -8,10 +8,9 @@ before_install:
   - cd otrrentapi
 
 script:
-  - echo "=> Building otrrentapi --build args"
-  - docker build --build-arg FLASK_DEPLOY_MODULE=otrrentapi \
-                --build-arg FLASK_DEPLOY_CALLABLE=app \
-                --build-arg FLASK_DEPLOY_PORT=8001 \
-                --build-arg FLASK_DEPLOY_DOMAIN=otrrent.app-workshop.de \
-                -t otrrent/otrrentapi \
+  - docker build --build-arg FLASK_DEPLOY_MODULE=otrrentapi 
+                --build-arg FLASK_DEPLOY_CALLABLE=app 
+                --build-arg FLASK_DEPLOY_PORT=8001 
+                --build-arg FLASK_DEPLOY_DOMAIN=otrrent.app-workshop.de 
+                -t otrrent/otrrentapi 
                 .
