@@ -1,6 +1,6 @@
 sudo: required
 language: 
-  - python 3.6
+  - python3.6
 services:
   - docker
 
@@ -13,4 +13,5 @@ script:
                 --build-arg FLASK_DEPLOY_CALLABLE=app \
                 --build-arg FLASK_DEPLOY_PORT=8001 \
                 --build-arg FLASK_DEPLOY_DOMAIN=otrrent.app-workshop.de \
-                -t otrrent/otrrentapi .
+                -t otrrent/otrrentapi \
+                .
