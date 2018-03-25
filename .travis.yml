@@ -1,4 +1,6 @@
 sudo: required
+language: python
+python: "3.6"
 services:
 - docker
 addons:
@@ -14,6 +16,7 @@ after_success:
 - eval "$(ssh-agent -s)"
 - chmod 600 ~/productionserver.pem
 - sshpass -p "$PASSPHRASE" ssh-add ~/productionserver.pem
+- sshpass -e ssh omza@$PRODUCTIONSERVER /opt/otrrentapi/docker-compose up -d
 env:
   global:
   - secure: o6Px0f7RwhJ+bez/hqYivZfq6m7Ykc04BEmLRQlWplf7gIPDgZJDiSdZun8+9MDljRL944oyy2heGsXVz8jdT9D7WD35uNvde8/i6tppRNYBzGRGLQmUdO+yxXfeSwDdKH5PAo7QX0JF5fJ/jsPfa0yPL+n42mwi9Pi9IX20FcPcY7iV0uzSI5QkhHzADIlg0bs2WEAra25QqxwVCi1Sknuf/ymHK4K4YUp9Y3LsoRBI/coVOedwk4Z+77LE+sJF2zKauyCoa+4fjun6XpFWGmHgG0RzFXJ1xVJhpzpatb98YPADlvrBY6gLqRdo0vuZ7inpdDHXLVgEg+EmwpgwZsEtURxXDVwIGRllN6jVLvMhnytsOOOz9hkqeujschvS2tAL4gtXiylwWFf9bD3BqAIu/yFk5fM+xt2rsZc4h6yc1DUl/VZaBCDv/N4A21kFPljj1QSR0KKdszsKNFj84sf8zUmfyzd0ycwZ4U8qbjewiZjbQranl4BBrHjKpySmmG2Zzr7QzVjgU5vlXLmowF0nwmYf8rnepxHH5oWxypaIKj36b+TiQMT+B1JIkA6LU3DY8CxtR16BUUMQ/8AW8hzs/Ii7zplGylWnsfN8UG+Nm44RfIw7aYLUuF+bzYwdez/jz4cmyH0kT2JdbVzJtoskOxC4Y4jWsu5d+P9eLvY=
