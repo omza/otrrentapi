@@ -15,8 +15,7 @@ script:
 - eval "$(ssh-agent -s)"
 - chmod 600 azurevm_rsa
 - ssh-add azurevm_rsa
-- ssh -o StrictHostKeyChecking=no omza@appworkshop.cloudapp.net
-- ssh omza@appworkshop.cloudapp.net './deploy_otrrentapi.sh'
+- ssh -o StrictHostKeyChecking=no omza@appworkshop.cloudapp.net ./deploy_otrrentapi.sh
 #deploy:
 #- provider: script
 #  skip_cleanup: true
