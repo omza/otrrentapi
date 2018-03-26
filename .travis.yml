@@ -17,6 +17,7 @@ before_deploy:
 - ssh-add azurevm_rsa 
 deploy:
 - provider: script
+  skip_cleanup: true
   script: ssh -o StrictHostKeyChecking=no $PRODUCTIONSERVER:./deploy_otrrentapi.sh
 env:
   global:
