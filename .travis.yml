@@ -15,7 +15,7 @@ before_deploy:
 - eval "$(ssh-agent -s)"
 - chmod 600 azurevm_rsa
 - ssh-add azurevm_rsa
-- ssh -o StrictHostKeyChecking=no appworkshop.cloudapp.net
+- ssh -o StrictHostKeyChecking=no omza@appworkshop.cloudapp.net
 deploy:
 - provider: script
   skip_cleanup: true
