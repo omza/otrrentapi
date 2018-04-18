@@ -5,7 +5,7 @@ MAINTAINER oliver@app-workshop.de
 # -------------------------------------------------------
 ENV APPLICATION_ENVIRONMENT Production
 ENV APPLICATION_UI_DEFAULT android
-ENV APPLICATION_VERSION 0.1.1
+ENV APPLICATION_VERSION 0.1.2
 
 # dirs & volumes
 # --------------------------------------------------------

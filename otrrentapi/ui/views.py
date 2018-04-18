@@ -135,6 +135,8 @@ def before_request():
             session['platform'] = platform 
         else:
             session['platform'] = config['APPLICATION_UI_DEFAULT']
+
+        session['ratelink'] = config['APPLICATION_' + str(session['platform']).upper + '_RATE']
         
         log.debug('request platform: {!s}'.format(session['platform']))
 

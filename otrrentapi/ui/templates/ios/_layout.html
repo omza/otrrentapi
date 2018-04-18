@@ -84,9 +84,9 @@
                         <div class="content-block-title">App</div>
                         <div class="list-block">
                             <ul>
-                                {% if not session['deviceuuid'] is none %}
+                                {% if not session['deviceuuid'] is none and session['ratelink'] != '' %}
                                 <li>
-                                    <a id="rate" href="https://play.google.com/store/apps/details?id=de.appworkshop.otrrent" class="item-link item-content close-panel external">
+                                    <a id="rate" href="{{ session['ratelink'] }}" class="item-link item-content close-panel external">
                                         <div class="item-media"><i class="f7-icons">star</i></div>
                                         <div class="item-inner item-title">Bewerten</div>
                                     </a>

@@ -17,6 +17,8 @@ APPLICATION_LOGLEVEL_CONSOLE = 10 # debug
 APPLICATION_LOGLEVEL_FILE = 10 # debug
 APPLICATION_LOG_LEVEL = 10 # Debug
 APPLICATION_MAINLOGGER = 'otrrentapi'
+APPLICATION_ANDROID_RATE = 'https://play.google.com/store/apps/details?id=de.appworkshop.otrrent'
+APPLICATION_IOS_RATE = ''
 
 # azure storage settings
 AZURE_REQUIRE_ENCRYPTION = True
