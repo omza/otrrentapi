@@ -1,85 +1,135 @@
 ﻿{% extends "ios/_layout.html" %}
 
 {% block navbar%}
-    <div class="navbar">
-        <div class="navbar-inner">
-            <div class="left"><a href="#" class="back link"> <i class="icon icon-back"></i><span>Back</span></a></div>
-            <div class="center sliding">{{ title }}</div>
-            <div class="right">
-                <!-- Right link contains only icon - additional "icon-only" class--><a href="#" class="link icon-only open-panel"> <i class="icon icon-bars"></i></a>
-            </div>
+<div class="navbar">
+    <div class="navbar-inner">
+        <div class="left"><a href="#" class="back link"> <i class="icon icon-back"></i><span>Back</span></a></div>
+        <div class="center sliding">{{ title }}</div>
+        <div class="right">
+            <!-- Right link contains only icon - additional "icon-only" class--><a href="#" class="link icon-only open-panel"> <i class="icon icon-bars"></i></a>
         </div>
     </div>
+</div>
 {% endblock %}
 
 {% block content %}
-    <!-- Content Block Details -->
-
-    <!-- Alerts -->
-    {% if message.show %}
-    <div class="content-block inset">
-        <div class="content-block-inner {% if message.error %}bg-pink color-white{% else %}bg-green{% endif %}">
-            <strong>{{ message.header}}</strong>
-            <p>{{ message.text}}</p>
-            {% if message.code != 0 %}<p class="color-gray">{{ message.code}}</p>{% endif %}
-        </div>
+<!-- Content Block Details -->
+<!-- Alerts -->
+{% if message.show %}
+<div class="content-block inset">
+    <div class="content-block-inner {% if message.error %}bg-pink color-white{% else %}bg-green{% endif %}">
+        <strong>{{ message.header}}</strong>
+        <p>{{ message.text}}</p>
+        {% if message.code != 0 %}<p class="color-gray">{{ message.code}}</p>{% endif %}
     </div>
-    {% endif %}
 
-    <!-- Details card -->
-    <div class="content-block-title">{{ item.titel }}</div>
-    <style>
-        .recording-header-pic .card-header {
-            height: 40vw;
-            background-size: cover;
-            background-position: center;
-        }
+</div>
+{% endif %}
 
-        .button {
-            display: block;
-            width: 100%;
-        }
+<!-- Details card -->
+<div class="content-block-title">{{ item.titel }}</div>
+<style>
+    .recording-header-pic .card-header {
+        height: 40vw;
+        background-size: cover;
+        background-position: center;
+    }
 
-    </style>
-    
-    <div class="card recording-header-pic">
-        <div style="background-image:url({{ item.previewimagelink }})" valign="bottom" class="card-header color-white no-border">
-            {{ item.titel }}<br />
-            {{ item.genre }}
-        </div>
-        
-        <div class="card-content">
-            <div class="card-content-inner">
-                <p>{{ item.text }}</p>
-            </div>
-        </div>
-        
-        <div class="card-footer">
-            <p class="color-gray">{{ item.sender }} {{ item.startdate}} {{ item.starttime}}</p>
-            <p class="color-gray">Bewertung: {{ item.rating }}</p>
+    .button {
+        display: block;
+        width: 100%;
+    }
+</style>
+
+<div class="card recording-header-pic">
+    <div style="background-image:url({{ item.previewimagelink }})" valign="bottom" class="card-header color-white no-border">
+        {{ item.titel }}<br />
+        {{ item.genre }}
+    </div>
+
+    <div class="card-content">
+        <div class="card-content-inner">
+            <p>{{ item.text }}</p>
         </div>
     </div>
 
-    <div class="content-block-title">Torrents</div>
-    <div class="card">
-        <div class="card-content">
-            <div class="card-content-inner">
-                {% for torrent in item.Torrents %}
-                <form action="{{ url_for('ui.details', epgid=item.Id) }}" method="POST" class="ajax-submit">
-                    <input type="hidden" name="Resolution" value="{{ torrent.Resolution }}">
-                    <input type="hidden" name="TorrentFile" value="{{ torrent.TorrentFile }}">
-                    <input type="hidden" name="TorrentLink" value="{{ torrent.TorrentLink }}">
-                    <button type="submit" name="{{ torrent.Resolution }}" class="button button-big active">
-                        {{ torrent.Resolution }}
-                        <span class='badge'>peer {{ torrent.loading }}</span>
-                        <span class="badge">seed {{ torrent.loaded }}</span>
-                        <span class="badge">reseed {{ torrent.finished }}</span>
-                    </button>
-                </form>
-                {% endfor %}
-            </div>
-        </div>
+    <div class="card-footer">
+        <p class="color-gray">{{ item.sender }} {{ item.startdate}} {{ item.starttime}}</p>
+        <p>
+            <i class="f7-icons">star_fill</i>
+            <i class="f7-icons">star_fill</i>
+            <i class="f7-icons">star_fill</i>
+            {% if item.rating == 'hoch' %}
+            <i class="f7-icons">star_fill</i>
+            <i class="f7-icons">star</i>
+            {% elif item.rating == 'sehr hoch' %}
+            <i class="f7-icons">star_fill</i>
+            <i class="f7-icons">star_fill</i>
+            {% else %}
+            <i class="f7-icons">star</i>
+            <i class="f7-icons">star</i>
+            {% endif %}
+        </p>
     </div>
+</div>
 
-{% endblock %}
+
+<!-- Torrents Card -->
+<div class="card">
+    <div class="card-header">Torrents</div>
+    <div class="card-content-inner">
+        {% for torrent in item.Torrents %}
+        <form action="{{ url_for('ui.details', epgid=item.Id) }}" method="POST" class="ajax-submit" style="width:100%; display:block;">
+            <input type="hidden" name="Resolution" value="{{ torrent.Resolution }}">
+            <input type="hidden" name="TorrentFile" value="{{ torrent.TorrentFile }}">
+            <input type="hidden" name="TorrentLink" value="{{ torrent.TorrentLink }}">
+            <p>
+                <button type="submit" name="{{ torrent.Resolution }}" class="button button-big button-fill button-raised">
+                    {% if torrent.Resolution == 'HD' %}
+                    <span class="badge bg-orange">{{ torrent.Resolution }}</span>
+                    <div class="chip">
+                        <div class="chip-label">mpg.HD.avi.</div>
+                    </div>
+                    {% elif torrent.Resolution == 'HQ' %}
+                    <span class="badge bg-red">{{ torrent.Resolution }}</span>
+                    <div class="chip">
+                        <div class="chip-label">mpg.HQ.avi.</div>
+                    </div>
+                    {% elif torrent.Resolution == 'HD.AC3' %}
+                    <span class="badge bg-orange">{{ torrent.Resolution }}</span>
+                    <div class="chip">
+                        <div class="chip-label">mpg.HD.ac3.</div>
+                    </div>
+                    {% elif torrent.Resolution == 'MP4' %}
+                    <span class="badge bg-green">{{ torrent.Resolution }}</span>
+                    <div class="chip">
+                        <div class="chip-label">mpg.mp4.</div>
+                    </div>
+                    {% else %}
+                    <span class="badge bg-blue">{{ torrent.Resolution }}</span>
+                    <div class="chip">
+                        <div class="chip-label">.mpg.avi.</div>
+                    </div>
+                    {% endif %}
+
+                    {% if torrent.loaded >= torrent.finished %}
+                    <div class="chip">
+                        <div class="chip-media bg-blue">{{ torrent.loaded }}</div>
+                        <div class="chip-label">geladen</div>
+                    </div>
+                    {% else %}
+                    <div class="chip">
+                        <div class="chip-media bg-blue">{{ torrent.finished }}</div>
+                        <div class="chip-label">fertig</div>
+                    </div>
+                    {% endif %}
+
+                </button>
+            </p>
+        </form>
+        {% endfor %}
+    </div>
+</div>
+
+    {% endblock %}
 

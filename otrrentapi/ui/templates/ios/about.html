@@ -1,4 +1,4 @@
-{% extends "ios/_layout.html" %}
+﻿{% extends "ios/_layout.html" %}
 
 {% block navbar%}
 <div class="navbar">
@@ -13,41 +13,103 @@
 {% endblock %}
 
 {% block content %}
-<div class="content-block-title">App Konfiguration</div>
-<div class="list-block">
-    <ul>
-        <li class="item-content">
-            <div class="item-inner">
-                <div class="item-title">UI</div>
-                <div class="item-after">{{ session['platform'] }}</div>
-            </div>
-        </li>
-        <li class="item-content">
-            <div class="item-inner">
-                <div class="item-title">Plattform</div>
-                <div class="item-after">{{ request.user_agent.platform }}</div>
-            </div>
-        </li>
-        <li class="item-content">
-            <div class="item-inner">
-                <div class="item-title">Browser</div>
-                <div class="item-after">{{ request.user_agent.browser }}</div>
-            </div>
-        </li>
-        <li class="item-content">
-            <div class="item-inner">
-                <div class="item-title">IP Adresse</div>
-                <div class="item-after">{{ request.remote_addr }}</div>
-            </div>
-        </li>
-        <li class="item-content">
-            <div class="item-inner">
-                <div class="item-title">Fingerprint</div>
-                <div class="item-after">{{ g.user.RowKey }}</div>
-            </div>
-        </li>
-    </ul>
-    <!--<div class="list-block-label">List block label text goes here</div>-->
+
+<!-- Alerts -->
+{% if message.show %}
+<div class="content-block inset">
+    <div class="content-block-inner {% if message.error %}bg-pink color-white{% else %}bg-green{% endif %}">
+        <strong>{{ message.header}}</strong>
+        <p>{{ message.text}}</p>
+        {% if message.code != 0 %}<p class="color-gray">{{ message.code}}</p>{% endif %}
+    </div>
+</div>
+{% endif %}
+
+<!-- Über -->
+<div id="about" class="card">
+    <div class="card-header">otrrent</div>
+    <div class="card-content-inner">
+        <p>
+            Mit <strong>otrrent</strong> können Nutzer von <a href="http://www.onlinetvrecorder.com/" target="_blank" class="external">onlineTVrecorder.com</a> (OTR) per torrent verfuegbare beliebteste Aufnahmen von OTR auswaehlen und die entsprechende torrent Datei an einen heimischen ftp-Server weiterleiten.
+            Am heimischen Rechner kann dann mit einem bittorrent Client die entsprechende Sendung als otrkey-Datei runtergeladen werden. <strong>otrrent</strong> benötigt für die Weiterleitung der torrent Datei die Zugangsdaten zu Ihrem ftp-Server.
+        </p>
+
+        <p>
+            Als otrrent <strong>Pro-User</strong> können Sie Aufnahmen in der otrrent-Cloud decodieren, schneiden und dann als Video an Ihren ftp-Server senden lassen.
+            Um diese Funktion nutzen zu können, ist ein Nutzeraccount unter <a href="http://www.onlinetvrecorder.com/" target="_blank" class="external">onlineTVrecorder.com</a> (OTR) notwendig. otrrent benötigt Ihre OTR Zugangsdaten um die von Ihnen aufgenommenen Sendungen decodieren zu können.
+            Ihre Zugangsdaten werden verschlüsselt übertragen und gespeichert. Ihre Daten werden nicht weitergegeben und nur zum decodieren der von Ihnen ausgewählten Sendungen genutzt. In dieser Verion steht diese Funktion noch nicht zu Verfügung.
+        </p>
+        <p>
+            otrrent wird sich in nachfolgenden Versionen über <strong>Werbung</strong> finanzieren. Es wird aber eine Funktion geben otrrent ohne Werbung zu nutzen! Diese Funktion wird aber noch entwickelt
+            und steht in dieser Version noch nicht zu Verfügung.
+        </p>
+    </div>
+</div>
+
+<!-- Hinweise & Lizenzen -->
+<div id="about" class="card">
+    <div class="card-header">Lizenzen &amp; rechtliche Hinweise</div>
+    <div class="card-content-inner">
+        <p>Die <strong>Inhalte</strong> dieser App - insbesondere EPG, Top-Aufnahmen &amp; Torrents - sind Eigentum von <a href="http://www.onlinetvrecorder.com/" target="_blank" class="external">onlineTVrecorder.com</a> der Internet TV AG, Seychelles. Alle Rechte liegen bei der Internet TV AG. Diese App zeigt die Daten unverfälscht an.</p>
+        <p>Die <strong>otrkey Dateien</strong> sind verschlüsselt und können nur decodiert werden, wenn Sie als OTR Nutzer die Sendung vor Ausstrahlung,&nbsp;wie in einem Videorecorder, programmiert haben.</p>
+        <p><strong>Framework7</strong>. otrrent nutzt <a href="https://framework7.io/" target="_blank" class="external">Framework7</a> um als Web App ein natives Nutzergefühl auf android und iOS Geräten zu ermöglichen.</p>
+        <p><strong>Fingerprint2</strong>. otrrent nutzt zur Erkennung des Gerätes die Javascript Bibliothek <a href="https://github.com/Valve/fingerprintjs2" target="_blank" class="external">Fingerprint2</a> unter MIT Lizenz. Unter dem Fingerprint speichert otrrent die Einstellungen und der Verlauf (Historie) in der Cloud.</p>
+        <p><strong>dAKirby309</strong>. Das Logo der otrrent app unterliegt der  <a href="http://creativecommons.org/licenses/by/3.0/" target="_blank" class="external">CC Attribution 3.0  Unported</a> Lizenz und wurde ursprünglich erstellt von <a href="http://dakirby309.deviantart.com/" target="_blank" class="external">dAKirby309</a></p>
+    </div>
+</div>
+
+<!-- App Konfiguration -->
+<div class="card">
+    <div class="card-header">App</div>
+    <div class="card-content" id="appconfig">
+        <div class="list-block media-list">
+            <ul>
+                <li class="item-content">
+                    <div class="item-inner">
+                        <div class="item-subtitle">Version</div>
+                        <div class="item-text">{{ config['APPLICATION_VERSION'] }}</div>
+                    </div>
+                </li>
+                <li class="item-content">
+                    <div class="item-inner">
+                        <div class="item-subtitle">Autor</div>
+                        <div class="item-text"><a href="https://app-workshop.de/" target="_blank" class="external">app workshop UG (haftungsbeschränkt)</a></div>
+                    </div>
+                </li>
+                <li class="item-content">
+                    <div class="item-inner">
+                        <div class="item-subtitle">UI</div>
+                        <div class="item-text">{{ session['platform'] }}</div>
+                    </div>
+                </li>
+                <li class="item-content">
+                    <div class="item-inner">
+                        <div class="item-subtitle">Plattform</div>
+                        <div class="item-text">{{ request.user_agent.platform }}</div>
+                    </div>
+                </li>
+                <li class="item-content">
+                    <div class="item-inner">
+                        <div class="item-subtitle">Browser</div>
+                        <div class="item-text">{{ request.user_agent.browser }}</div>
+                    </div>
+                </li>
+                <li class="item-content">
+                    <div class="item-inner">
+                        <div class="item-subtitle">
+                            {% if session['deviceuuid'] is none %}
+                            Fingerprint
+                            {% else %}
+                            Device UUID
+                            {% endif %}
+                        </div>
+                        <div class="item-text">{{ g.user.RowKey }}</div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
 </div>
 {% endblock %}
+
 

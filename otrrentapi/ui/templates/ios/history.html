@@ -15,35 +15,65 @@
 
 {% block content %}
 
-    <!-- Content Block Listview -->
-    <div class="list-block media-list">
-        <ul>
+<!-- Content Block Listview -->
+<div class="list-block media-list">
+    <ul>
 
-            {% for item in items %}
+        {% for item in items %}
 
-            <!-- Divider -->
-            {% if loop.changed(item.createdate) %}
-                <li class="item-divider">{{ item.createdate }}</li>
-            {% endif %}
+        <!-- Divider -->
+        {% if loop.changed(item.createdate) %}
+        <li class="item-divider">{{ item.createdate }}</li>
+        {% endif %}
 
-            <!-- Listitems -->
-            <li class="item-content">
-                <div class="item-media"><img data-src="{{ item.previewimagelink }}" class="lazy" width="80"></div>
-                <div class="item-inner">
-                    <div class="item-title-row">
-                        <div class="item-title">{{ item.titel }}</div>
-                        <div class="item-after"><span class="badge">{{ item.tasktype }}</span>&nbsp;<span class="badge">{{ item.resolution }}</span></div>
+        <!-- Listitems -->
+        <li class="item-content">
+            <div class="item-media"><img data-src="{{ item.previewimagelink }}" class="lazy" width="80"></div>
+            <div class="item-inner">
+                <div class="item-title-row">
+                    <div class="item-title">{{ item.titel }}</div>
+                    <div class="item-after">
+                        {% if item.status in ['error', 'deleted'] %}
+                        <i class="f7-icons" style="color: red;">bolt_round_fill</i>
+                        {% elif item.status in ['finished'] %}
+                        <i class="f7-icons" style="color: green;">check_round_fill</i>
+                        {% else %}
+                        <i class="f7-icons" style="color: yellow;">help_fill</i>
+                        {% endif %}
                     </div>
-
-                    <div class="item-subtitle">{{ item.genre }}</div>
-                    <div class="item-text">{{ item.sender }} {{ item.startdate }} {{ item.starttime }}</div>
-                    <span class="badge">{{ item.status }}</span>&nbsp;<span class="badge">{{ item.updatedate }}</span>
                 </div>
-            </li>
 
-            {% endfor %}
+                <div class="item-subtitle">{{ item.genre }}</div>
+                <div class="item-text">{{ item.sender }} {{ item.startdate }} {{ item.starttime }}</div>
+                {% if item.resolution == 'HD' or item.resolution == 'HD.AC3' %}
+                <span class="badge bg-orange">
+                    {{ item.resolution }}
+                </span>
+                {% elif item.resolution == 'HQ' %}
+                <span class="badge bg-red">
+                    {{ item.resolution }}
+                </span>
+                {% elif item.resolution == 'MP4' %}
+                <span class="badge bg-green">
+                    {{ item.resolution }}
+                </span>
+                {% else %}
+                <span class="badge bg-blue">
+                    {{ item.resolution }}
+                </span>
+                {% endif %}
+                <div class="chip">
+                    <div class="chip-label">{{ item.tasktype }}</div>
+                </div>
+                <div class="chip">
+                    <div class="chip-label">{{ item.status }}</div>
+                </div>
+            </div>
+        </li>
 
-        </ul>
-    </div>
+        {% endfor %}
+
+    </ul>
+</div>
 
 {% endblock %}

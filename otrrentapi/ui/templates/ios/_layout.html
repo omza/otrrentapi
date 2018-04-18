@@ -1,37 +1,53 @@
 ﻿<!DOCTYPE html>
 <html>
+
 <head>
-    <!-- Required meta tags-->
+    {% block head %}
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <!-- Your app title -->
     <title>otrrent</title>
-    <!-- Path to Framework7 iOS CSS theme styles-->
+    <!-- Path to Framework7 Library CSS-->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/framework7.ios.min.css') }}">
-    <!-- Path to Framework7 iOS related color styles -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/framework7.ios.colors.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/framework7-icons.css') }}">
+
+    <!-- Goggle Adsense: Page Ads-->
+    {% if not g.user.AdsRemoved %}
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({
+            google_ad_client: "ca-pub-6230052197390545",
+            enable_page_level_ads: true
+        });
+    </script>
+    {% endif %}
+
+    {% endblock %}
+
 </head>
-<body>
+
+<body class="theme-green">
+
     <!-- Status bar overlay for full screen mode (PhoneGap) -->
     <div class="statusbar-overlay"></div>
 
     <!-- Panels overlay-->
     <div class="panel-overlay"></div>
     <!-- Left panel with reveal effect-->
-    <div class="panel panel-left panel-reveal">
+    <div class="panel panel-left panel-cover">
         <div class="view navbar-fixed">
             <div class="pages">
                 <div data-page="panel-left" class="page">
+
                     <div class="navbar">
                         <div class="navbar-inner">
                             <div class="center">otrrent</div>
                         </div>
                     </div>
-                    <div class="page-content">
 
+                    <div class="page-content">
                         <div class="content-block-title">Menü</div>
                         <div class="list-block">
                             <ul>
@@ -47,29 +63,61 @@
                                         <div class="item-inner item-title">Einstellungen</div>
                                     </a>
                                 </li>
+                                {% if not g.user.AdsRemoved %}
                                 <li>
-                                    <a id="settings" href="{{ url_for('ui.about') }}" class="item-link item-content close-panel" data-ignore-cache="true">
+                                    <a id="adsfree" href="{{ url_for('ui.about') }}?menu=adsfree" class="item-link item-content close-panel">
+                                        <div class="item-media"><i class="f7-icons">bag</i></div>
+                                        <div class="item-inner item-title">Werbefrei</div>
+                                    </a>
+                                </li>
+                                {% endif %}
+                                {% if not g.user.ProUser %}
+                                <li>
+                                    <a id="getprouser" href="{{ url_for('ui.about') }}?menu=getprouser" class="item-link item-content close-panel">
+                                        <div class="item-media"><i class="f7-icons">person</i></div>
+                                        <div class="item-inner item-title">Pro User</div>
+                                    </a>
+                                </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                        <div class="content-block-title">App</div>
+                        <div class="list-block">
+                            <ul>
+                                {% if not session['deviceuuid'] is none %}
+                                <li>
+                                    <a id="rate" href="https://play.google.com/store/apps/details?id=de.appworkshop.otrrent" class="item-link item-content close-panel external">
+                                        <div class="item-media"><i class="f7-icons">star</i></div>
+                                        <div class="item-inner item-title">Bewerten</div>
+                                    </a>
+                                </li>
+                                {% endif %}
+                                <li>
+                                    <a id="privacy" href="{{ url_for('www.index') }}#privacy" target="_blank" class="item-link item-content close-panel external">
+                                        <div class="item-media"><i class="f7-icons">lock</i></div>
+                                        <div class="item-inner item-title">Datenschutzerklärung</div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ url_for('ui.about') }}" class="item-link item-content close-panel">
                                         <div class="item-media"><i class="f7-icons">info</i></div>
                                         <div class="item-inner item-title">Über</div>
                                     </a>
                                 </li>
                             </ul>
                         </div>
-
-                        <div class="content-block">
-                            <p>Mit otrrent können Nutzer von onlineTVrecorder.com (OTR) per torrent verfügbare beliebteste Aufnahmen von OTR auswählen und die entsprechende torrent Datei an einen heimischen ftp-Server weiterleiten. Am heimischen Rechner kann dann mit einem bittorrent Client die entsprechende Sendung (otrkey) runtergeladen werden.</p>
-                            <p>Mit der Pro Version von otrrent können die Aufnahmen in der Cloud decodiert und geschnitten werden. Dafür benötigt otrrent die OTR Zugangsdaten.</p>
-                        </div>
-
                     </div>
+
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Views -->
+
+    <!-- Views-->
     <div class="views">
-        <!-- Your main view, should have "view-main" class -->
+
+        <!-- Your main view, should have "view-main" class-->
         <div class="view view-main">
             <!-- Top Navbar-->
             {% block navbar%}
@@ -83,31 +131,99 @@
                 </div>
             </div>
             {% endblock %}
-            <!-- Pages container, because we use fixed-through navbar and toolbar, it has additional appropriate classes-->
-            <div class="pages navbar-through">
-                <!-- Page, "data-page" contains page name -->
+
+            <!-- Pages, because we need fixed-through navbar and toolbar, it has additional appropriate classes-->
+            <div class="pages navbar-fixed">
+
+                <!-- Page, data-page contains page name-->
                 <div data-page="{{ pagetitle }}" class="page">
 
+                    <!-- Search Bar -->
                     {% block searchbar %}
                     {% endblock %}
 
-                    <!-- Scrollable page content -->
+                    <!-- Scrollable page content-->
                     <div class="page-content">
+
                         {% block content %}
                         {% endblock %}
+
                     </div>
                 </div>
             </div>
+
+
         </div>
     </div>
+
+    <!-- Coockie Disclaimer pickup -->
+    <div class="picker-modal picker-info">
+        <div class="toolbar">
+            <div class="toolbar-inner">
+                <div class="left">Cookies</div>
+                <div class="right"><a href="#" class="close-picker">OK</a></div>
+            </div>
+        </div>
+        <div class="picker-modal-inner">
+            <div class="content-block">
+                <p>Diese Webseite/App verwendet Cookies um im Rahmen Ihrer Sitzung einen Authentifizierungstoken zu speichern. Indem Sie auf OK klicken oder diese Website weiter nutzen, stimmen Sie der Speicherung von Cookies auf Ihrem Endgerät zu. Näheres erfahren Sie aus unserer <a href='{{ url_for('www.index') }}#privacy' target='_blank' class='external'>Datenschutzerklärung</a></p>
+            </div>
+        </div>
+    </div>
+
     <!-- Path to Framework7 Library JS-->
     <script type="text/javascript" src="{{ url_for('static', filename='js/framework7.min.js') }}"></script>
 
+    <!-- Path to your app js-->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/framework7.myiosapp.js') }}"></script>
+
+
+    {% if 'authtoken' in session %}
+
+    <!-- Cookie Disclaimer-->
+    {% if session['deviceuuid'] is none %}
+    <script>
+        if (!sessionStorage.cookiedisclaimershown) {
+            myApp.pickerModal('.picker-info') 
+    }
+    </script>
+    {% endif %}
+
+    {% else %}
+    <!-- Login -->
     <!-- Path to Fingerprint2 Library JS-->
     <script type="text/javascript" src="{{ url_for('static', filename='js/fingerprint2.min.js') }}"></script>
 
-    <!-- Path to your app js-->
-    <script type="text/javascript" src="{{ url_for('static', filename='js/framework7.myiosapp.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/otrrent.js') }}"></script>
+    <script>
+        // Login with ClientID and Device Fingerprint
+        // --------------------------------------------------------------------------------------
+
+        //get a hash, representing your device fingerprint
+        new Fingerprint2().get(function (result) {
+
+            //login credentials
+            var ClientID = "{{ config['APPLICATION_CLIENT_ID'] }}";
+            var Fingerprint = result;
+
+            // If current page has a query string, append action to the end of the query string, else
+            // create our query string
+            var next_page = location.href;
+            if (next_page.indexOf("?") > -1) {
+                next_page += '&clientid=' + ClientID;
+            } else {
+                next_page += '?clientid=' + ClientID;
+            }
+            next_page += '&fingerprint=' + Fingerprint;
+
+            //redirect
+            location.replace(next_page);
+
+            });
+
+    </script>
+    {% endif %}
+
+
+
 </body>
-</html>  
+</html>

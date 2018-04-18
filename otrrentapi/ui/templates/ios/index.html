@@ -10,14 +10,42 @@
 {% endblock %}
 
 {% block content %}
+
+<!-- This block will be displayed if nothing found -->
+<div class="content-block searchbar-not-found">
+    <div class="content-block-inner">Nichts gefunden</div>
+</div>
+
+<!-- Content Block Listview -->
 <div class="list-block media-list list-block-search searchbar-found">
+
     <ul>
 
         {% for item in items %}
 
-        <!-- Divider -->
         {% if loop.changed(item.startdate) %}
+        <!-- Divider -->
         <li class="item-divider">{{ item.startdate }}</li>
+
+
+        {% if not g.user.AdsRemoved %}
+        <!-- Ads after Divider -->
+        <li class="item-content">
+            <div class="item-inner" style="margin-top:5px; margin-bottom:5px; margin-right:5px;">
+                <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-format="fluid"
+                     data-ad-layout-key="-fd-s+7c-3c-k4"
+                     data-ad-client="ca-pub-6230052197390545"
+                     data-ad-slot="1160467221"></ins>
+                <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
+        </li>
+        {% endif %}
+
         {% endif %}
 
         <!-- Listitems -->
@@ -27,9 +55,19 @@
                 <div class="item-inner">
                     <div class="item-title-row">
                         <div class="item-title">{{ item.titel }}</div>
+                        {% if item.torrentCount > 0 %}
+                        <div class="item-after">
+                            <span class="badge {% if item.torrentCount >= 3 %}bg-red{% elif item.torrentCount == 2%}bg-orange{% else %}bg-blue{% endif %}">
+                                {{ item.torrentCount }}
+                            </span>
+                        </div>
+                        {% endif %}
                     </div>
                     <div class="item-subtitle">{{ item.genre }}</div>
-                    <div class="item-text">{{ item.sender }} {{ item.startdate }} {{ item.starttime }}</div>
+                    <div class="item-text">
+                        {{ item.sender }} {{ item.startdate }} {{ item.starttime }}
+                    </div>
+
                 </div>
             </a>
         </li>
@@ -38,4 +76,5 @@
 
     </ul>
 </div>
+
 {% endblock %}

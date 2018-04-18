@@ -13,182 +13,226 @@
 {% endblock %}
 
 {% block content %}
-    <form action="{{ url_for('ui.settings') }}" method="POST" class="ajax-submit-onchange">
+<form action="{{ url_for('ui.settings') }}" method="POST" class="ajax-submit-onchange">
     {{ form.hidden_tag() }}
 
-    <div class="content-block-title">FTP Endpoint</div>
-    <div class="list-block">
-        <ul>
+    <!-- Global -->
+    {% if User.ProUser %}
+    <div class="card">
+        <div class="card-header">Globale Einstellung</div>
+        <div class="card-content">
+            <div class="list-block">
+                <ul>
+                    <!-- Push Video -->
+                    <li>
+                        <div class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title label">{{ form.PushVideo.label }}</div>
+                                <div class="item-input">
+                                    <label class="label-switch">
+                                        {{ form.PushVideo }}
+                                        <div class="checkbox"></div>
+                                    </label>
+                                </div>
+                                <div class="item-input label">
+                                    {% for error in form.PushVideo.errors %}
+                                    <span style="color: red;">{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    {% endif %}
 
-            <!-- Protocol -->
-            <li>
-                <div class="item-content">
-                    <div class="item-inner">
-                        <div class="item-title label">{{ form.Protocol.label }}</div>
-                        <div class="item-input">
-                            {{ form.Protocol }}
+    <!-- FTP Endpoint -->
+    <div class="card">
+        <div class="card-header">FTP Endpoint</div>
+        <div class="card-content">
+            <div class="list-block">
+                <ul>
+                    <!-- Protocol -->
+                    <li>
+                        <div class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title label">{{ form.Protocol.label }}</div>
+                                <div class="item-input">
+                                    {{ form.Protocol }}
+                                </div>
+                                <div class="item-input label">
+                                    {% for error in form.Protocol.errors %}
+                                    <span style="color: red;">{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
                         </div>
-                        <div class="item-input label">
-                            {% for error in form.Protocol.errors %}
-                            <span style="color: red;">{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-            </li>
+                    </li>
 
-            <!-- Server -->
-            <li>
-                <div class="item-content">
-                    <div class="item-inner">
-                        <div class="item-title label">{{ form.Server.label }}</div>
-                        <div class="item-input">
-                            {{ form.Server }}
+                    <!-- Server -->
+                    <li>
+                        <div class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title label">{{ form.Server.label }}</div>
+                                <div class="item-input">
+                                    {{ form.Server }}
+                                </div>
+                                <div class="item-input label" style="color: red;">
+                                    {% for error in form.Server.errors %}{{ error }}{% endfor %}
+                                </div>
+                            </div>
                         </div>
-                        <div class="item-input label" style="color: red;">
-                            {% for error in form.Server.errors %}{{ error }}{% endfor %}
-                        </div>
-                    </div>
-                </div>
-            </li>
+                    </li>
 
-            <!-- Port -->
-            <li>
-                <div class="item-content">
-                    <div class="item-inner">
-                        <div class="item-title label">{{ form.Port.label }}</div>
-                        <div class="item-input">
-                            {{ form.Port }}
+                    <!-- Port -->
+                    <li>
+                        <div class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title label">{{ form.Port.label }}</div>
+                                <div class="item-input">
+                                    {{ form.Port }}
+                                </div>
+                                <div class="item-input label" style="color: red;">
+                                    {% for error in form.Port.errors %}{{ error }}{% endfor %}
+                                </div>
+                            </div>
                         </div>
-                        <div class="item-input label" style="color: red;">
-                            {% for error in form.Port.errors %}{{ error }}{% endfor %}
-                        </div>
-                    </div>
-                </div>
-            </li>
+                    </li>
 
-            <!-- FtpUser -->
-            <li>
-                <div class="item-content">
-                    <div class="item-inner">
-                        <div class="item-title label">{{ form.FtpUser.label }}</div>
-                        <div class="item-input">
-                            {{ form.FtpUser }}
+                    <!-- FtpUser -->
+                    <li>
+                        <div class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title label">{{ form.FtpUser.label }}</div>
+                                <div class="item-input">
+                                    {{ form.FtpUser }}
+                                </div>
+                                <div class="item-input label" style="color: red;">
+                                    {% for error in form.FtpUser.errors %}{{ error }}{% endfor %}
+                                </div>
+                            </div>
                         </div>
-                        <div class="item-input label" style="color: red;">
-                            {% for error in form.FtpUser.errors %}{{ error }}{% endfor %}
-                        </div>
-                    </div>
-                </div>
-            </li>
+                    </li>
 
-            <!-- FtpPassword -->
-            <li>
-                <div class="item-content">
-                    <div class="item-inner">
-                        <div class="item-title label">{{ form.FtpPassword.label }}</div>
-                        <div class="item-input">
-                            {{ form.FtpPassword }}
+                    <!-- FtpPassword -->
+                    <li>
+                        <div class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title label">{{ form.FtpPassword.label }}</div>
+                                <div class="item-input">
+                                    {{ form.FtpPassword }}
+                                </div>
+                                <div class="item-input label" style="color: red;">
+                                    {% for error in form.FtpPassword.errors %}{{ error }}{% endfor %}
+                                </div>
+                            </div>
                         </div>
-                        <div class="item-input label" style="color: red;">
-                            {% for error in form.FtpPassword.errors %}{{ error }}{% endfor %}
-                        </div>
-                    </div>
-                </div>
-            </li>
+                    </li>
 
-            <!-- ServerPath -->
-            <li>
-                <div class="item-content">
-                    <div class="item-inner">
-                        <div class="item-title label">{{ form.ServerPath.label }}</div>
-                        <div class="item-input">
-                            {{ form.ServerPath }}
+                    <!-- ServerPath -->
+                    <li>
+                        <div class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title label">{{ form.ServerPath.label }}</div>
+                                <div class="item-input">
+                                    {{ form.ServerPath }}
+                                </div>
+                                <div class="item-input label" style="color: red;">
+                                    {% for error in form.ServerPath.errors %}{{ error }}{% endfor %}
+                                </div>
+                            </div>
                         </div>
-                        <div class="item-input label" style="color: red;">
-                            {% for error in form.ServerPath.errors %}{{ error }}{% endfor %}
-                        </div>
-                    </div>
-                </div>
-            </li>
-        </ul>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+        <div class="card-footer">
+            <span>FTP Verbindung erfolgreich?</span>
+            <span>
+                {% if g.user.FtpConnectionChecked is none %}
+                <i class="f7-icons" style="color: yellow;">help_fill</i>
+                {% elif g.user.FtpConnectionChecked %}
+                <i class="f7-icons" style="color: green;">check_round_fill</i>
+                {% else %}
+                <i class="f7-icons" style="color: red;">bolt_round_fill</i>
+                {% endif %}
+            </span>
+        </div>
     </div>
 
-    {% if User.ProUser %}
-        <div class="content-block-title">Decoding otrkey</div>
-        <div class="list-block">
-            <ul>
-
-                <!-- Push Video -->
-                <li>
-                    <div class="item-content">
-                        <div class="item-inner">
-                            <div class="item-title label">{{ form.PushVideo.label }}</div>
-                            <div class="item-input">
-                                <label class="label-switch">
-                                    {{ form.PushVideo }}
-                                    <div class="checkbox"></div>
-                                </label>
-                            </div>
-                            <div class="item-input label">
-                                {% for error in form.PushVideo.errors %}
-                                <span style="color: red;">{{ error }}</span>
-                                {% endfor %}
+    <!-- OTR Decoding -->
+    {% if User.ProUser and User.PushVideo %}
+    <div class="card">
+        <div class="card-header">OTR Decoding</div>
+        <div class="card-content">
+            <div class="list-block">
+                <ul>
+                    <!-- OTR User-->
+                    <li>
+                        <div class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title label">{{ form.OtrUser.label }}</div>
+                                <div class="item-input">
+                                    {{ form.OtrUser }}
+                                </div>
+                                <div class="item-input label" style="color: red;">
+                                    {% for error in form.OtrUser.errors %}{{ error }}{% endfor %}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </li>
+                    </li>
 
-                <!-- OTR User-->
-                <li>
-                    <div class="item-content">
-                        <div class="item-inner">
-                            <div class="item-title label">{{ form.OtrUser.label }}</div>
-                            <div class="item-input">
-                                {{ form.OtrUser }}
-                            </div>
-                            <div class="item-input label" style="color: red;">
-                                {% for error in form.OtrUser.errors %}{{ error }}{% endfor %}
+                    <!-- OTR Password -->
+                    <li>
+                        <div class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title label">{{ form.OtrPassword.label }}</div>
+                                <div class="item-input">
+                                    {{ form.OtrPassword }}
+                                </div>
+                                <div class="item-input label" style="color: red;">
+                                    {% for error in form.OtrPassword.errors %}{{ error }}{% endfor %}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </li>
+                    </li>
 
-                <!-- OTR Password -->
-                <li>
-                    <div class="item-content">
-                        <div class="item-inner">
-                            <div class="item-title label">{{ form.OtrPassword.label }}</div>
-                            <div class="item-input">
-                                {{ form.OtrPassword }}
-                            </div>
-                            <div class="item-input label" style="color: red;">
-                                {% for error in form.OtrPassword.errors %}{{ error }}{% endfor %}
+                    <!-- UseCutlist -->
+                    <li>
+                        <div class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title label">{{ form.UseCutlist.label }}</div>
+                                <div class="item-input">
+                                    <label class="label-switch">
+                                        {{ form.UseCutlist }}
+                                        <div class="checkbox"></div>
+                                    </label>
+                                </div>
+                                <div class="item-input label" style="color: red;">
+                                    {% for error in form.UseCutlist.errors %}{{ error }}{% endfor %}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </li>
-
-                <!-- UseCutlist -->
-                <li>
-                    <div class="item-content">
-                        <div class="item-inner">
-                            <div class="item-title label">{{ form.UseCutlist.label }}</div>
-                            <div class="item-input">
-                                <label class="label-switch">
-                                    {{ form.UseCutlist }}
-                                    <div class="checkbox"></div>
-                                </label>
-                            </div>
-                            <div class="item-input label" style="color: red;">
-                                {% for error in form.UseCutlist.errors %}{{ error }}{% endfor %}
-                            </div>
-                        </div>
-                    </div>
-                </li>
-
-            </ul>
+                    </li>
+                </ul>
+            </div>
         </div>
+        <div class="card-footer">
+            <span>OTR Zugangsdaten korrekt?</span>
+            <span>
+                {% if g.user.OtrCredentialsChecked is none %}
+                <i class="material-icons" style="color: yellow;">help</i>
+                {% elif g.user.OtrCredentialsChecked %}
+                <i class="material-icons" style="color: green;">check_circle</i>
+                {% else %}
+                <i class="material-icons" style="color: red;">error</i>
+                {% endif %}
+            </span>
+        </div>
+    </div>
     {% endif %}
 
 </form>
