@@ -107,6 +107,7 @@ def before_request():
     else:
         g.user = None
         log.debug('Logged Out redirect to login from endpoint: {!s}'.format(request.endpoint))
+        return 'Authentification required', 401
 
     """ retrieve device uuid """
     if ('deviceuuid' in session):
