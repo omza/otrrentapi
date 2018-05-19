@@ -6,7 +6,7 @@ var myApp = new Framework7({
     pushState: true,
 
     // disable status overlay
-    statusbarOverlay: false, 
+    statusbarOverlay: true, 
 
     //swipe panel
     swipePanel: true,
