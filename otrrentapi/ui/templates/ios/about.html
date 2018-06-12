@@ -68,7 +68,7 @@
                 <li class="item-content">
                     <div class="item-inner">
                         <div class="item-subtitle">UI</div>
-                        <div class="item-text">{{ session['platform'] }}</div>
+                        <div class="item-text">{{ g.platform }}</div>
                     </div>
                 </li>
                 <li class="item-content">
@@ -85,20 +85,8 @@
                 </li>
                 <li class="item-content">
                     <div class="item-inner">
-                        <div class="item-subtitle">
-                            {% if session['deviceuuid'] is none %}
-                            Fingerprint
-                            {% else %}
-                            Device UUID
-                            {% endif %}
-                        </div>
-                        <div class="item-text">{{ g.user.RowKey }}</div>
-                    </div>
-                </li>
-                <li class="item-content">
-                    <div class="item-inner">
-                        <div class="item-subtitle">Request</div>
-                        <div class="item-text">{{ request.query_string }}</div>
+                        <div class="item-subtitle">Device UUID</div>
+                        <div class="item-text">{{ g.deviceuuid }}</div>
                     </div>
                 </li>
             </ul>

@@ -21,9 +21,10 @@ from wtforms.widgets import PasswordInput
 
 """ configuration """
 from config import config, log
-from helpers.helper import Message, test_ftpconnection
+from helpers.helper import Message, test_ftpconnection, safe_cast
 import os
 from datetime import datetime
+from functools import wraps
 
 """ import & Init storage """
 from azurestorage.wrapper import StorageTableCollection
@@ -39,8 +40,6 @@ db.register_model(Torrent())
 queue.register_model(PushMessage())
 queue.register_model(PushVideoMessage())
 
-""" import Authentification """
-from auth import basicauth, verify_auth_token, generate_auth_token
 
 """ define blueprint """
 otrrentui = Blueprint('ui', __name__, template_folder='templates', url_prefix = '/ui')
@@ -64,33 +63,77 @@ class Settings(FlaskForm):
 @otrrentui.before_request
 def beforerequestlogic():
 
-    """ retrieve platform parameter and set to session cookie """
-    if ('platform' not in session):
-
-        if ('cordovaplatform' in request.args):
-            session['platform'] = str.lower(request.args.get('cordovaplatform', None))
-            session['app'] = True
-        else:
-            platform = request.user_agent.platform
-            session['app'] = False
-
-            if platform in ['android','ios']:        #,'windows'
-                session['platform'] = platform 
-            else:
-                session['platform'] = config['APPLICATION_UI_DEFAULT']
+    """ parse request data """
+    g.platform = str.lower(request.args.get('cordovaplatform', request.user_agent.platform))
+    g.clientid = request.args.get('clientid', config['APPLICATION_CLIENT_ID'])
+    g.deviceuuid = request.args.get('deviceuuid', '')
 
     """ user = default """
     g.user = None
 
-    log.debug('request platform: {!s}'.format(session['platform']))
+    """ set platform """
+    if not g.platform in ['android','ios']:
+        g.platform = config['APPLICATION_UI_DEFAULT']
 
+    """ message """
+    messageid = safe_cast(request.args.get('messageid', 0), int)
+    g.message = Message()
+    g.message.text = 'Entschuldigung! Diese Funktion wird noch entwickelt und steht in dieser Verion von otrrent noch nicht zu Verfügung.'
     
-""" view to top recordings """        
-@otrrentui.route('/')
-def index(message=Message()):
+    if messageid == 1:
+        g.message.header = 'Bewerten Sie otrrent'
+        g.message.error = True    
+        g.message.show = True
+    
+    elif messageid == 2:
+        g.message.header = 'Nutzen Sie otrrent Werbefrei!'
+        g.message.error = True    
+        g.message.show = True
 
-    """ retrieve Messages """
+    elif messageid == 3:
+        g.message.header = 'Nutzen Sie otrrent als Pro-User!'
+        g.message.error = True    
+        g.message.show = True
+
+    elif messageid == 4:
+        log.debug(messageid)
+        g.message.header = 'Fehler'
+        g.message.text = 'Bitte nutzen Sie die otrrent App! Sie sind nicht eingelogged'
+        g.message.error = True    
+        g.message.show = True
+
+
+""" decorators """
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        """ request user """
+        
+        if g.deviceuuid == '' or g.clientid == '':
+            g.user = None
+
+        else:
+            loginuser = db.get(User(PartitionKey=g.clientid, RowKey=g.deviceuuid))
+
+            """ user exists ? Create a new and  """
+            if not db.exists(loginuser):
+                loginuser.created = datetime.now()
+                db.insert(loginuser)
+            
+            """ login user """
+            g.user = loginuser
+ 
+        return f(*args, **kwargs)
+    return decorated_function
+
+#
+# ------------------------------------------------------------------------------------------------------------------------
+#            
+@otrrentui.route('/')
+def index():
     """ retrieve top recordings with filters """
+       
+    #get toplist
     toplist = StorageTableCollection('recordings', "PartitionKey eq 'top'")
     toplist = db.query(toplist)
     toplist.sort(key = lambda item: item.beginn, reverse = True)
@@ -104,12 +147,15 @@ def index(message=Message()):
 
 
     """ render platform template """
-    pathtemplate = session['platform'] + '/' + 'index.html'
+    pathtemplate = g.platform + '/' + 'index.html'
     return render_template(pathtemplate, title = 'OTR Top Aufnahmen', pagetitle='index', items=toplist,
-                            message=message)
+                            message=g.message)
 
-
+#
+# ------------------------------------------------------------------------------------------------------------------------
+#
 @otrrentui.route('/<int:epgid>', methods=['GET', 'POST'])
+@login_required
 def details(epgid):
     """ request top recording detail data """
 
@@ -117,8 +163,11 @@ def details(epgid):
     log.info('select all details for recording: {!s} with method {!s}'.format(epgid, request.method))
 
     """ determine template & messages """
-    pathtemplate = session['platform'] + '/' + 'details.html'
-    message = Message()
+    pathtemplate = g.platform + '/' + 'details.html'
+
+    #get message
+    message = g.message
+    g.pop('message')
 
     """ retrieve recording from storage """
     recording = db.get(Recording(PartitionKey = 'top', RowKey = str(epgid)))
@@ -139,8 +188,6 @@ def details(epgid):
         log.debug(data)
 
         """ post method = push only available for logged in users """
-        RetrieveUser()
-
         if not g.user:
             message.show = True
             message.error = True
@@ -222,180 +269,152 @@ def details(epgid):
                             item=recording,
                             message=message)
 
-
+#
+# ------------------------------------------------------------------------------------------------------------------------
+#
 @otrrentui.route('/settings', methods=['GET', 'POST'])
+@login_required
 def settings():
     """ validate settings form  at POST request """
-    RetrieveUser()
-    
+
     if not g.user:
-        message = Message()
-        message.show = True
-        message.error = True
-        message.header = 'Fehler'
-        message.text = 'Bitte nutzen Sie die otrrent App. Ihr Gerät konnte nicht identifiziert werden'
+        return redirect(url_for('ui.index',messageid=4))
 
-        return index(message)
-    
-    else:
 
-        """ get request data """
-        form = Settings()
 
-        """ init values in get method """
-        if form.validate_on_submit() or form.is_submitted(): 
+    """ get request data """
+    form = Settings()
 
-            """ save form data to userprofile """
-            if (g.user.PushVideo != form.PushVideo.data):
-                g.user.PushVideo = form.PushVideo.data
+    """ init values in get method """
+    if form.validate_on_submit() or form.is_submitted(): 
+
+        """ save form data to userprofile """
+        if (g.user.PushVideo != form.PushVideo.data):
+            g.user.PushVideo = form.PushVideo.data
             
-            if (g.user.OtrUser != form.OtrUser.data):
-                g.user.OtrUser = form.OtrUser.data
+        if (g.user.OtrUser != form.OtrUser.data):
+            g.user.OtrUser = form.OtrUser.data
             
-            if (g.user.UseCutlist != form.UseCutlist.data):
-                g.user.UseCutlist = form.UseCutlist.data
+        if (g.user.UseCutlist != form.UseCutlist.data):
+            g.user.UseCutlist = form.UseCutlist.data
             
-            if (g.user.Protocol != form.Protocol.data):
-                g.user.Protocol = form.Protocol.data
-                g.user.FtpConnectionChecked = False
+        if (g.user.Protocol != form.Protocol.data):
+            g.user.Protocol = form.Protocol.data
+            g.user.FtpConnectionChecked = False
             
-            if (g.user.Server != form.Server.data):
-                g.user.Server = form.Server.data
-                g.user.FtpConnectionChecked = False
+        if (g.user.Server != form.Server.data):
+            g.user.Server = form.Server.data
+            g.user.FtpConnectionChecked = False
             
-            if (g.user.Port != form.Port.data):
-                g.user.Port = form.Port.data
-                g.user.FtpConnectionChecked = False
+        if (g.user.Port != form.Port.data):
+            g.user.Port = form.Port.data
+            g.user.FtpConnectionChecked = False
             
-            if (g.user.FtpUser != form.FtpUser.data):
-                g.user.FtpUser = form.FtpUser.data
-                g.user.FtpConnectionChecked = False
+        if (g.user.FtpUser != form.FtpUser.data):
+            g.user.FtpUser = form.FtpUser.data
+            g.user.FtpConnectionChecked = False
 
-            if (g.user.ServerPath != form.ServerPath.data):
-                g.user.ServerPath = form.ServerPath.data
-                g.user.FtpConnectionChecked = False
+        if (g.user.ServerPath != form.ServerPath.data):
+            g.user.ServerPath = form.ServerPath.data
+            g.user.FtpConnectionChecked = False
 
-            if (form.OtrPassword.data not in ['*****']) and (g.user.OtrPassword != form.OtrPassword.data):
-                g.user.OtrPassword = form.OtrPassword.data
+        if (form.OtrPassword.data not in ['*****']) and (g.user.OtrPassword != form.OtrPassword.data):
+            g.user.OtrPassword = form.OtrPassword.data
 
-            if (form.FtpPassword.data not in ['*****']) and (g.user.FtpPassword != form.FtpPassword.data):
-                g.user.FtpPassword = form.FtpPassword.data
-                g.user.FtpConnectionChecked = False
+        if (form.FtpPassword.data not in ['*****']) and (g.user.FtpPassword != form.FtpPassword.data):
+            g.user.FtpPassword = form.FtpPassword.data
+            g.user.FtpConnectionChecked = False
 
             
-            """ check ftp Connection """
-            if not g.user.FtpConnectionChecked:
-                g.user.FtpConnectionChecked, validftpmessage = test_ftpconnection(g.user.Server, g.user.Port, g.user.FtpUser, g.user.FtpPassword, g.user.ServerPath)
+        """ check ftp Connection """
+        if not g.user.FtpConnectionChecked:
+            g.user.FtpConnectionChecked, validftpmessage = test_ftpconnection(g.user.Server, g.user.Port, g.user.FtpUser, g.user.FtpPassword, g.user.ServerPath)
                 
-                if not g.user.FtpConnectionChecked:
-                    log.error(validftpmessage)
+            if not g.user.FtpConnectionChecked:
+                log.error(validftpmessage)
 
 
-            """ check otr credentials """
-            if not g.user.OtrCredentialsChecked:
-                pass
+        """ check otr credentials """
+        if not g.user.OtrCredentialsChecked:
+            pass
 
-            """ update user """
-            g.user.updated = datetime.now()
-            db.insert(g.user)        
+        """ update user """
+        g.user.updated = datetime.now()
+        db.insert(g.user)        
 
+    else:
+        form.PushVideo.data = g.user.PushVideo
+        form.OtrUser.data = g.user.OtrUser
+
+        if g.user.OtrPassword != '':
+            form.OtrPassword.data = '*****'
         else:
-            form.PushVideo.data = g.user.PushVideo
-            form.OtrUser.data = g.user.OtrUser
+            form.OtrPassword.data = ''
 
-            if g.user.OtrPassword != '':
-                form.OtrPassword.data = '*****'
-            else:
-                form.OtrPassword.data = ''
-
-            form.UseCutlist.data = g.user.UseCutlist
-            form.Protocol.data = g.user.Protocol
-            form.Server.data = g.user.Server
-            form.Port.data = g.user.Port
-            form.FtpUser.data = g.user.FtpUser
+        form.UseCutlist.data = g.user.UseCutlist
+        form.Protocol.data = g.user.Protocol
+        form.Server.data = g.user.Server
+        form.Port.data = g.user.Port
+        form.FtpUser.data = g.user.FtpUser
             
-            if g.user.FtpPassword != '':
-                form.FtpPassword.data = '*****'
-            else:
-                form.FtpPassword.data = ''
+        if g.user.FtpPassword != '':
+            form.FtpPassword.data = '*****'
+        else:
+            form.FtpPassword.data = ''
 
-            form.ServerPath.data = g.user.ServerPath
+        form.ServerPath.data = g.user.ServerPath
 
-        """ return """
-        pathtemplate = session['platform'] + '/' + 'settings.html'
-        return render_template(pathtemplate, title = 'Einstellungen', pagetitle='settings', form=form, User=g.user)
+    """ return """
+    pathtemplate = g.platform + '/' + 'settings.html'
+    return render_template(pathtemplate, title = 'Einstellungen', pagetitle='settings', form=form, User=g.user)
 
+#
+# ------------------------------------------------------------------------------------------------------------------------
+#
 @otrrentui.route('/history')
+@login_required
 def history():
     """ retrieve top recordings with filters """
-    RetrieveUser()
 
     if not g.user:
-        message = Message()
-        message.show = True
-        message.error = True
-        message.header = 'Fehler'
-        message.text = 'Bitte nutzen Sie die otrrent App. Ihr Gerät konnte nicht identifiziert werden'
+        return redirect(url_for('ui.index', messageid=4))
 
-        return index(message)
-    
-    else:  
+    historylist = StorageTableCollection('history', "PartitionKey eq '" + g.user.RowKey + "'")
+    historylist = db.query(historylist)
+    historylist.sort(key = lambda item: item.created, reverse = True)
 
-        historylist = StorageTableCollection('history', "PartitionKey eq '" + g.user.RowKey + "'")
-        historylist = db.query(historylist)
-        historylist.sort(key = lambda item: item.created, reverse = True)
+    for item in historylist:
+        item['startdate'] = item.beginn.strftime('%d.%m.%Y')
+        item['starttime'] = item.beginn.strftime('%H:%M')
+        item['createdate'] = item.created.strftime('%d.%m.%Y')
+        item['updatedate'] = item.updated.strftime('%d.%m.%Y %H:%M')
+        item['previewimagelink'] = item['previewimagelink'].replace('http://','https://',1)
 
-        for item in historylist:
-            item['startdate'] = item.beginn.strftime('%d.%m.%Y')
-            item['starttime'] = item.beginn.strftime('%H:%M')
-            item['createdate'] = item.created.strftime('%d.%m.%Y')
-            item['updatedate'] = item.updated.strftime('%d.%m.%Y %H:%M')
-            item['previewimagelink'] = item['previewimagelink'].replace('http://','https://',1)
-
-
-        """ render platform template """
-        pathtemplate = session['platform'] + '/' + 'history.html'
-        return render_template(pathtemplate, title = 'Verlauf', pagetitle='history', items=historylist)
-
-@otrrentui.route('/about')
-def about():
-    """ retrieve request parameters """
-    message = Message()
-    message.text = 'Entschuldigung! Diese Funktion wird noch entwickelt und steht in dieser Verion von otrrent noch nicht zu Verfügung.'
-    
-    menu = request.args.get('menu', default='none', type=str)
-    if menu == 'rate':
-        message.header = 'Bewerten Sie otrrent'
-        message.error = True    
-        message.show = True
-    
-    elif menu == 'adsfree':
-        message.header = 'Nutzen Sie otrrent Werbefrei!'
-        message.error = True    
-        message.show = True
-
-    elif menu == 'getprouser':
-        message.header = 'Nutzen Sie otrrent als Pro-User!'
-        message.error = True    
-        message.show = True
-
-    elif menu == 'nologin':
-        message.header = 'Bitte nutzen Sie die otrrent App! Sie sind nicht eingelogged'
-        message.error = True    
-        message.show = True
-
-    else:
-        message.show = False
 
     """ render platform template """
-    pathtemplate = session['platform'] + '/' + 'about.html'
+    pathtemplate = g.platform + '/' + 'history.html'
+    return render_template(pathtemplate, title = 'Verlauf', pagetitle='history', items=historylist)
+
+#
+# ------------------------------------------------------------------------------------------------------------------------
+#
+@otrrentui.route('/about')
+def about():
+
+    #get message
+    message = g.message
+    log.debug(message.header)
+    g.pop('message')
+
+    """ render platform template """
+    pathtemplate = g.platform + '/' + 'about.html'
     return render_template(pathtemplate, title = 'Über', pagetitle='about', message=message)
 
 
-"""
-   logic
-"""
 
+#
+# ------------------------------------------------------------------------------------------------------------------------
+#
 def PushTorrent(epgid, resolution, sourcefile, sourcelink, user:User):
     """ create a push queue message for torrent push """   
     ErrorMessage = ''
@@ -521,67 +540,5 @@ def ExistsHistory(fingerprint, epgid ) -> bool:
     else:
         return False
 
-def RetrieveUser():
-
-    """ prapare session auth code """
-    log.debug('Start before_request')
-
-    """ retrieve user from session cookie """
-    if ('authtoken' in session):
-        user = verify_auth_token(session['authtoken'])
-        if not user:
-            session.pop('authtoken')
-            g.user = None
-            log.debug('User not found')
-        else:
-            g.user = user
-            log.debug('Logged in: {!s}, AdsRemoved: {!s}, ProUser: {!s}'.format(g.user.RowKey, g.user.AdsRemoved, g.user.ProUser))
-
-    elif ('clientid' in request.args) and (('fingerprint' in request.args) or ('deviceuuid' in request.args)):
-        """ credentials delivered in request args  """
-        log.debug('credentials delivered!')
-
-        """ parse request data """
-        clientid = request.args.get('clientid', config['APPLICATION_CLIENT_ID'])
-        fingerprint = request.args.get('fingerprint', '')
-        deviceuuid = request.args.get('deviceuuid', None)
-
-        if not deviceuuid is None:
-            fingerprint = deviceuuid
-
-        """ request user """            
-        loginuser = db.get(User(PartitionKey=clientid, RowKey=fingerprint))
-
-        """ user exists ? Create a new and  """
-        if not db.exists(loginuser):
-            loginuser.created = datetime.now()
-            db.insert(loginuser)
-            
-        """ login user """
-        #log.debug(loginuser.dict())
-        g.user = loginuser
-        session['authtoken'] = generate_auth_token(loginuser) 
-
-    else:
-        g.user = None
-        log.debug('Logged Out redirect to login from endpoint: {!s}'.format(request.endpoint))
-        return 'Authentification required', 401
-
-    """ retrieve device uuid """
-    if ('deviceuuid' in session):
-        #session['deviceuuid'] = session['deviceuuid']
-        log.debug('deviceuuid: {!s}'.format(session['deviceuuid']))
-
-    elif ('deviceuuid' in request.args):
-        session['deviceuuid'] = request.args.get('deviceuuid', None)
-        if ('cordovaplatform' in request.args):
-            session['platform'] = str.lower(request.args.get('cordovaplatform', None))
-        log.debug('From web app: deviceuuid={!s} and platform {!s}'.format(session['deviceuuid'], session['platform']))
-
-    else:
-        session['deviceuuid'] = None
-        log.debug('Not in Session deviceuuid: {!s}'.format(session['deviceuuid']))
-
-    log.debug(session)
 
 
