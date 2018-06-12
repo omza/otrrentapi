@@ -387,9 +387,6 @@ def about():
     else:
         message.show = False
 
-    """ retrieve Platform """
-    RetrievePlatform()
-
     """ render platform template """
     pathtemplate = session['platform'] + '/' + 'about.html'
     return render_template(pathtemplate, title = 'Über', pagetitle='about', message=message)

@@ -82,14 +82,6 @@
                         <div class="content-block-title">App</div>
                         <div class="list-block">
                             <ul>
-                                {% if not session['deviceuuid'] is none %}
-                                <li>
-                                    <a id="rate" href="https://play.google.com/store/apps/details?id=de.appworkshop.otrrent" class="item-link item-content close-panel external">
-                                        <div class="item-media"><i class="material-icons">star</i></div>
-                                        <div class="item-inner item-title">Bewerten</div>
-                                    </a>
-                                </li>
-                                {% endif %}
                                 <li>
                                     <a id="privacy" href="{{ url_for('www.index') }}#privacy" target="_blank" class="item-link item-content close-panel external">
                                         <div class="item-media"><i class="material-icons">lock</i></div>
@@ -145,6 +137,19 @@
                     <!-- Scrollable page content-->
                     <div class="page-content">
 
+                        <!-- Alerts -->
+                        {% if message.show %}
+                        <div class="content-block inset">
+                            <div class="content-block-inner {% if message.error %}bg-pink color-white{% else %}bg-green{% endif %}">
+                                <strong>{{ message.header}}</strong>
+                                <p>{{ message.text}}</p>
+                                {% if message.code != 0 %}<p class="color-gray">{{ message.code}}</p>{% endif %}
+                            </div>
+
+                        </div>
+                        {% endif %}
+
+
                         {% block content %}
                         {% endblock %}
 
@@ -163,60 +168,16 @@
     <script type="text/javascript" src="{{ url_for('static', filename='js/framework7.myandroidapp.js') }}"></script>
 
 
-    {% if 'authtoken' in session %}
+    {% if 'authtoken' in session and session['deviceuuid'] is none %}
 
     <!-- Cookie Disclaimer-->
-    {% if session['deviceuuid'] is none %}
     <script>
         if (!sessionStorage.cookiedisclaimershown) {
-
-        myApp.addNotification({
-            title: 'Cookies',
-            message: "Diese Webseite/App verwendet Cookies um im Rahmen Ihrer Sitzung einen Authentifizierungstoken zu speichern. Indem Sie auf OK klicken oder diese Website weiter nutzen, stimmen Sie der Speicherung von Cookies auf Ihrem Endgerät zu. Näheres erfahren Sie aus unserer <a href='{{ url_for('www.index') }}#privacy' target='_blank' class='external'>Datenschutzerklärung</a>",
-            button: {
-                text: 'OK'
-            },
-            onClose: function () {
-                sessionStorage.cookiedisclaimershown = true;
-            }
-        });
-    }
+            myApp.pickerModal('.picker-info')
+        }
     </script>
-    {% endif %}
 
-    {% else %}
-    <!-- Login -->
 
-    <!-- Path to Fingerprint2 Library JS-->
-    <script type="text/javascript" src="{{ url_for('static', filename='js/fingerprint2.min.js') }}"></script>
-
-    <script>
-        // Login with ClientID and Device Fingerprint
-        // --------------------------------------------------------------------------------------
-
-        //get a hash, representing your device fingerprint
-        new Fingerprint2().get(function (result) {
-
-            //login credentials
-            var ClientID = "{{ config['APPLICATION_CLIENT_ID'] }}";
-            var Fingerprint = result;
-
-            // If current page has a query string, append action to the end of the query string, else
-            // create our query string
-            var next_page = location.href;
-            if (next_page.indexOf("?") > -1) {
-                next_page += '&clientid=' + ClientID;
-            } else {
-                next_page += '?clientid=' + ClientID;
-            }
-            next_page += '&fingerprint=' + Fingerprint;
-
-            //redirect
-            location.replace(next_page);
-
-            });
-
-    </script>
     {% endif %}
 
 
