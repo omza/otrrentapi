@@ -61,93 +61,36 @@ class Settings(FlaskForm):
     FtpPassword = StringField('ftp Password', widget=PasswordInput(hide_value=False))
     ServerPath = StringField('Pfad', [validators.DataRequired(), validators.Length(min=1, max=35)])
 
-
-""" set session platform variable """
 @otrrentui.before_request
-def before_request():
-    """ prapare session auth code """
-    log.debug('Start before_request')
-
-    """ retrieve user from session cookie """
-    if ('authtoken' in session):
-        user = verify_auth_token(session['authtoken'])
-        if not user:
-            session.pop('authtoken')
-            g.user = None
-            log.debug('User not found')
-        else:
-            g.user = user
-            log.debug('Logged in: {!s}, AdsRemoved: {!s}, ProUser: {!s}'.format(g.user.RowKey, g.user.AdsRemoved, g.user.ProUser))
-
-    elif ('clientid' in request.args) and (('fingerprint' in request.args) or ('deviceuuid' in request.args)):
-        """ credentials delivered in request args  """
-        log.debug('credentials delivered!')
-
-        """ parse request data """
-        clientid = request.args.get('clientid', config['APPLICATION_CLIENT_ID'])
-        fingerprint = request.args.get('fingerprint', '')
-        deviceuuid = request.args.get('deviceuuid', None)
-
-        if not deviceuuid is None:
-            fingerprint = deviceuuid
-
-        """ request user """            
-        loginuser = db.get(User(PartitionKey=clientid, RowKey=fingerprint))
-
-        """ user exists ? Create a new and  """
-        if not db.exists(loginuser):
-            loginuser.created = datetime.now()
-            db.insert(loginuser)
-            
-        """ login user """
-        #log.debug(loginuser.dict())
-        g.user = loginuser
-        session['authtoken'] = generate_auth_token(loginuser) 
-
-    else:
-        g.user = None
-        log.debug('Logged Out redirect to login from endpoint: {!s}'.format(request.endpoint))
-        return 'Authentification required', 401
-
-    """ retrieve device uuid """
-    if ('deviceuuid' in session):
-        #session['deviceuuid'] = session['deviceuuid']
-        log.debug('deviceuuid: {!s}'.format(session['deviceuuid']))
-
-    elif ('deviceuuid' in request.args):
-        session['deviceuuid'] = request.args.get('deviceuuid', None)
-        if ('cordovaplatform' in request.args):
-            session['platform'] = str.lower(request.args.get('cordovaplatform', None))
-        log.debug('From web app: deviceuuid={!s} and platform {!s}'.format(session['deviceuuid'], session['platform']))
-
-    else:
-        session['deviceuuid'] = None
-        log.debug('Not in Session deviceuuid: {!s}'.format(session['deviceuuid']))
-
+def beforerequestlogic():
 
     """ retrieve platform parameter and set to session cookie """
-    if ('platform' in session):
-        #session['platform'] = session['platform']
-        log.debug('platform: {!s}'.format(session['platform']))
-    else:
-        platform = request.user_agent.platform
-        
-        if platform in ['android','ios']:        #,'windows'
-            session['platform'] = platform 
+    if ('platform' not in session):
+
+        if ('cordovaplatform' in request.args):
+            session['platform'] = str.lower(request.args.get('cordovaplatform', None))
+            session['app'] = True
         else:
-            session['platform'] = config['APPLICATION_UI_DEFAULT']
+            platform = request.user_agent.platform
+            session['app'] = False
 
-        session['ratelink'] = config['APPLICATION_' + str(session['platform']).upper + '_RATE']
-        
-        log.debug('request platform: {!s}'.format(session['platform']))
+            if platform in ['android','ios']:        #,'windows'
+                session['platform'] = platform 
+            else:
+                session['platform'] = config['APPLICATION_UI_DEFAULT']
 
-    log.debug(session)
+    """ user = default """
+    g.user = None
+
+    log.debug('request platform: {!s}'.format(session['platform']))
+
     
 """ view to top recordings """        
 @otrrentui.route('/')
-def index():
-    """ retrieve top recordings with filters """
+def index(message=Message()):
 
+    """ retrieve Messages """
+    """ retrieve top recordings with filters """
     toplist = StorageTableCollection('recordings', "PartitionKey eq 'top'")
     toplist = db.query(toplist)
     toplist.sort(key = lambda item: item.beginn, reverse = True)
@@ -159,9 +102,11 @@ def index():
         if not 'torrentCount' in item:
             item['torrentCount'] = 0
 
+
     """ render platform template """
     pathtemplate = session['platform'] + '/' + 'index.html'
-    return render_template(pathtemplate, title = 'OTR Top Aufnahmen', pagetitle='index', items=toplist)
+    return render_template(pathtemplate, title = 'OTR Top Aufnahmen', pagetitle='index', items=toplist,
+                            message=message)
 
 
 @otrrentui.route('/<int:epgid>', methods=['GET', 'POST'])
@@ -194,6 +139,8 @@ def details(epgid):
         log.debug(data)
 
         """ post method = push only available for logged in users """
+        RetrieveUser()
+
         if not g.user:
             message.show = True
             message.error = True
@@ -268,8 +215,6 @@ def details(epgid):
                            request.user_agent.version,
                            request.user_agent.language)     
 
-
-
     """ render platform template """
     return render_template(pathtemplate,  
                             title = 'OTR Aufnahme Details', 
@@ -281,9 +226,16 @@ def details(epgid):
 @otrrentui.route('/settings', methods=['GET', 'POST'])
 def settings():
     """ validate settings form  at POST request """
-
+    RetrieveUser()
+    
     if not g.user:
-        return index()
+        message = Message()
+        message.show = True
+        message.error = True
+        message.header = 'Fehler'
+        message.text = 'Bitte nutzen Sie die otrrent App. Ihr Gerät konnte nicht identifiziert werden'
+
+        return index(message)
     
     else:
 
@@ -376,9 +328,16 @@ def settings():
 @otrrentui.route('/history')
 def history():
     """ retrieve top recordings with filters """
+    RetrieveUser()
 
     if not g.user:
-        return index()
+        message = Message()
+        message.show = True
+        message.error = True
+        message.header = 'Fehler'
+        message.text = 'Bitte nutzen Sie die otrrent App. Ihr Gerät konnte nicht identifiziert werden'
+
+        return index(message)
     
     else:  
 
@@ -420,8 +379,16 @@ def about():
         message.error = True    
         message.show = True
 
+    elif menu == 'nologin':
+        message.header = 'Bitte nutzen Sie die otrrent App! Sie sind nicht eingelogged'
+        message.error = True    
+        message.show = True
+
     else:
         message.show = False
+
+    """ retrieve Platform """
+    RetrievePlatform()
 
     """ render platform template """
     pathtemplate = session['platform'] + '/' + 'about.html'
@@ -556,3 +523,68 @@ def ExistsHistory(fingerprint, epgid ) -> bool:
         return True
     else:
         return False
+
+def RetrieveUser():
+
+    """ prapare session auth code """
+    log.debug('Start before_request')
+
+    """ retrieve user from session cookie """
+    if ('authtoken' in session):
+        user = verify_auth_token(session['authtoken'])
+        if not user:
+            session.pop('authtoken')
+            g.user = None
+            log.debug('User not found')
+        else:
+            g.user = user
+            log.debug('Logged in: {!s}, AdsRemoved: {!s}, ProUser: {!s}'.format(g.user.RowKey, g.user.AdsRemoved, g.user.ProUser))
+
+    elif ('clientid' in request.args) and (('fingerprint' in request.args) or ('deviceuuid' in request.args)):
+        """ credentials delivered in request args  """
+        log.debug('credentials delivered!')
+
+        """ parse request data """
+        clientid = request.args.get('clientid', config['APPLICATION_CLIENT_ID'])
+        fingerprint = request.args.get('fingerprint', '')
+        deviceuuid = request.args.get('deviceuuid', None)
+
+        if not deviceuuid is None:
+            fingerprint = deviceuuid
+
+        """ request user """            
+        loginuser = db.get(User(PartitionKey=clientid, RowKey=fingerprint))
+
+        """ user exists ? Create a new and  """
+        if not db.exists(loginuser):
+            loginuser.created = datetime.now()
+            db.insert(loginuser)
+            
+        """ login user """
+        #log.debug(loginuser.dict())
+        g.user = loginuser
+        session['authtoken'] = generate_auth_token(loginuser) 
+
+    else:
+        g.user = None
+        log.debug('Logged Out redirect to login from endpoint: {!s}'.format(request.endpoint))
+        return 'Authentification required', 401
+
+    """ retrieve device uuid """
+    if ('deviceuuid' in session):
+        #session['deviceuuid'] = session['deviceuuid']
+        log.debug('deviceuuid: {!s}'.format(session['deviceuuid']))
+
+    elif ('deviceuuid' in request.args):
+        session['deviceuuid'] = request.args.get('deviceuuid', None)
+        if ('cordovaplatform' in request.args):
+            session['platform'] = str.lower(request.args.get('cordovaplatform', None))
+        log.debug('From web app: deviceuuid={!s} and platform {!s}'.format(session['deviceuuid'], session['platform']))
+
+    else:
+        session['deviceuuid'] = None
+        log.debug('Not in Session deviceuuid: {!s}'.format(session['deviceuuid']))
+
+    log.debug(session)
+
+

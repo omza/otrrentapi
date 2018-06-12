@@ -14,17 +14,6 @@
 
 {% block content %}
 <!-- Content Block Details -->
-<!-- Alerts -->
-{% if message.show %}
-<div class="content-block inset">
-    <div class="content-block-inner {% if message.error %}bg-pink color-white{% else %}bg-green{% endif %}">
-        <strong>{{ message.header}}</strong>
-        <p>{{ message.text}}</p>
-        {% if message.code != 0 %}<p class="color-gray">{{ message.code}}</p>{% endif %}
-    </div>
-
-</div>
-{% endif %}
 
 <!-- Details card -->
 <div class="content-block-title">{{ item.titel }}</div>
