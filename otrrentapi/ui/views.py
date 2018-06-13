@@ -63,17 +63,29 @@ class Settings(FlaskForm):
 @otrrentui.before_request
 def beforerequestlogic():
 
+    log.debug(request.args.get('deviceuuid', '...'))
+
     """ parse request data """
-    g.platform = str.lower(request.args.get('cordovaplatform', request.user_agent.platform))
-    g.clientid = request.args.get('clientid', config['APPLICATION_CLIENT_ID'])
-    g.deviceuuid = request.args.get('deviceuuid', '')
+    if not 'platform' in session:
+        platform = str.lower(request.args.get('cordovaplatform', request.user_agent.platform))
+        if not platform in ['android','ios']:
+            session['platform'] = config['APPLICATION_UI_DEFAULT']
+        else:
+            session['platform'] = platform
+
+    if not 'clientid' in session:
+        session['clientid'] = request.args.get('clientid', config['APPLICATION_CLIENT_ID'])
+    
+    if not 'deviceuuid' in session:    
+        session['deviceuuid'] = request.args.get('deviceuuid', '')
+
+    g.platform =  session['platform']
+    g.clientid =  session['clientid']
+    g.deviceuuid = session['deviceuuid']
 
     """ user = default """
     g.user = None
 
-    """ set platform """
-    if not g.platform in ['android','ios']:
-        g.platform = config['APPLICATION_UI_DEFAULT']
 
     """ message """
     messageid = safe_cast(request.args.get('messageid', 0), int)
@@ -104,27 +116,33 @@ def beforerequestlogic():
 
 
 """ decorators """
-def login_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        """ request user """
-        
-        if g.deviceuuid == '' or g.clientid == '':
-            g.user = None
+def login_required(backtoindex=False):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
 
-        else:
-            loginuser = db.get(User(PartitionKey=g.clientid, RowKey=g.deviceuuid))
+            if g.deviceuuid == '' or g.clientid == '':
+                g.user = None
 
-            """ user exists ? Create a new and  """
-            if not db.exists(loginuser):
-                loginuser.created = datetime.now()
-                db.insert(loginuser)
+            else:
+                loginuser = db.get(User(PartitionKey=g.clientid, RowKey=g.deviceuuid))
+
+                """ user exists ? Create a new and  """
+                if not db.exists(loginuser):
+                    loginuser.created = datetime.now()
+                    db.insert(loginuser)
             
-            """ login user """
-            g.user = loginuser
- 
-        return f(*args, **kwargs)
-    return decorated_function
+                """ login user """
+                g.user = loginuser
+
+            if backtoindex and not g.user:
+                return redirect(url_for('ui.index', messageid=4))
+            else:
+                return func(*args, **kwargs)
+
+        return wrapper
+    return decorator
+
 
 #
 # ------------------------------------------------------------------------------------------------------------------------
@@ -155,7 +173,7 @@ def index():
 # ------------------------------------------------------------------------------------------------------------------------
 #
 @otrrentui.route('/<int:epgid>', methods=['GET', 'POST'])
-@login_required
+@login_required(False)
 def details(epgid):
     """ request top recording detail data """
 
@@ -273,14 +291,9 @@ def details(epgid):
 # ------------------------------------------------------------------------------------------------------------------------
 #
 @otrrentui.route('/settings', methods=['GET', 'POST'])
-@login_required
+@login_required(True)
 def settings():
     """ validate settings form  at POST request """
-
-    if not g.user:
-        return redirect(url_for('ui.index',messageid=4))
-
-
 
     """ get request data """
     form = Settings()
@@ -366,18 +379,15 @@ def settings():
 
     """ return """
     pathtemplate = g.platform + '/' + 'settings.html'
-    return render_template(pathtemplate, title = 'Einstellungen', pagetitle='settings', form=form, User=g.user)
+    return render_template(pathtemplate, title = 'Einstellungen', pagetitle='settings', form=form, User=g.user, message=g.message)
 
 #
 # ------------------------------------------------------------------------------------------------------------------------
 #
 @otrrentui.route('/history')
-@login_required
+@login_required(True)
 def history():
     """ retrieve top recordings with filters """
-
-    if not g.user:
-        return redirect(url_for('ui.index', messageid=4))
 
     historylist = StorageTableCollection('history', "PartitionKey eq '" + g.user.RowKey + "'")
     historylist = db.query(historylist)
@@ -393,7 +403,7 @@ def history():
 
     """ render platform template """
     pathtemplate = g.platform + '/' + 'history.html'
-    return render_template(pathtemplate, title = 'Verlauf', pagetitle='history', items=historylist)
+    return render_template(pathtemplate, title = 'Verlauf', pagetitle='history', items=historylist, message=g.message)
 
 #
 # ------------------------------------------------------------------------------------------------------------------------
