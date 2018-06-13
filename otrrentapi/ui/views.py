@@ -63,8 +63,6 @@ class Settings(FlaskForm):
 @otrrentui.before_request
 def beforerequestlogic():
 
-    log.debug(request.args.get('deviceuuid', '...'))
-
     """ parse request data """
     if not 'platform' in session:
         platform = str.lower(request.args.get('cordovaplatform', request.user_agent.platform))
@@ -108,9 +106,14 @@ def beforerequestlogic():
         g.message.show = True
 
     elif messageid == 4:
-        log.debug(messageid)
         g.message.header = 'Fehler'
         g.message.text = 'Bitte nutzen Sie die otrrent App! Sie sind nicht eingelogged'
+        g.message.error = True    
+        g.message.show = True
+
+    elif messageid == 5:
+        g.message.header = 'Konfiguration'
+        g.message.text = 'Bitte pflegen Sie Ihren Endpoints für torrent oder Videodateien'
         g.message.error = True    
         g.message.show = True
 
@@ -225,7 +228,12 @@ def details(epgid):
             message.header = 'Fehler'
             message.text = 'Sie haben diese Aufnahme bereits erfolgreich gepushed!'
 
-        elif (g.user.PushVideo):           
+        elif (g.user.PushVideo):
+            """ successfully configured ? """
+            if not g.user.FtpConnectionChecked:
+                return redirect(url_for('ui.settings', messageid=5))
+
+
             """ push video """
             job, errormessage = PushVideo(epgid, data['Resolution'], data['TorrentFile'], data['TorrentLink'], g.user) 
             if not job:
@@ -249,7 +257,11 @@ def details(epgid):
                            request.user_agent.version,
                            request.user_agent.language)                          
 
-        else:           
+        else:
+            """ successfully configured ? """
+            if not g.user.FtpConnectionChecked:
+                return redirect(url_for('ui.settings', messageid=5))
+
             """ push torrent """
             job, errormessage = PushTorrent(epgid, data['Resolution'], data['TorrentFile'], data['TorrentLink'], g.user) 
             if not job:
@@ -317,7 +329,7 @@ def settings():
             
         if (g.user.Server != form.Server.data):
             g.user.Server = form.Server.data
-            g.user.FtpConnectionChecked = False
+            g.user.FtpConnectionChecked = False                                                                                                                                                                                                     
             
         if (g.user.Port != form.Port.data):
             g.user.Port = form.Port.data
