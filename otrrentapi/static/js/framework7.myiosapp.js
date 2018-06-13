@@ -79,6 +79,33 @@ myApp.onPageInit('settings', function (page) {
         
     });
 
+    //callback on submit push element to send settings in POST request 
+    $$('.ajax-submit').on('submitted', function (e) {
+
+        myApp.showIndicator();
+        var xhr = e.detail.xhr; // actual XHR object
+        var responsePage = xhr.responseText; //response data
+
+        //get focused element in form
+        var focusedId = document.activeElement.id;
+
+        //Load new content as new page
+        mainView.router.reloadContent(responsePage);
+
+        //set focus
+        if (typeof focusedId !== 'undefined' && focusedId !== null && focusedId !== "") {
+            var focusedEl = document.getElementById(focusedId);
+            focusedEl.focus();
+
+            if (focusedEl.type === 'textarea') {
+                focusedEl.setSelectionRange(focusedEl.value.length, focusedEl.value.length);
+            }
+
+        }
+
+        myApp.hideIndicator();
+    });
+
 });
 
 

@@ -13,7 +13,7 @@
 {% endblock %}
 
 {% block content %}
-<form action="{{ url_for('ui.settings') }}" method="POST" class="ajax-submit-onchange">
+<form action="{{ url_for('ui.settings') }}" method="POST" class="ajax-submit">
     {{ form.hidden_tag() }}
 
     <!-- Global -->
@@ -234,6 +234,14 @@
         </div>
     </div>
     {% endif %}
+
+    <!-- Submit-->
+    <div class="card">
+        <div class="card-content">
+            <input type="submit" value="Speichern" class="inset button button-big button-fill button-raised">
+        </div>
+    </div>
+    
 
 </form>
 
