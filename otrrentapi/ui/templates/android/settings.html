@@ -48,6 +48,43 @@
     </div>
     {% endif %}
 
+    <!-- EMail Endpoint -->
+    <div class="card">
+        <div class="card-header">EMail Endpoint</div>
+        <div class="card-content">
+            <div class="list-block">
+                <ul>
+                    <!-- FtpUser -->
+                    <li>
+                        <div class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title label">{{ form.EMailEndpoint.label }}</div>
+                                <div class="item-input">
+                                    {{ form.EMailEndpoint }}
+                                </div>
+                                <div class="item-input label" style="color: red;">
+                                    {% for error in form.EMailEndpoint.errors %}{{ error }}{% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="card-footer">
+            <span>EMail bestaetigt?</span>
+            <span>
+                {% if g.user.EMailEndpointChecked is none %}
+                <i class="material-icons" style="color: yellow;">help</i>
+                {% elif g.user.EMailEndpointChecked %}
+                <i class="material-icons" style="color: green;">check_circle</i>
+                {% else %}
+                <i class="material-icons" style="color: red;">error</i>
+                {% endif %}
+            </span>
+        </div>
+    </div>
+
     <!-- FTP Endpoint -->
     <div class="card">
         <div class="card-header">FTP Endpoint</div>
@@ -241,7 +278,7 @@
             <input type="submit" value="Speichern" class="inset button button-big button-fill button-raised">
         </div>
     </div>
-    
+
 
 </form>
 

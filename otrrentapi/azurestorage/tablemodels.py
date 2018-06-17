@@ -129,6 +129,8 @@ class History(StorageTableModel):
     language = ''
     status = ''
 
+    securedownloadlink = ''
+
     created = datetime.datetime.strptime('01.01.1900 00:00:00', _datetimeformat)
     updated  = datetime.datetime.strptime('01.01.1900 00:00:00', _datetimeformat)
 
@@ -155,8 +157,11 @@ class User(StorageTableModel):
     FtpConnectionChecked = None
     OtrCredentialsChecked = None
 
+    EMailEndpoint = ''
+    EMailEndpointChecked = None
+
     def __setEncryptedProperties__(self):
-        self._encryptedproperties = ['OtrUser', 'OtrPassword', 'Server', 'FtpUser', 'FtpPassword']
+        self._encryptedproperties = ['OtrUser', 'OtrPassword', 'Server', 'FtpUser', 'FtpPassword', 'EMailEndpoint']
         return super().__setEncryptedProperties__()
     
     

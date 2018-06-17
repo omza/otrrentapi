@@ -60,6 +60,9 @@ class Settings(FlaskForm):
     FtpPassword = StringField('ftp Password', widget=PasswordInput(hide_value=False))
     ServerPath = StringField('Pfad', [validators.DataRequired(), validators.Length(min=1, max=35)])
 
+    EMailEndpoint = StringField('EMail Endpoint', validators=[validators.Email()])
+
+
 @otrrentui.before_request
 def beforerequestlogic():
 
@@ -350,6 +353,9 @@ def settings():
             g.user.FtpPassword = form.FtpPassword.data
             g.user.FtpConnectionChecked = False
 
+        if (g.user.EMailEndpoint != form.EMailEndpoint.data):
+            g.user.EMailEndpoint = form.EMailEndpoint.data
+
             
         """ check ftp Connection """
         if not g.user.FtpConnectionChecked:
@@ -388,6 +394,8 @@ def settings():
             form.FtpPassword.data = ''
 
         form.ServerPath.data = g.user.ServerPath
+
+        form.EMailEndpoint.data = g.user.EMailEndpoint
 
     """ return """
     pathtemplate = g.platform + '/' + 'settings.html'
