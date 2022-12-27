@@ -16,7 +16,7 @@ pyparsing==2.2.0
 python-dateutil==2.6.1
 python-editor==1.0.3
 pytz==2017.3
-setuptools==37.0.0
+setuptools==65.5.1
 six==1.11.0
 Werkzeug
 asn1crypto==0.23.0
